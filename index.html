@@ -11,9 +11,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Summer Grind">
-<link id="manifest-link" rel="manifest">
-<link id="apple-icon-link" rel="apple-touch-icon">
-<link id="icon-link" rel="icon">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -740,30 +740,16 @@
   };
 
   /* =========================================================
-     PWA bootstrap — inline manifest + icon, no external files
+     PWA bootstrap — registers the service worker so the app
+     is fully installable (removes Chrome's "shortcut" badge)
+     and keeps working offline.
   ========================================================= */
   function bootstrapPWA(){
-    const iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-      <rect width="192" height="192" rx="40" fill="#0A0D10"/>
-      <circle cx="96" cy="96" r="62" fill="none" stroke="#FF5A2B" stroke-width="10"/>
-      <path d="M96 34v124M34 96h124M52 52c22 20 22 68 0 88M140 52c-22 20-22 68 0 88" stroke="#FF5A2B" stroke-width="6" fill="none"/>
-      <circle cx="96" cy="96" r="62" fill="none" stroke="#22D9C4" stroke-width="4" stroke-dasharray="6 10"/>
-    </svg>`;
-    const iconURI = "data:image/svg+xml," + encodeURIComponent(iconSVG);
-    document.getElementById("apple-icon-link").setAttribute("href", iconURI);
-    document.getElementById("icon-link").setAttribute("href", iconURI);
-
-    const manifest = {
-      name: "Summer Grind — Workout & Recovery Tracker",
-      short_name: "Summer Grind",
-      start_url: ".",
-      display: "standalone",
-      background_color: "#0A0D10",
-      theme_color: "#0A0D10",
-      icons: [{ src: iconURI, sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" }]
-    };
-    const manifestURI = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
-    document.getElementById("manifest-link").setAttribute("href", manifestURI);
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("./sw.js").catch(function(){
+        /* offline support is a bonus, not a requirement -- fail silently */
+      });
+    }
   }
 
   /* =========================================================
