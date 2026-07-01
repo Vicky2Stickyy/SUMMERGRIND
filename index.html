@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Summer Grind</title>
+
+<!-- PWA / home-screen behavior -->
+<meta name="theme-color" content="#0A0D10">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Summer Grind">
+<link id="manifest-link" rel="manifest">
+<link id="apple-icon-link" rel="apple-touch-icon">
+<link id="icon-link" rel="icon">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #0A0D10;
+    --bg-elevated: #12171C;
+    --surface: #161C22;
+    --surface-hi: #1D242B;
+    --border: #232B32;
+    --text: #F5F3EE;
+    --text-dim: #8B94A0;
+    --text-faint: #565F69;
+    --orange: #FF5A2B;
+    --orange-dim: #4A2A1C;
+    --teal: #22D9C4;
+    --teal-dim: #1B3833;
+    --danger: #FF4D5E;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body{ height: 100%; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Manrope', sans-serif;
+    overscroll-behavior-y: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    z-index:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(255,90,43,0.10), transparent 45%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 64px);
+  }
+
+  h1,h2,h3, .jersey{
+    font-family: 'Teko', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+
+  .mono{ font-family: 'JetBrains Mono', monospace; }
+
+  button{ font-family: inherit; border:none; background:none; color:inherit; cursor:pointer; }
+  button:focus-visible, [tabindex]:focus-visible{ outline: 2px solid var(--teal); outline-offset: 3px; }
+
+  #app{
+    position: relative;
+    z-index:1;
+    max-width: 520px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    padding: calc(18px + var(--safe-top)) 20px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .wordmark .jersey{ font-size: 30px; line-height:1; color: var(--text); }
+  .wordmark .jersey em{ font-style:normal; color: var(--orange); }
+  .icon-btn{
+    width: 42px; height:42px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    transition: background .15s ease, transform .15s ease;
+  }
+  .icon-btn:active{ transform: scale(0.92); background: var(--surface-hi); }
+
+  /* ---------- VIEWS ---------- */
+  .view{ display:none; flex:1; padding: 4px 20px calc(110px + var(--safe-bottom)); animation: fadein .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fadein{ from{ opacity:0; transform: translateY(6px); } to{ opacity:1; transform:none; } }
+
+  /* ---------- SHOT CLOCK RING ---------- */
+  .clock-wrap{ display:flex; flex-direction:column; align-items:center; padding: 18px 0 6px; }
+  .ring-box{ position:relative; width: 200px; height:200px; }
+  .ring-box svg{ width:100%; height:100%; transform: rotate(-90deg); }
+  .ring-track{ fill:none; stroke: var(--surface-hi); stroke-width:10; }
+  .ring-progress{
+    fill:none; stroke-width:10; stroke-linecap:round;
+    stroke: url(#ring-gradient);
+    transition: stroke-dashoffset .35s cubic-bezier(.4,0,.2,1);
+  }
+  .ring-center{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  .ring-frac{ font-size: 46px; line-height:1; font-weight:600; letter-spacing:1px; }
+  .ring-label{ font-size:10px; letter-spacing:2px; color:var(--text-faint); text-transform:uppercase; margin-top:6px; font-weight:700; }
+  .ring-day{ font-size: 15px; color: var(--text-dim); margin-top:4px; }
+
+  /* ---------- LINEAR PROGRESS BAR ---------- */
+  .progress-bar-wrap{ width:100%; max-width:340px; margin: 14px auto 4px; }
+  .progress-bar-label{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim);
+    margin-bottom:7px;
+  }
+  .progress-bar-label span.count{ font-family:'JetBrains Mono'; color: var(--text); font-size:12px; letter-spacing:0; }
+  .progress-track{ height:8px; border-radius:100px; background: var(--surface-hi); overflow:hidden; }
+  .progress-fill{
+    height:100%; border-radius:100px;
+    background: linear-gradient(90deg, var(--orange), var(--teal));
+    width:0%;
+    transition: width .35s cubic-bezier(.4,0,.2,1);
+  }
+
+  .legend{ display:flex; gap:22px; margin-top:16px; justify-content:center; }
+  .legend-item{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-dim); font-weight:600; }
+  .legend-dot{ width:9px; height:9px; border-radius:50%; }
+  .legend-dot.orange{ background: var(--orange); }
+  .legend-dot.teal{ background: var(--teal); }
+
+  /* ---------- TASK CARDS ---------- */
+  .task-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 15px 16px;
+    margin-top: 10px;
+    display:flex;
+    gap: 13px;
+    align-items:flex-start;
+    transition: border-color .2s ease, background .2s ease;
+  }
+  .task-card.done{ border-color: var(--card-accent, var(--orange)); background: var(--bg-elevated); }
+  .task-card.workout{ --card-accent: var(--orange); }
+  .task-card.recovery{ --card-accent: var(--teal); }
+
+  .check{
+    flex: 0 0 auto;
+    width: 44px; height:44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    background: var(--bg-elevated);
+    transition: all .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .task-card.workout .check.checked{ background: var(--orange); border-color: var(--orange); transform: scale(1.05); }
+  .task-card.recovery .check.checked{ background: var(--teal); border-color: var(--teal); transform: scale(1.05); }
+  .check svg{ width:20px; height:20px; opacity:0; transform: scale(.5); transition: all .18s ease; color:#0A0D10; }
+  .check.checked svg{ opacity:1; transform: scale(1); }
+  .task-card:active .check{ transform: scale(0.9); }
+
+  /* compact variant used inside week-view accordions */
+  .task-card.mini{ padding: 11px 13px; margin-top:8px; gap:11px; border-radius: var(--radius-sm); }
+  .task-card.mini .check{ width:34px; height:34px; }
+  .task-card.mini .check svg{ width:16px; height:16px; }
+  .task-card.mini .task-title{ font-size:13.5px; }
+  .task-card.mini .task-kicker{ font-size:9px; margin-bottom:3px; }
+
+  .task-body{ flex:1; min-width:0; }
+  .task-kicker{ font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:800; margin-bottom:5px; }
+  .task-card.workout .task-kicker{ color: var(--orange); }
+  .task-card.recovery .task-kicker{ color: var(--teal); }
+  .task-title{ font-size:15px; font-weight:700; line-height:1.35; font-family:'Manrope'; color:var(--text); }
+  .task-card.done .task-title{ color: var(--text-dim); }
+
+  .section-label{
+    font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint);
+    font-weight:800; margin: 22px 2px 0;
+  }
+
+  /* ---------- WEEK VIEW ---------- */
+  .week-header{ padding-top:6px; display:flex; align-items:flex-end; justify-content:space-between; }
+  .week-header h2{ font-size:30px; }
+  .week-stat{ text-align:right; }
+  .week-stat .num{ font-size:20px; font-weight:700; color:var(--orange); font-family:'JetBrains Mono'; }
+  .week-stat .lbl{ font-size:9px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase; font-weight:700; }
+
+  .day-wrap{ margin-top: 10px; }
+  .day-row{
+    background: var(--surface);
+    border:1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 13px 15px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    transition: border-color .15s ease;
+  }
+  .day-wrap.open .day-row{ border-bottom-left-radius:0; border-bottom-right-radius:0; }
+  .day-row.today{ border-color: var(--orange); box-shadow: 0 0 0 1px var(--orange) inset; }
+  .day-badge{
+    flex:0 0 auto;
+    width:44px; height:44px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'Teko'; line-height:1;
+  }
+  .day-badge .d{ font-size:19px; font-weight:700; }
+  .day-badge .m{ font-size:9px; color:var(--text-faint); letter-spacing:1px; margin-top:2px; }
+  .day-row.today .day-badge{ background: var(--orange-dim); }
+  .day-row.today .day-badge .d{ color: var(--orange); }
+
+  .day-info{ flex:1; min-width:0; }
+  .day-name{ font-size:15px; font-weight:700; }
+  .day-sub{ font-size:11.5px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .day-frac{
+    flex:0 0 auto;
+    font-family:'JetBrains Mono'; font-size:12px; font-weight:600;
+    padding: 7px 10px;
+    border-radius: 100px;
+    background: var(--bg-elevated);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    transition: all .15s ease;
+  }
+  .day-frac.complete{ background: var(--orange-dim); color: var(--orange); border-color: var(--orange); }
+  .chevron{ flex:0 0 auto; width:16px; height:16px; color: var(--text-faint); transition: transform .2s ease; }
+  .day-wrap.open .chevron{ transform: rotate(180deg); }
+
+  .day-panel{
+    display:none;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-top:none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    padding: 4px 12px 12px;
+  }
+  .day-wrap.open .day-panel{ display:block; }
+
+  /* ---------- BOTTOM NAV ---------- */
+  .bottomnav{
+    position: fixed; left:0; right:0; bottom:0;
+    z-index: 5;
+    max-width: 520px; margin: 0 auto;
+    display:flex;
+    background: rgba(18,23,28,0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-top: 1px solid var(--border);
+    padding: 10px 16px calc(14px + var(--safe-bottom));
+    gap: 8px;
+  }
+  .nav-btn{
+    flex:1;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    padding: 8px 0 6px;
+    border-radius: var(--radius-sm);
+    color: var(--text-faint);
+    transition: color .15s ease, background .15s ease;
+  }
+  .nav-btn svg{ width:22px; height:22px; }
+  .nav-btn span{ font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
+  .nav-btn.active{ color: var(--orange); background: var(--orange-dim); }
+
+  /* ---------- MODAL ---------- */
+  .modal-backdrop{
+    position:fixed; inset:0; z-index:20;
+    background: rgba(5,7,9,0.7);
+    display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; pointer-events:none;
+    transition: opacity .2s ease;
+  }
+  .modal-backdrop.open{ opacity:1; pointer-events:auto; }
+  .modal-sheet{
+    width:100%; max-width:520px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom:none;
+    border-radius: 24px 24px 0 0;
+    padding: 10px 22px calc(28px + var(--safe-bottom));
+    transform: translateY(100%);
+    transition: transform .25s cubic-bezier(.32,.72,0,1);
+  }
+  .modal-backdrop.open .modal-sheet{ transform: translateY(0); }
+  .modal-handle{ width:36px; height:4px; border-radius:2px; background:var(--border); margin: 8px auto 18px; }
+  .modal-sheet h3{ font-size:22px; margin-bottom:6px; }
+  .modal-sheet p{ font-size:13px; color:var(--text-dim); line-height:1.6; margin:0 0 20px; }
+  .modal-btn{
+    width:100%; padding:16px; border-radius: var(--radius-sm);
+    font-weight:800; font-size:14px; letter-spacing:0.5px; text-align:center;
+    margin-top:10px;
+  }
+  .modal-btn.danger{ background: var(--danger); color:#1a0507; }
+  .modal-btn.ghost{ background: var(--surface-hi); color: var(--text-dim); }
+  .modal-btn:active{ transform: scale(0.98); }
+
+  .toast{
+    position: fixed; left:50%; bottom: 110px; transform: translateX(-50%) translateY(10px);
+    background: var(--surface-hi); border:1px solid var(--border);
+    color: var(--text); font-size:13px; font-weight:600;
+    padding: 12px 18px; border-radius: 100px;
+    opacity:0; pointer-events:none; transition: all .25s ease;
+    z-index: 25; white-space:nowrap;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="wordmark"><h1 class="jersey">SUMMER<em>GRIND</em></h1></div>
+    <button class="icon-btn" id="settings-btn" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13.5c.06-.5.1-1 .1-1.5s-.04-1-.1-1.5l2.02-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.38.96a7.1 7.1 0 00-1.3-.75l-.36-2.53a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.53c-.47.2-.9.45-1.3.75l-2.38-.96a.5.5 0 00-.6.22L3.6 8.78a.5.5 0 00.12.64L5.74 11c-.06.5-.1 1-.1 1.5s.04 1 .1 1.5l-2.02 1.58a.5.5 0 00-.12.64l1.92 3.32c.14.24.42.32.6.22l2.38-.96c.4.3.83.55 1.3.75l.36 2.53c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.53c.47-.2.9-.45 1.3-.75l2.38.96c.24.1.5 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64L19.4 13.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </button>
+  </header>
+
+  <!-- TODAY VIEW -->
+  <main class="view active" id="view-today">
+    <div class="clock-wrap">
+      <div class="ring-box">
+        <svg viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF5A2B"/>
+              <stop offset="100%" stop-color="#22D9C4"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+          <circle id="ring-progress" class="ring-progress" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"></circle>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-frac mono" id="ring-frac">0/0</div>
+          <div class="ring-label">Grinded Today</div>
+          <div class="ring-day" id="ring-day">Monday</div>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-label">
+          <span>Today's Progress</span>
+          <span class="count" id="progress-count">0/0 Tasks Completed</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot orange"></span>Training</div>
+        <div class="legend-item"><span class="legend-dot teal"></span>Recovery</div>
+      </div>
+    </div>
+
+    <div class="section-label">Today's Blueprint</div>
+    <div id="today-cards"></div>
+  </main>
+
+  <!-- WEEK VIEW -->
+  <main class="view" id="view-week">
+    <div class="week-header">
+      <h2>The Week</h2>
+      <div class="week-stat">
+        <div class="num mono" id="week-stat-num">0/0</div>
+        <div class="lbl">Tasks Cleared</div>
+      </div>
+    </div>
+    <div id="week-list"></div>
+  </main>
+
+  <nav class="bottomnav">
+    <button class="nav-btn active" data-view="today">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M8 12.5l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Today</span>
+    </button>
+    <button class="nav-btn" data-view="week">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 9.5h17" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v3M16 3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>Week</span>
+    </button>
+  </nav>
+</div>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3>Reset This Week</h3>
+    <p>This clears every checked-off task for Monday through Sunday of the current week. Past weeks aren't affected. This can't be undone.</p>
+    <button class="modal-btn danger" id="confirm-reset">Reset This Week</button>
+    <button class="modal-btn ghost" id="cancel-reset">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     CONFIG — the weekly training blueprint, broken into
+     granular per-task checklist items.
+     Keyed by Date.getDay(): 0 = Sunday ... 6 = Saturday
+  ========================================================= */
+  const SCHEDULE = {
+    1: { name: "Monday", tasks: [
+      "Dynamic Warm-up (5-10 mins)",
+      "Upper Body Lift: Push/Pull heavy sets",
+      "Basketball: Form & catch-and-shoot reps",
+      "Recovery: Full-body foam roll (10 mins)",
+      "Recovery: Massage gun on tight spots (10 mins)"
+    ]},
+    2: { name: "Tuesday", tasks: [
+      "Dynamic Warm-up (5-10 mins)",
+      "Vertical Jump Training: Plyometrics & box jumps",
+      "Lower Body Lift: Squats or Deadlifts",
+      "Basketball: Finishing drills (Eurosteps, contact)",
+      "Recovery: Contrast Therapy (Hot & cold cycles)"
+    ]},
+    3: { name: "Wednesday", tasks: [
+      "Dynamic Warm-up (5-10 mins)",
+      "Core Circuit (Planks, Russian twists, leg raises)",
+      "Conditioning: 6-8 x 20-40m max effort sprints",
+      "Conditioning: 15-20 min moderate long-distance run",
+      "Recovery: Deep static stretching & mobility flow"
+    ]},
+    4: { name: "Thursday", tasks: [
+      "Dynamic Warm-up (5-10 mins)",
+      "Upper Body Lift: Accessory & hypertrophy work",
+      "Basketball: Shooting off the dribble & free throws",
+      "Recovery: Hot tub session or Contrast Therapy"
+    ]},
+    5: { name: "Friday", tasks: [
+      "Dynamic Warm-up (5-10 mins)",
+      "Lower Body Lift: Explosive & unilateral work (lunges, step-ups)",
+      "Conditioning: Hill sprints",
+      "Basketball: Advanced finishing (floaters, reverse layups)",
+      "Recovery: Full-body foam roll (10 mins)",
+      "Recovery: Massage gun on tight spots (10 mins)"
+    ]},
+    6: { name: "Saturday", tasks: [
+      "Ball Handling & Activation warm-up",
+      "Basketball: Shooting circuit (game-speed reps)",
+      "Basketball: Defensive slides & closeout drills",
+      "Basketball: Finishing under fatigue",
+      "Recovery: Hot tub session or Contrast Therapy"
+    ]},
+    0: { name: "Sunday", tasks: [
+      "Optional: Light jogging, swimming, or form shooting (15-20 min)",
+      "Recovery: Full-body foam roll",
+      "Recovery: Massage gun on tight spots",
+      "Rest & Hydrate (Gallon of water)"
+    ]}
+  };
+
+  const MONTH_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const RING_CIRCUMFERENCE = 2 * Math.PI * 42; // r=42, matches the SVG circle
+
+  /* =========================================================
+     TASK PARSING — turns a raw task string into a
+     { kicker, title, category } triple used for rendering.
+     category drives the orange (training) / teal (recovery) accent.
+  ========================================================= */
+  function parseTask(raw){
+    const lower = raw.toLowerCase();
+    const category = (lower.startsWith("recovery") || lower.startsWith("rest")) ? "recovery" : "workout";
+
+    const colonIdx = raw.indexOf(":");
+    if(colonIdx !== -1){
+      return { kicker: raw.slice(0, colonIdx).trim(), title: raw.slice(colonIdx+1).trim(), category };
+    }
+    let kicker = "Training";
+    if(lower.startsWith("dynamic warm-up") || lower.startsWith("ball handling")) kicker = "Warm-up";
+    else if(lower.startsWith("rest")) kicker = "Rest";
+    else if(lower.startsWith("optional")) kicker = "Optional";
+    return { kicker, title: raw, category };
+  }
+
+  /* =========================================================
+     DATE UTILITIES
+  ========================================================= */
+  const DateUtils = {
+    toKey(d){
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${day}`;
+    },
+    today(){ return new Date(); },
+    todayKey(){ return this.toKey(this.today()); },
+    weekDates(base){
+      const d = new Date(base);
+      d.setHours(0,0,0,0);
+      const dow = d.getDay();
+      const diffToMonday = (dow === 0) ? -6 : (1 - dow);
+      const monday = new Date(d);
+      monday.setDate(d.getDate() + diffToMonday);
+      const out = [];
+      for(let i=0;i<7;i++){
+        const dt = new Date(monday);
+        dt.setDate(monday.getDate()+i);
+        out.push(dt);
+      }
+      return out;
+    },
+    longLabel(d){ return d.toLocaleDateString("en-US",{ weekday:"long" }); }
+  };
+
+  /* =========================================================
+     STATE — localStorage persistence
+     Shape: { "YYYY-MM-DD": [true, false, true, ...] }
+     Each array index lines up with that weekday's tasks[] order.
+  ========================================================= */
+  const Store = {
+    KEY: "summerGrind.completions.v2",
+    _read(){
+      try{
+        const raw = localStorage.getItem(this.KEY);
+        return raw ? JSON.parse(raw) : {};
+      }catch(e){ return {}; }
+    },
+    _write(data){
+      try{ localStorage.setItem(this.KEY, JSON.stringify(data)); }
+      catch(e){ /* storage unavailable — app still works in-memory for the session */ }
+    },
+    getCompletions(dateKey, taskCount){
+      const data = this._read();
+      const arr = data[dateKey] || [];
+      const out = new Array(taskCount).fill(false);
+      for(let i=0;i<taskCount;i++) out[i] = !!arr[i];
+      return out;
+    },
+    toggleTask(dateKey, index, taskCount){
+      const data = this._read();
+      const arr = data[dateKey] || new Array(taskCount).fill(false);
+      while(arr.length < taskCount) arr.push(false);
+      arr[index] = !arr[index];
+      data[dateKey] = arr;
+      this._write(data);
+      return arr[index];
+    },
+    resetDates(dateKeys){
+      const data = this._read();
+      dateKeys.forEach(k => delete data[k]);
+      this._write(data);
+    }
+  };
+
+  /* =========================================================
+     UI — rendering (kept fully separate from Store/DateUtils)
+  ========================================================= */
+  const checkIcon = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const chevronIcon = `<svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+  const UI = {
+    els: {},
+
+    init(){
+      this.els.todayCards = document.getElementById("today-cards");
+      this.els.ringFrac = document.getElementById("ring-frac");
+      this.els.ringDay = document.getElementById("ring-day");
+      this.els.ringProgress = document.getElementById("ring-progress");
+      this.els.progressFill = document.getElementById("progress-fill");
+      this.els.progressCount = document.getElementById("progress-count");
+      this.els.weekList = document.getElementById("week-list");
+      this.els.weekStatNum = document.getElementById("week-stat-num");
+      this.els.toast = document.getElementById("toast");
+    },
+
+    /** Builds the row markup for a single task. `mini` = compact variant for the week accordion. */
+    taskRowHTML(rawTask, index, checked, dateKey, mini){
+      const { kicker, title, category } = parseTask(rawTask);
+      return `
+        <div class="task-card ${category} ${checked ? "done" : ""} ${mini ? "mini" : ""}"
+             data-index="${index}" data-date="${dateKey}" role="button" tabindex="0" aria-pressed="${checked}">
+          <div class="check ${checked ? "checked" : ""}">${checkIcon}</div>
+          <div class="task-body">
+            <div class="task-kicker">${kicker}</div>
+            <div class="task-title">${title}</div>
+          </div>
+        </div>
+      `;
+    },
+
+    tasksListHTML(dateKey, tasks, completions, mini){
+      return tasks.map((t,i) => this.taskRowHTML(t, i, completions[i], dateKey, mini)).join("");
+    },
+
+    bindTaskRows(container, tasks, onToggle){
+      container.querySelectorAll(".task-card").forEach(card => {
+        const activate = () => {
+          const index = parseInt(card.dataset.index, 10);
+          const dateKey = card.dataset.date;
+          const newVal = Store.toggleTask(dateKey, index, tasks.length);
+          card.classList.toggle("done", newVal);
+          card.querySelector(".check").classList.toggle("checked", newVal);
+          card.setAttribute("aria-pressed", newVal);
+          onToggle && onToggle(newVal, index);
+        };
+        card.addEventListener("click", activate);
+      });
+    },
+
+    renderToday(){
+      const now = DateUtils.today();
+      const dow = now.getDay();
+      const key = DateUtils.todayKey();
+      const plan = SCHEDULE[dow];
+      const completions = Store.getCompletions(key, plan.tasks.length);
+
+      this.els.ringDay.textContent = DateUtils.longLabel(now);
+      this.updateProgress(completions);
+
+      this.els.todayCards.innerHTML = this.tasksListHTML(key, plan.tasks, completions, false);
+      this.bindTaskRows(this.els.todayCards, plan.tasks, (newVal, index) => {
+        const fresh = Store.getCompletions(key, plan.tasks.length);
+        this.updateProgress(fresh);
+        if(newVal){
+          const { category } = parseTask(plan.tasks[index]);
+          this.showToast(category === "recovery" ? "Recovery logged ❄️" : "Task logged 🏀");
+        }
+      });
+    },
+
+    updateProgress(completions){
+      const total = completions.length;
+      const done = completions.filter(Boolean).length;
+      this.els.ringFrac.textContent = `${done}/${total}`;
+      this.els.progressCount.textContent = `${done}/${total} Tasks Completed`;
+      const pct = total ? done/total : 0;
+      this.els.progressFill.style.width = `${pct*100}%`;
+      const offset = RING_CIRCUMFERENCE * (1 - pct);
+      this.els.ringProgress.style.strokeDashoffset = offset;
+    },
+
+    renderWeek(){
+      const todayKey = DateUtils.todayKey();
+      const dates = DateUtils.weekDates(DateUtils.today());
+      let weekDone = 0, weekTotal = 0;
+
+      const rows = dates.map(d => {
+        const dow = d.getDay();
+        const key = DateUtils.toKey(d);
+        const plan = SCHEDULE[dow];
+        const completions = Store.getCompletions(key, plan.tasks.length);
+        const done = completions.filter(Boolean).length;
+        const total = plan.tasks.length;
+        weekDone += done; weekTotal += total;
+        const isToday = key === todayKey;
+        const complete = done === total;
+
+        return `
+          <div class="day-wrap" id="wrap-${key}">
+            <div class="day-row ${isToday ? "today" : ""}" data-date="${key}">
+              <div class="day-badge">
+                <div class="d">${d.getDate()}</div>
+                <div class="m">${MONTH_ABBR[d.getMonth()]}</div>
+              </div>
+              <div class="day-info">
+                <div class="day-name">${plan.name}</div>
+                <div class="day-sub">${total} tasks · ${plan.tasks[0]}</div>
+              </div>
+              <div class="day-frac mono ${complete ? "complete" : ""}">${done}/${total}</div>
+              ${chevronIcon}
+            </div>
+            <div class="day-panel" id="panel-${key}"></div>
+          </div>
+        `;
+      }).join("");
+
+      this.els.weekList.innerHTML = rows;
+      this.els.weekStatNum.textContent = `${weekDone}/${weekTotal}`;
+
+      dates.forEach(d => {
+        const dow = d.getDay();
+        const key = DateUtils.toKey(d);
+        const plan = SCHEDULE[dow];
+        const wrap = document.getElementById(`wrap-${key}`);
+        wrap.querySelector(".day-row").addEventListener("click", () => {
+          const isOpen = wrap.classList.contains("open");
+          document.querySelectorAll(".day-wrap.open").forEach(w => { if(w !== wrap) w.classList.remove("open"); });
+          wrap.classList.toggle("open", !isOpen);
+          const panel = document.getElementById(`panel-${key}`);
+          if(!isOpen && !panel.dataset.built){
+            const completions = Store.getCompletions(key, plan.tasks.length);
+            panel.innerHTML = this.tasksListHTML(key, plan.tasks, completions, true);
+            this.bindTaskRows(panel, plan.tasks, () => {
+              this.renderWeek();
+              if(key === DateUtils.todayKey()) this.renderToday();
+            });
+            panel.dataset.built = "1";
+          }
+        });
+      });
+    },
+
+    showToast(msg){
+      clearTimeout(this._toastTimer);
+      this.els.toast.textContent = msg;
+      this.els.toast.classList.add("show");
+      this._toastTimer = setTimeout(() => this.els.toast.classList.remove("show"), 1600);
+    },
+
+    switchView(view){
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      document.getElementById(`view-${view}`).classList.add("active");
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+      if(view === "week") this.renderWeek();
+      if(view === "today") this.renderToday();
+    },
+
+    openModal(){ document.getElementById("modal").classList.add("open"); },
+    closeModal(){ document.getElementById("modal").classList.remove("open"); }
+  };
+
+  /* =========================================================
+     PWA bootstrap — inline manifest + icon, no external files
+  ========================================================= */
+  function bootstrapPWA(){
+    const iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+      <rect width="192" height="192" rx="40" fill="#0A0D10"/>
+      <circle cx="96" cy="96" r="62" fill="none" stroke="#FF5A2B" stroke-width="10"/>
+      <path d="M96 34v124M34 96h124M52 52c22 20 22 68 0 88M140 52c-22 20-22 68 0 88" stroke="#FF5A2B" stroke-width="6" fill="none"/>
+      <circle cx="96" cy="96" r="62" fill="none" stroke="#22D9C4" stroke-width="4" stroke-dasharray="6 10"/>
+    </svg>`;
+    const iconURI = "data:image/svg+xml," + encodeURIComponent(iconSVG);
+    document.getElementById("apple-icon-link").setAttribute("href", iconURI);
+    document.getElementById("icon-link").setAttribute("href", iconURI);
+
+    const manifest = {
+      name: "Summer Grind — Workout & Recovery Tracker",
+      short_name: "Summer Grind",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#0A0D10",
+      theme_color: "#0A0D10",
+      icons: [{ src: iconURI, sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" }]
+    };
+    const manifestURI = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(manifest));
+    document.getElementById("manifest-link").setAttribute("href", manifestURI);
+  }
+
+  /* =========================================================
+     INIT
+  ========================================================= */
+  function init(){
+    bootstrapPWA();
+    UI.init();
+    UI.renderToday();
+
+    document.querySelectorAll(".nav-btn").forEach(btn => {
+      btn.addEventListener("click", () => UI.switchView(btn.dataset.view));
+    });
+
+    document.getElementById("settings-btn").addEventListener("click", UI.openModal);
+    document.getElementById("cancel-reset").addEventListener("click", UI.closeModal);
+    document.getElementById("modal").addEventListener("click", (e) => {
+      if(e.target.id === "modal") UI.closeModal();
+    });
+    document.getElementById("confirm-reset").addEventListener("click", () => {
+      const keys = DateUtils.weekDates(DateUtils.today()).map(DateUtils.toKey.bind(DateUtils));
+      Store.resetDates(keys);
+      UI.closeModal();
+      UI.renderToday();
+      document.querySelectorAll(".day-panel").forEach(p => { p.innerHTML = ""; delete p.dataset.built; });
+      UI.renderWeek();
+      UI.showToast("Week reset — clean slate 🔄");
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if((e.key === "Enter" || e.key === " ") && document.activeElement.classList.contains("task-card")){
+        e.preventDefault();
+        document.activeElement.click();
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
