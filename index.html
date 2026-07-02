@@ -6,7 +6,7 @@
 <title>Summer Grind</title>
 
 <!-- PWA / home-screen behavior -->
-<meta name="theme-color" content="#0A0D10">
+<meta name="theme-color" content="#0B0810">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,18 +21,19 @@
 
 <style>
   :root{
-    --bg: #0A0D10;
-    --bg-elevated: #12171C;
-    --surface: #161C22;
-    --surface-hi: #1D242B;
-    --border: #232B32;
+    --bg: #0B0810;
+    --bg-elevated: #14101B;
+    --surface: #191320;
+    --surface-hi: #221A2B;
+    --border: #2C2333;
     --text: #F5F3EE;
-    --text-dim: #8B94A0;
-    --text-faint: #565F69;
-    --orange: #FF5A2B;
-    --orange-dim: #4A2A1C;
-    --teal: #22D9C4;
-    --teal-dim: #1B3833;
+    --text-dim: #9791A3;
+    --text-faint: #5F5769;
+    --orange: #FF7A45;
+    --orange-dim: #3D2419;
+    --purple: #9B5DE5;
+    --purple-dim: #2A1F42;
+    --pink: #F0367C;
     --danger: #FF4D5E;
     --radius-lg: 22px;
     --radius-md: 16px;
@@ -58,7 +59,8 @@
     z-index:0;
     pointer-events:none;
     background:
-      radial-gradient(circle at 50% -10%, rgba(255,90,43,0.10), transparent 45%),
+      radial-gradient(circle at 20% -10%, rgba(155,93,229,0.16), transparent 45%),
+      radial-gradient(circle at 90% 5%, rgba(255,122,69,0.12), transparent 50%),
       repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 64px);
   }
 
@@ -72,7 +74,7 @@
   .mono{ font-family: 'JetBrains Mono', monospace; }
 
   button{ font-family: inherit; border:none; background:none; color:inherit; cursor:pointer; }
-  button:focus-visible, [tabindex]:focus-visible{ outline: 2px solid var(--teal); outline-offset: 3px; }
+  button:focus-visible, [tabindex]:focus-visible{ outline: 2px solid var(--purple); outline-offset: 3px; }
 
   #app{
     position: relative;
@@ -92,7 +94,11 @@
     justify-content:space-between;
   }
   .wordmark .jersey{ font-size: 30px; line-height:1; color: var(--text); }
-  .wordmark .jersey em{ font-style:normal; color: var(--orange); }
+  .wordmark .jersey em{
+    font-style:normal;
+    background: linear-gradient(90deg, var(--purple), var(--pink) 55%, var(--orange));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
   .icon-btn{
     width: 42px; height:42px;
     border-radius: 50%;
@@ -139,7 +145,7 @@
   .progress-track{ height:8px; border-radius:100px; background: var(--surface-hi); overflow:hidden; }
   .progress-fill{
     height:100%; border-radius:100px;
-    background: linear-gradient(90deg, var(--orange), var(--teal));
+    background: linear-gradient(90deg, var(--purple), var(--pink), var(--orange));
     width:0%;
     transition: width .35s cubic-bezier(.4,0,.2,1);
   }
@@ -148,7 +154,7 @@
   .legend-item{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-dim); font-weight:600; }
   .legend-dot{ width:9px; height:9px; border-radius:50%; }
   .legend-dot.orange{ background: var(--orange); }
-  .legend-dot.teal{ background: var(--teal); }
+  .legend-dot.purple{ background: var(--purple); }
 
   /* ---------- TASK CARDS ---------- */
   .task-card{
@@ -164,7 +170,7 @@
   }
   .task-card.done{ border-color: var(--card-accent, var(--orange)); background: var(--bg-elevated); }
   .task-card.workout{ --card-accent: var(--orange); }
-  .task-card.recovery{ --card-accent: var(--teal); }
+  .task-card.recovery{ --card-accent: var(--purple); }
 
   .check{
     flex: 0 0 auto;
@@ -176,8 +182,8 @@
     transition: all .18s cubic-bezier(.34,1.56,.64,1);
   }
   .task-card.workout .check.checked{ background: var(--orange); border-color: var(--orange); transform: scale(1.05); }
-  .task-card.recovery .check.checked{ background: var(--teal); border-color: var(--teal); transform: scale(1.05); }
-  .check svg{ width:20px; height:20px; opacity:0; transform: scale(.5); transition: all .18s ease; color:#0A0D10; }
+  .task-card.recovery .check.checked{ background: var(--purple); border-color: var(--purple); transform: scale(1.05); }
+  .check svg{ width:20px; height:20px; opacity:0; transform: scale(.5); transition: all .18s ease; color:#0B0810; }
   .check.checked svg{ opacity:1; transform: scale(1); }
   .task-card:active .check{ transform: scale(0.9); }
 
@@ -191,7 +197,7 @@
   .task-body{ flex:1; min-width:0; }
   .task-kicker{ font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:800; margin-bottom:5px; }
   .task-card.workout .task-kicker{ color: var(--orange); }
-  .task-card.recovery .task-kicker{ color: var(--teal); }
+  .task-card.recovery .task-kicker{ color: var(--purple); }
   .task-title{ font-size:15px; font-weight:700; line-height:1.35; font-family:'Manrope'; color:var(--text); }
   .task-card.done .task-title{ color: var(--text-dim); }
 
@@ -351,8 +357,9 @@
         <svg viewBox="0 0 100 100">
           <defs>
             <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FF5A2B"/>
-              <stop offset="100%" stop-color="#22D9C4"/>
+              <stop offset="0%" stop-color="#9B5DE5"/>
+              <stop offset="55%" stop-color="#F0367C"/>
+              <stop offset="100%" stop-color="#FF7A45"/>
             </linearGradient>
           </defs>
           <circle class="ring-track" cx="50" cy="50" r="42"></circle>
@@ -375,7 +382,7 @@
 
       <div class="legend">
         <div class="legend-item"><span class="legend-dot orange"></span>Training</div>
-        <div class="legend-item"><span class="legend-dot teal"></span>Recovery</div>
+        <div class="legend-item"><span class="legend-dot purple"></span>Recovery</div>
       </div>
     </div>
 
@@ -485,7 +492,7 @@
   /* =========================================================
      TASK PARSING — turns a raw task string into a
      { kicker, title, category } triple used for rendering.
-     category drives the orange (training) / teal (recovery) accent.
+     category drives the orange (training) / purple (recovery) accent.
   ========================================================= */
   function parseTask(raw){
     const lower = raw.toLowerCase();
