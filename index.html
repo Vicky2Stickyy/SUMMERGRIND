@@ -3,799 +3,449 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
-<title>Summer Grind</title>
+<title>Life OS | Level Up</title>
 
-<!-- PWA / home-screen behavior -->
-<meta name="theme-color" content="#0B0810">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Summer Grind">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --bg: #0B0810;
-    --bg-elevated: #14101B;
-    --surface: #191320;
-    --surface-hi: #221A2B;
-    --border: #2C2333;
-    --text: #F5F3EE;
-    --text-dim: #9791A3;
-    --text-faint: #5F5769;
-    --orange: #FF7A45;
-    --orange-dim: #3D2419;
-    --purple: #9B5DE5;
-    --purple-dim: #2A1F42;
-    --pink: #F0367C;
-    --danger: #FF4D5E;
-    --radius-lg: 22px;
+  :root {
+    --bg: #000000;
+    --surface: #0E0E10;
+    --surface-hi: #18181B;
+    --border: #222226;
+    --border-hi: #333338;
+    --text: #F4F4F5;
+    --text-dim: #A1A1AA;
+    --text-faint: #52525B;
+    --primary: #FF4500; /* Aggressive orange for action */
+    --primary-glow: rgba(255, 69, 0, 0.2);
+    --secondary: #6366F1; /* Tech/Magic purple */
+    --success: #10B981;
+    --xp-color: #F59E0B;
+    --radius-lg: 24px;
     --radius-md: 16px;
-    --radius-sm: 12px;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --radius-sm: 10px;
+    --safe-top: env(safe-area-inset-top, 40px);
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
   }
 
-  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body{ height: 100%; }
-  body{
-    margin:0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Manrope', sans-serif;
-    overscroll-behavior-y: none;
-    -webkit-font-smoothing: antialiased;
-  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; width: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; overflow: hidden; }
+  
+  /* Utilities */
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  button { border: none; background: none; color: inherit; cursor: pointer; padding: 0; font-family: inherit; }
+  .glass { background: rgba(14, 14, 16, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 
-  body::before{
-    content:"";
-    position: fixed; inset:0;
-    z-index:0;
-    pointer-events:none;
-    background:
-      radial-gradient(circle at 20% -10%, rgba(155,93,229,0.16), transparent 45%),
-      radial-gradient(circle at 90% 5%, rgba(255,122,69,0.12), transparent 50%),
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 64px);
-  }
+  /* App Shell */
+  #app { display: flex; flex-direction: column; height: 100%; max-width: 500px; margin: 0 auto; position: relative; background: var(--bg); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+  
+  .view { display: none; flex: 1; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 100px); animation: fadeIn 0.3s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  h1,h2,h3, .jersey{
-    font-family: 'Teko', sans-serif;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    margin: 0;
-  }
+  /* Typography */
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px 0; }
+  h2 { font-size: 20px; font-weight: 700; margin: 0 0 16px 0; }
+  h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin: 32px 0 16px 0; }
+  
+  /* --- HOME TAB --- */
+  .header-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; position: relative; overflow: hidden; }
+  .header-card::before { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); z-index: 0; }
+  .header-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-end; }
+  .user-info .rank { font-size: 12px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .level-badge { text-align: right; }
+  .level-badge .num { font-size: 42px; font-weight: 800; line-height: 1; font-family: 'JetBrains Mono'; }
+  .level-badge .lbl { font-size: 12px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
 
-  .mono{ font-family: 'JetBrains Mono', monospace; }
+  .xp-bar-container { width: 100%; height: 8px; background: var(--border); border-radius: 4px; margin-top: 16px; position: relative; z-index: 1; overflow: hidden; }
+  .xp-bar-fill { height: 100%; background: var(--xp-color); border-radius: 4px; width: 65%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--xp-color); }
+  .xp-text { display: flex; justify-content: space-between; font-size: 11px; margin-top: 8px; color: var(--text-dim); font-weight: 600; position: relative; z-index: 1; }
 
-  button{ font-family: inherit; border:none; background:none; color:inherit; cursor:pointer; }
-  button:focus-visible, [tabindex]:focus-visible{ outline: 2px solid var(--purple); outline-offset: 3px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; }
+  .stat-card .val { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono'; color: var(--text); }
+  .stat-card .lbl { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-top: 4px; }
 
-  #app{
-    position: relative;
-    z-index:1;
-    max-width: 520px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display:flex;
-    flex-direction:column;
-  }
+  .mission-card { background: linear-gradient(135deg, var(--surface-hi), var(--surface)); border: 1px solid var(--border-hi); border-radius: var(--radius-md); padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .mission-info h4 { margin: 0; font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .mission-info p { margin: 0; font-size: 16px; font-weight: 700; }
+  .btn-start { background: var(--text); color: var(--bg); font-weight: 800; padding: 12px 20px; border-radius: 100px; font-size: 13px; transition: transform 0.2s; }
+  .btn-start:active { transform: scale(0.95); }
 
-  /* ---------- TOP BAR ---------- */
-  .topbar{
-    padding: calc(18px + var(--safe-top)) 20px 14px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-  }
-  .wordmark .jersey{ font-size: 30px; line-height:1; color: var(--text); }
-  .wordmark .jersey em{
-    font-style:normal;
-    background: linear-gradient(90deg, var(--purple), var(--pink) 55%, var(--orange));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .icon-btn{
-    width: 42px; height:42px;
-    border-radius: 50%;
-    display:flex; align-items:center; justify-content:center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    transition: background .15s ease, transform .15s ease;
-  }
-  .icon-btn:active{ transform: scale(0.92); background: var(--surface-hi); }
+  /* --- QUESTS TAB --- */
+  .category-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 8px; scrollbar-width: none; }
+  .category-scroll::-webkit-scrollbar { display: none; }
+  .chip { background: var(--surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; color: var(--text-dim); white-space: nowrap; transition: all 0.2s; }
+  .chip.active { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-  /* ---------- VIEWS ---------- */
-  .view{ display:none; flex:1; padding: 4px 20px calc(110px + var(--safe-bottom)); animation: fadein .25s ease; }
-  .view.active{ display:block; }
-  @keyframes fadein{ from{ opacity:0; transform: translateY(6px); } to{ opacity:1; transform:none; } }
+  .quest-list { display: flex; flex-direction: column; gap: 12px; }
+  .quest-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: stretch; gap: 16px; transition: all 0.2s; position: relative; overflow: hidden; }
+  .quest-card.completed { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+  .quest-card.completed .quest-title { color: var(--text-dim); text-decoration: line-through; }
+  
+  .quest-check { flex: 0 0 40px; display: flex; justify-content: center; align-items: center; }
+  .check-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border-hi); display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+  .quest-card.completed .check-circle { background: var(--success); border-color: var(--success); }
+  .check-circle svg { width: 14px; height: 14px; color: var(--bg); opacity: 0; transform: scale(0.5); transition: all 0.2s; }
+  .quest-card.completed .check-circle svg { opacity: 1; transform: scale(1); }
 
-  /* ---------- SHOT CLOCK RING ---------- */
-  .clock-wrap{ display:flex; flex-direction:column; align-items:center; padding: 18px 0 6px; }
-  .ring-box{ position:relative; width: 200px; height:200px; }
-  .ring-box svg{ width:100%; height:100%; transform: rotate(-90deg); }
-  .ring-track{ fill:none; stroke: var(--surface-hi); stroke-width:10; }
-  .ring-progress{
-    fill:none; stroke-width:10; stroke-linecap:round;
-    stroke: url(#ring-gradient);
-    transition: stroke-dashoffset .35s cubic-bezier(.4,0,.2,1);
-  }
-  .ring-center{
-    position:absolute; inset:0;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center;
-  }
-  .ring-frac{ font-size: 46px; line-height:1; font-weight:600; letter-spacing:1px; }
-  .ring-label{ font-size:10px; letter-spacing:2px; color:var(--text-faint); text-transform:uppercase; margin-top:6px; font-weight:700; }
-  .ring-day{ font-size: 15px; color: var(--text-dim); margin-top:4px; }
+  .quest-details { flex: 1; }
+  .quest-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; transition: color 0.2s; }
+  .quest-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-faint); font-weight: 600; }
+  .quest-xp { color: var(--xp-color); font-family: 'JetBrains Mono'; }
 
-  /* ---------- LINEAR PROGRESS BAR ---------- */
-  .progress-bar-wrap{ width:100%; max-width:340px; margin: 14px auto 4px; }
-  .progress-bar-label{
-    display:flex; justify-content:space-between; align-items:baseline;
-    font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-dim);
-    margin-bottom:7px;
-  }
-  .progress-bar-label span.count{ font-family:'JetBrains Mono'; color: var(--text); font-size:12px; letter-spacing:0; }
-  .progress-track{ height:8px; border-radius:100px; background: var(--surface-hi); overflow:hidden; }
-  .progress-fill{
-    height:100%; border-radius:100px;
-    background: linear-gradient(90deg, var(--purple), var(--pink), var(--orange));
-    width:0%;
-    transition: width .35s cubic-bezier(.4,0,.2,1);
-  }
+  /* --- CHARACTER TAB --- */
+  .avatar-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; }
+  .avatar-ring { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--secondary), var(--primary), var(--secondary)); display: flex; justify-content: center; align-items: center; margin-bottom: 16px; box-shadow: 0 0 30px rgba(99, 102, 241, 0.2); }
+  .avatar-inner { width: 112px; height: 112px; border-radius: 50%; background: var(--surface-hi); display: flex; justify-content: center; align-items: center; font-size: 40px; border: 4px solid var(--bg); }
+  
+  .attribute-list { display: flex; flex-direction: column; gap: 16px; }
+  .attr-row { display: flex; align-items: center; gap: 16px; }
+  .attr-name { flex: 0 0 80px; font-size: 13px; font-weight: 700; color: var(--text-dim); }
+  .attr-bar-bg { flex: 1; height: 6px; background: var(--surface-hi); border-radius: 3px; overflow: hidden; }
+  .attr-bar-fill { height: 100%; border-radius: 3px; }
+  .attr-val { flex: 0 0 30px; text-align: right; font-size: 13px; font-weight: 800; font-family: 'JetBrains Mono'; }
 
-  .legend{ display:flex; gap:22px; margin-top:16px; justify-content:center; }
-  .legend-item{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--text-dim); font-weight:600; }
-  .legend-dot{ width:9px; height:9px; border-radius:50%; }
-  .legend-dot.orange{ background: var(--orange); }
-  .legend-dot.purple{ background: var(--purple); }
+  /* --- PROGRESS TAB --- */
+  .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; }
+  .github-grid { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; margin-top: 16px; }
+  .gh-cell { aspect-ratio: 1; background: var(--surface-hi); border-radius: 2px; }
+  .gh-cell.lvl-1 { background: rgba(16, 185, 129, 0.3); }
+  .gh-cell.lvl-2 { background: rgba(16, 185, 129, 0.6); }
+  .gh-cell.lvl-3 { background: rgba(16, 185, 129, 1); }
 
-  /* ---------- TASK CARDS ---------- */
-  .task-card{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 15px 16px;
-    margin-top: 10px;
-    display:flex;
-    gap: 13px;
-    align-items:flex-start;
-    transition: border-color .2s ease, background .2s ease;
-  }
-  .task-card.done{ border-color: var(--card-accent, var(--orange)); background: var(--bg-elevated); }
-  .task-card.workout{ --card-accent: var(--orange); }
-  .task-card.recovery{ --card-accent: var(--purple); }
+  /* --- SETTINGS TAB --- */
+  .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-label { font-size: 15px; font-weight: 600; }
+  .toggle { width: 44px; height: 24px; background: var(--surface-hi); border-radius: 12px; position: relative; transition: 0.3s; }
+  .toggle.on { background: var(--success); }
+  .toggle-knob { width: 20px; height: 20px; background: var(--text); border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
+  .toggle.on .toggle-knob { transform: translateX(20px); }
 
-  .check{
-    flex: 0 0 auto;
-    width: 44px; height:44px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    background: var(--bg-elevated);
-    transition: all .18s cubic-bezier(.34,1.56,.64,1);
-  }
-  .task-card.workout .check.checked{ background: var(--orange); border-color: var(--orange); transform: scale(1.05); }
-  .task-card.recovery .check.checked{ background: var(--purple); border-color: var(--purple); transform: scale(1.05); }
-  .check svg{ width:20px; height:20px; opacity:0; transform: scale(.5); transition: all .18s ease; color:#0B0810; }
-  .check.checked svg{ opacity:1; transform: scale(1); }
-  .task-card:active .check{ transform: scale(0.9); }
+  /* --- BOTTOM NAV --- */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; height: calc(70px + var(--safe-bottom)); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding-bottom: var(--safe-bottom); z-index: 100; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-faint); transition: color 0.2s; }
+  .nav-item.active { color: var(--text); }
+  .nav-item svg { width: 24px; height: 24px; }
+  .nav-label { font-size: 10px; font-weight: 700; }
+  
+  /* Floating XP UI */
+  .floating-xp { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--xp-color); font-weight: 800; font-size: 24px; font-family: 'JetBrains Mono'; text-shadow: 0 0 20px rgba(245, 158, 11, 0.5); opacity: 0; pointer-events: none; z-index: 999; }
+  @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 0); } 20% { opacity: 1; transform: translate(-50%, -20px); } 80% { opacity: 1; transform: translate(-50%, -40px); } 100% { opacity: 0; transform: translate(-50%, -60px); } }
 
-  /* compact variant used inside week-view accordions */
-  .task-card.mini{ padding: 11px 13px; margin-top:8px; gap:11px; border-radius: var(--radius-sm); }
-  .task-card.mini .check{ width:34px; height:34px; }
-  .task-card.mini .check svg{ width:16px; height:16px; }
-  .task-card.mini .task-title{ font-size:13.5px; }
-  .task-card.mini .task-kicker{ font-size:9px; margin-bottom:3px; }
-
-  .task-body{ flex:1; min-width:0; }
-  .task-kicker{ font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:800; margin-bottom:5px; }
-  .task-card.workout .task-kicker{ color: var(--orange); }
-  .task-card.recovery .task-kicker{ color: var(--purple); }
-  .task-title{ font-size:15px; font-weight:700; line-height:1.35; font-family:'Manrope'; color:var(--text); }
-  .task-card.done .task-title{ color: var(--text-dim); }
-
-  .section-label{
-    font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint);
-    font-weight:800; margin: 22px 2px 0;
-  }
-
-  /* ---------- WEEK VIEW ---------- */
-  .week-header{ padding-top:6px; display:flex; align-items:flex-end; justify-content:space-between; }
-  .week-header h2{ font-size:30px; }
-  .week-stat{ text-align:right; }
-  .week-stat .num{ font-size:20px; font-weight:700; color:var(--orange); font-family:'JetBrains Mono'; }
-  .week-stat .lbl{ font-size:9px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase; font-weight:700; }
-
-  .day-wrap{ margin-top: 10px; }
-  .day-row{
-    background: var(--surface);
-    border:1px solid var(--border);
-    border-radius: var(--radius-md);
-    padding: 13px 15px;
-    display:flex;
-    align-items:center;
-    gap:13px;
-    transition: border-color .15s ease;
-  }
-  .day-wrap.open .day-row{ border-bottom-left-radius:0; border-bottom-right-radius:0; }
-  .day-row.today{ border-color: var(--orange); box-shadow: 0 0 0 1px var(--orange) inset; }
-  .day-badge{
-    flex:0 0 auto;
-    width:44px; height:44px;
-    border-radius: var(--radius-sm);
-    background: var(--bg-elevated);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-family:'Teko'; line-height:1;
-  }
-  .day-badge .d{ font-size:19px; font-weight:700; }
-  .day-badge .m{ font-size:9px; color:var(--text-faint); letter-spacing:1px; margin-top:2px; }
-  .day-row.today .day-badge{ background: var(--orange-dim); }
-  .day-row.today .day-badge .d{ color: var(--orange); }
-
-  .day-info{ flex:1; min-width:0; }
-  .day-name{ font-size:15px; font-weight:700; }
-  .day-sub{ font-size:11.5px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-
-  .day-frac{
-    flex:0 0 auto;
-    font-family:'JetBrains Mono'; font-size:12px; font-weight:600;
-    padding: 7px 10px;
-    border-radius: 100px;
-    background: var(--bg-elevated);
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    transition: all .15s ease;
-  }
-  .day-frac.complete{ background: var(--orange-dim); color: var(--orange); border-color: var(--orange); }
-  .chevron{ flex:0 0 auto; width:16px; height:16px; color: var(--text-faint); transition: transform .2s ease; }
-  .day-wrap.open .chevron{ transform: rotate(180deg); }
-
-  .day-panel{
-    display:none;
-    background: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-top:none;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    padding: 4px 12px 12px;
-  }
-  .day-wrap.open .day-panel{ display:block; }
-
-  /* ---------- BOTTOM NAV ---------- */
-  .bottomnav{
-    position: fixed; left:0; right:0; bottom:0;
-    z-index: 5;
-    max-width: 520px; margin: 0 auto;
-    display:flex;
-    background: rgba(18,23,28,0.92);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-top: 1px solid var(--border);
-    padding: 10px 16px calc(14px + var(--safe-bottom));
-    gap: 8px;
-  }
-  .nav-btn{
-    flex:1;
-    display:flex; flex-direction:column; align-items:center; gap:5px;
-    padding: 8px 0 6px;
-    border-radius: var(--radius-sm);
-    color: var(--text-faint);
-    transition: color .15s ease, background .15s ease;
-  }
-  .nav-btn svg{ width:22px; height:22px; }
-  .nav-btn span{ font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
-  .nav-btn.active{ color: var(--orange); background: var(--orange-dim); }
-
-  /* ---------- MODAL ---------- */
-  .modal-backdrop{
-    position:fixed; inset:0; z-index:20;
-    background: rgba(5,7,9,0.7);
-    display:flex; align-items:flex-end; justify-content:center;
-    opacity:0; pointer-events:none;
-    transition: opacity .2s ease;
-  }
-  .modal-backdrop.open{ opacity:1; pointer-events:auto; }
-  .modal-sheet{
-    width:100%; max-width:520px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-bottom:none;
-    border-radius: 24px 24px 0 0;
-    padding: 10px 22px calc(28px + var(--safe-bottom));
-    transform: translateY(100%);
-    transition: transform .25s cubic-bezier(.32,.72,0,1);
-  }
-  .modal-backdrop.open .modal-sheet{ transform: translateY(0); }
-  .modal-handle{ width:36px; height:4px; border-radius:2px; background:var(--border); margin: 8px auto 18px; }
-  .modal-sheet h3{ font-size:22px; margin-bottom:6px; }
-  .modal-sheet p{ font-size:13px; color:var(--text-dim); line-height:1.6; margin:0 0 20px; }
-  .modal-btn{
-    width:100%; padding:16px; border-radius: var(--radius-sm);
-    font-weight:800; font-size:14px; letter-spacing:0.5px; text-align:center;
-    margin-top:10px;
-  }
-  .modal-btn.danger{ background: var(--danger); color:#1a0507; }
-  .modal-btn.ghost{ background: var(--surface-hi); color: var(--text-dim); }
-  .modal-btn:active{ transform: scale(0.98); }
-
-  .toast{
-    position: fixed; left:50%; bottom: 110px; transform: translateX(-50%) translateY(10px);
-    background: var(--surface-hi); border:1px solid var(--border);
-    color: var(--text); font-size:13px; font-weight:600;
-    padding: 12px 18px; border-radius: 100px;
-    opacity:0; pointer-events:none; transition: all .25s ease;
-    z-index: 25; white-space:nowrap;
-  }
-  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
-
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-  }
 </style>
 </head>
 <body>
 
 <div id="app">
 
-  <header class="topbar">
-    <div class="wordmark"><h1 class="jersey">SUMMER<em>GRIND</em></h1></div>
-    <button class="icon-btn" id="settings-btn" aria-label="Settings">
-      <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13.5c.06-.5.1-1 .1-1.5s-.04-1-.1-1.5l2.02-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.38.96a7.1 7.1 0 00-1.3-.75l-.36-2.53a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.53c-.47.2-.9.45-1.3.75l-2.38-.96a.5.5 0 00-.6.22L3.6 8.78a.5.5 0 00.12.64L5.74 11c-.06.5-.1 1-.1 1.5s.04 1 .1 1.5l-2.02 1.58a.5.5 0 00-.12.64l1.92 3.32c.14.24.42.32.6.22l2.38-.96c.4.3.83.55 1.3.75l.36 2.53c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.53c.47-.2.9-.45 1.3-.75l2.38.96c.24.1.5 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64L19.4 13.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-    </button>
-  </header>
-
-  <!-- TODAY VIEW -->
-  <main class="view active" id="view-today">
-    <div class="clock-wrap">
-      <div class="ring-box">
-        <svg viewBox="0 0 100 100">
-          <defs>
-            <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#9B5DE5"/>
-              <stop offset="55%" stop-color="#F0367C"/>
-              <stop offset="100%" stop-color="#FF7A45"/>
-            </linearGradient>
-          </defs>
-          <circle class="ring-track" cx="50" cy="50" r="42"></circle>
-          <circle id="ring-progress" class="ring-progress" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9"></circle>
-        </svg>
-        <div class="ring-center">
-          <div class="ring-frac mono" id="ring-frac">0/0</div>
-          <div class="ring-label">Grinded Today</div>
-          <div class="ring-day" id="ring-day">Monday</div>
+  <div class="view active" id="view-home">
+    <div class="header-card">
+      <div class="header-content">
+        <div class="user-info">
+          <h1>Good morning.</h1>
+          <div class="rank">Rank: Architect</div>
+        </div>
+        <div class="level-badge">
+          <div class="num">14</div>
+          <div class="lbl">Level</div>
         </div>
       </div>
-
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-label">
-          <span>Today's Progress</span>
-          <span class="count" id="progress-count">0/0 Tasks Completed</span>
-        </div>
-        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="xp-bar-container">
+        <div class="xp-bar-fill" id="home-xp-fill"></div>
       </div>
-
-      <div class="legend">
-        <div class="legend-item"><span class="legend-dot orange"></span>Training</div>
-        <div class="legend-item"><span class="legend-dot purple"></span>Recovery</div>
+      <div class="xp-text">
+        <span>XP: 2,450</span>
+        <span>Next: 3,000</span>
       </div>
     </div>
 
-    <div class="section-label">Today's Blueprint</div>
-    <div id="today-cards"></div>
-  </main>
+    <div class="mission-card">
+      <div class="mission-info">
+        <h4>Current Priority</h4>
+        <p>Architect p5.js Game Engine Structure</p>
+      </div>
+      <button class="btn-start">Start</button>
+    </div>
 
-  <!-- WEEK VIEW -->
-  <main class="view" id="view-week">
-    <div class="week-header">
-      <h2>The Week</h2>
-      <div class="week-stat">
-        <div class="num mono" id="week-stat-num">0/0</div>
-        <div class="lbl">Tasks Cleared</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="val" id="stat-xp">350</div>
+        <div class="lbl">XP Gained Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="val">12</div>
+        <div class="lbl">Day Streak 🔥</div>
+      </div>
+      <div class="stat-card">
+        <div class="val">7.5h</div>
+        <div class="lbl">Sleep Logged</div>
+      </div>
+      <div class="stat-card">
+        <div class="val">4/7</div>
+        <div class="lbl">Quests Cleared</div>
       </div>
     </div>
-    <div id="week-list"></div>
-  </main>
+    
+    <h3>Today's Timeline</h3>
+    <div class="quest-list" id="home-timeline">
+      </div>
+  </div>
 
-  <nav class="bottomnav">
-    <button class="nav-btn active" data-view="today">
-      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M8 12.5l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Today</span>
+  <div class="view" id="view-quests">
+    <h2>Quest Board</h2>
+    <div class="category-scroll">
+      <div class="chip active">All</div>
+      <div class="chip">Basketball</div>
+      <div class="chip">Coding</div>
+      <div class="chip">Fitness</div>
+      <div class="chip">Faith</div>
+    </div>
+    
+    <div class="quest-list" id="full-quest-list">
+      </div>
+  </div>
+
+  <div class="view" id="view-character">
+    <div class="avatar-section">
+      <div class="avatar-ring">
+        <div class="avatar-inner">🐺</div>
+      </div>
+      <h2>Player One</h2>
+      <div style="color: var(--primary); font-weight: 800; font-size: 14px; letter-spacing: 1px;">LVL 14 · ARCHITECT</div>
+    </div>
+
+    <h3>Attributes</h3>
+    <div class="attribute-list">
+      <div class="attr-row">
+        <div class="attr-name">Discipline</div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 80%; background: var(--primary);"></div></div>
+        <div class="attr-val">24</div>
+      </div>
+      <div class="attr-row">
+        <div class="attr-name">Athleticism</div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 65%; background: var(--secondary);"></div></div>
+        <div class="attr-val">18</div>
+      </div>
+      <div class="attr-row">
+        <div class="attr-name">Knowledge</div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 90%; background: #0EA5E9;"></div></div>
+        <div class="attr-val">29</div>
+      </div>
+      <div class="attr-row">
+        <div class="attr-name">Faith</div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 50%; background: #F59E0B;"></div></div>
+        <div class="attr-val">14</div>
+      </div>
+      <div class="attr-row">
+        <div class="attr-name">Recovery</div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 35%; background: #10B981;"></div></div>
+        <div class="attr-val">9</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-progress">
+    <h2>Analytics</h2>
+    
+    <div class="chart-card">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="font-weight: 700;">Consistency Matrix</span>
+        <span class="mono" style="color: var(--text-dim); font-size: 12px;">Last 28 Days</span>
+      </div>
+      <div class="github-grid" id="gh-grid"></div>
+    </div>
+
+    <div class="chart-card">
+      <div style="font-weight: 700; margin-bottom: 16px;">Weekly XP Output</div>
+      <div style="height: 120px; display: flex; align-items: flex-end; gap: 8px; border-bottom: 1px solid var(--border);">
+        <div style="flex:1; background: var(--border-hi); height: 40%; border-radius: 4px 4px 0 0;"></div>
+        <div style="flex:1; background: var(--border-hi); height: 60%; border-radius: 4px 4px 0 0;"></div>
+        <div style="flex:1; background: var(--border-hi); height: 50%; border-radius: 4px 4px 0 0;"></div>
+        <div style="flex:1; background: var(--border-hi); height: 90%; border-radius: 4px 4px 0 0;"></div>
+        <div style="flex:1; background: var(--primary); height: 75%; border-radius: 4px 4px 0 0; box-shadow: 0 0 10px rgba(255,69,0,0.3);"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: var(--text-dim); font-weight: 700;">
+        <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-settings">
+    <h2>System Configuration</h2>
+    
+    <div class="chart-card" style="margin-top: 24px;">
+      <div class="setting-row">
+        <span class="setting-label">Haptic Feedback</span>
+        <div class="toggle on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">OLED Black Theme</span>
+        <div class="toggle on"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Push Notifications</span>
+        <div class="toggle"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Cloud Sync</span>
+        <div class="toggle on"><div class="toggle-knob"></div></div>
+      </div>
+    </div>
+    
+    <button style="width: 100%; padding: 16px; background: var(--surface-hi); border-radius: var(--radius-md); font-weight: 700; color: var(--text); margin-top: 16px; border: 1px solid var(--border);">Export JSON Data</button>
+  </div>
+
+  <nav class="bottom-nav glass">
+    <button class="nav-item active" data-target="home">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+      <span class="nav-label">HOME</span>
     </button>
-    <button class="nav-btn" data-view="week">
-      <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4.5" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 9.5h17" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v3M16 3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span>Week</span>
+    <button class="nav-item" data-target="quests">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+      <span class="nav-label">QUESTS</span>
+    </button>
+    <button class="nav-item" data-target="character">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+      <span class="nav-label">CHAR</span>
+    </button>
+    <button class="nav-item" data-target="progress">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+      <span class="nav-label">DATA</span>
+    </button>
+    <button class="nav-item" data-target="settings">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+      <span class="nav-label">SYS</span>
     </button>
   </nav>
+  
+  <div class="floating-xp" id="xp-flyout">+50 XP</div>
 </div>
-
-<div class="modal-backdrop" id="modal">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <h3>Reset This Week</h3>
-    <p>This clears every checked-off task for Monday through Sunday of the current week. Past weeks aren't affected. This can't be undone.</p>
-    <button class="modal-btn danger" id="confirm-reset">Reset This Week</button>
-    <button class="modal-btn ghost" id="cancel-reset">Cancel</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-(function(){
-  "use strict";
+  // DEFAULT DATA - Mixing realistic physical, technical, and habit quests
+  const quests = [
+    { id: 1, title: "Film Study: LeBron James Playmaking", category: "Basketball", xp: 150, time: "30m", completed: false },
+    { id: 2, title: "Architect p5.js Game Engine Structure", category: "Coding", xp: 300, time: "90m", completed: false },
+    { id: 3, title: "Refactor Windows Forms .NET logic", category: "Coding", xp: 200, time: "45m", completed: false },
+    { id: 4, title: "Upper Body Strength Protocol", category: "Fitness", xp: 125, time: "60m", completed: false },
+    { id: 5, title: "Contrast Therapy (Hot/Cold)", category: "Fitness", xp: 50, time: "20m", completed: false },
+    { id: 6, title: "Read Chapter: Romans 8", category: "Faith", xp: 50, time: "15m", completed: false },
+    { id: 7, title: "Group Project Sync / Architecture Review", category: "School", xp: 100, time: "30m", completed: false }
+  ];
 
-  /* =========================================================
-     CONFIG — the weekly training blueprint, broken into
-     granular per-task checklist items.
-     Keyed by Date.getDay(): 0 = Sunday ... 6 = Saturday
-  ========================================================= */
-  const SCHEDULE = {
-    1: { name: "Monday", tasks: [
-      "Dynamic Warm-up (5-10 mins)",
-      "Upper Body Lift: Push/Pull heavy sets",
-      "Basketball: Form & catch-and-shoot reps",
-      "Recovery: Full-body foam roll (10 mins)",
-      "Recovery: Massage gun on tight spots (10 mins)"
-    ]},
-    2: { name: "Tuesday", tasks: [
-      "Dynamic Warm-up (5-10 mins)",
-      "Vertical Jump Training: Plyometrics & box jumps",
-      "Lower Body Lift: Squats or Deadlifts",
-      "Basketball: Finishing drills (Eurosteps, contact)",
-      "Recovery: Contrast Therapy (Hot & cold cycles)"
-    ]},
-    3: { name: "Wednesday", tasks: [
-      "Dynamic Warm-up (5-10 mins)",
-      "Core Circuit (Planks, Russian twists, leg raises)",
-      "Conditioning: 6-8 x 20-40m max effort sprints",
-      "Conditioning: 15-20 min moderate long-distance run",
-      "Recovery: Deep static stretching & mobility flow"
-    ]},
-    4: { name: "Thursday", tasks: [
-      "Dynamic Warm-up (5-10 mins)",
-      "Upper Body Lift: Accessory & hypertrophy work",
-      "Basketball: Shooting off the dribble & free throws",
-      "Recovery: Hot tub session or Contrast Therapy"
-    ]},
-    5: { name: "Friday", tasks: [
-      "Dynamic Warm-up (5-10 mins)",
-      "Lower Body Lift: Explosive & unilateral work (lunges, step-ups)",
-      "Conditioning: Hill sprints",
-      "Basketball: Advanced finishing (floaters, reverse layups)",
-      "Recovery: Full-body foam roll (10 mins)",
-      "Recovery: Massage gun on tight spots (10 mins)"
-    ]},
-    6: { name: "Saturday", tasks: [
-      "Ball Handling & Activation warm-up",
-      "Basketball: Shooting circuit (game-speed reps)",
-      "Basketball: Defensive slides & closeout drills",
-      "Basketball: Finishing under fatigue",
-      "Recovery: Hot tub session or Contrast Therapy"
-    ]},
-    0: { name: "Sunday", tasks: [
-      "Optional: Light jogging, swimming, or form shooting (15-20 min)",
-      "Recovery: Full-body foam roll",
-      "Recovery: Massage gun on tight spots",
-      "Rest & Hydrate (Gallon of water)"
-    ]}
-  };
+  let currentXP = 2450;
+  let dailyXPGained = 350;
 
-  const MONTH_ABBR = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const RING_CIRCUMFERENCE = 2 * Math.PI * 42; // r=42, matches the SVG circle
-
-  /* =========================================================
-     TASK PARSING — turns a raw task string into a
-     { kicker, title, category } triple used for rendering.
-     category drives the orange (training) / purple (recovery) accent.
-  ========================================================= */
-  function parseTask(raw){
-    const lower = raw.toLowerCase();
-    const category = (lower.startsWith("recovery") || lower.startsWith("rest")) ? "recovery" : "workout";
-
-    const colonIdx = raw.indexOf(":");
-    if(colonIdx !== -1){
-      return { kicker: raw.slice(0, colonIdx).trim(), title: raw.slice(colonIdx+1).trim(), category };
-    }
-    let kicker = "Training";
-    if(lower.startsWith("dynamic warm-up") || lower.startsWith("ball handling")) kicker = "Warm-up";
-    else if(lower.startsWith("rest")) kicker = "Rest";
-    else if(lower.startsWith("optional")) kicker = "Optional";
-    return { kicker, title: raw, category };
-  }
-
-  /* =========================================================
-     DATE UTILITIES
-  ========================================================= */
-  const DateUtils = {
-    toKey(d){
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const day = String(d.getDate()).padStart(2,"0");
-      return `${y}-${m}-${day}`;
-    },
-    today(){ return new Date(); },
-    todayKey(){ return this.toKey(this.today()); },
-    weekDates(base){
-      const d = new Date(base);
-      d.setHours(0,0,0,0);
-      const dow = d.getDay();
-      const diffToMonday = (dow === 0) ? -6 : (1 - dow);
-      const monday = new Date(d);
-      monday.setDate(d.getDate() + diffToMonday);
-      const out = [];
-      for(let i=0;i<7;i++){
-        const dt = new Date(monday);
-        dt.setDate(monday.getDate()+i);
-        out.push(dt);
-      }
-      return out;
-    },
-    longLabel(d){ return d.toLocaleDateString("en-US",{ weekday:"long" }); }
-  };
-
-  /* =========================================================
-     STATE — localStorage persistence
-     Shape: { "YYYY-MM-DD": [true, false, true, ...] }
-     Each array index lines up with that weekday's tasks[] order.
-  ========================================================= */
-  const Store = {
-    KEY: "summerGrind.completions.v2",
-    _read(){
-      try{
-        const raw = localStorage.getItem(this.KEY);
-        return raw ? JSON.parse(raw) : {};
-      }catch(e){ return {}; }
-    },
-    _write(data){
-      try{ localStorage.setItem(this.KEY, JSON.stringify(data)); }
-      catch(e){ /* storage unavailable — app still works in-memory for the session */ }
-    },
-    getCompletions(dateKey, taskCount){
-      const data = this._read();
-      const arr = data[dateKey] || [];
-      const out = new Array(taskCount).fill(false);
-      for(let i=0;i<taskCount;i++) out[i] = !!arr[i];
-      return out;
-    },
-    toggleTask(dateKey, index, taskCount){
-      const data = this._read();
-      const arr = data[dateKey] || new Array(taskCount).fill(false);
-      while(arr.length < taskCount) arr.push(false);
-      arr[index] = !arr[index];
-      data[dateKey] = arr;
-      this._write(data);
-      return arr[index];
-    },
-    resetDates(dateKeys){
-      const data = this._read();
-      dateKeys.forEach(k => delete data[k]);
-      this._write(data);
-    }
-  };
-
-  /* =========================================================
-     UI — rendering (kept fully separate from Store/DateUtils)
-  ========================================================= */
-  const checkIcon = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const chevronIcon = `<svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
-  const UI = {
-    els: {},
-
-    init(){
-      this.els.todayCards = document.getElementById("today-cards");
-      this.els.ringFrac = document.getElementById("ring-frac");
-      this.els.ringDay = document.getElementById("ring-day");
-      this.els.ringProgress = document.getElementById("ring-progress");
-      this.els.progressFill = document.getElementById("progress-fill");
-      this.els.progressCount = document.getElementById("progress-count");
-      this.els.weekList = document.getElementById("week-list");
-      this.els.weekStatNum = document.getElementById("week-stat-num");
-      this.els.toast = document.getElementById("toast");
-    },
-
-    /** Builds the row markup for a single task. `mini` = compact variant for the week accordion. */
-    taskRowHTML(rawTask, index, checked, dateKey, mini){
-      const { kicker, title, category } = parseTask(rawTask);
-      return `
-        <div class="task-card ${category} ${checked ? "done" : ""} ${mini ? "mini" : ""}"
-             data-index="${index}" data-date="${dateKey}" role="button" tabindex="0" aria-pressed="${checked}">
-          <div class="check ${checked ? "checked" : ""}">${checkIcon}</div>
-          <div class="task-body">
-            <div class="task-kicker">${kicker}</div>
-            <div class="task-title">${title}</div>
-          </div>
-        </div>
-      `;
-    },
-
-    tasksListHTML(dateKey, tasks, completions, mini){
-      return tasks.map((t,i) => this.taskRowHTML(t, i, completions[i], dateKey, mini)).join("");
-    },
-
-    bindTaskRows(container, tasks, onToggle){
-      container.querySelectorAll(".task-card").forEach(card => {
-        const activate = () => {
-          const index = parseInt(card.dataset.index, 10);
-          const dateKey = card.dataset.date;
-          const newVal = Store.toggleTask(dateKey, index, tasks.length);
-          card.classList.toggle("done", newVal);
-          card.querySelector(".check").classList.toggle("checked", newVal);
-          card.setAttribute("aria-pressed", newVal);
-          onToggle && onToggle(newVal, index);
-        };
-        card.addEventListener("click", activate);
-      });
-    },
-
-    renderToday(){
-      const now = DateUtils.today();
-      const dow = now.getDay();
-      const key = DateUtils.todayKey();
-      const plan = SCHEDULE[dow];
-      const completions = Store.getCompletions(key, plan.tasks.length);
-
-      this.els.ringDay.textContent = DateUtils.longLabel(now);
-      this.updateProgress(completions);
-
-      this.els.todayCards.innerHTML = this.tasksListHTML(key, plan.tasks, completions, false);
-      this.bindTaskRows(this.els.todayCards, plan.tasks, (newVal, index) => {
-        const fresh = Store.getCompletions(key, plan.tasks.length);
-        this.updateProgress(fresh);
-        if(newVal){
-          const { category } = parseTask(plan.tasks[index]);
-          this.showToast(category === "recovery" ? "Recovery logged ❄️" : "Task logged 🏀");
-        }
-      });
-    },
-
-    updateProgress(completions){
-      const total = completions.length;
-      const done = completions.filter(Boolean).length;
-      this.els.ringFrac.textContent = `${done}/${total}`;
-      this.els.progressCount.textContent = `${done}/${total} Tasks Completed`;
-      const pct = total ? done/total : 0;
-      this.els.progressFill.style.width = `${pct*100}%`;
-      const offset = RING_CIRCUMFERENCE * (1 - pct);
-      this.els.ringProgress.style.strokeDashoffset = offset;
-    },
-
-    renderWeek(){
-      const todayKey = DateUtils.todayKey();
-      const dates = DateUtils.weekDates(DateUtils.today());
-      let weekDone = 0, weekTotal = 0;
-
-      const rows = dates.map(d => {
-        const dow = d.getDay();
-        const key = DateUtils.toKey(d);
-        const plan = SCHEDULE[dow];
-        const completions = Store.getCompletions(key, plan.tasks.length);
-        const done = completions.filter(Boolean).length;
-        const total = plan.tasks.length;
-        weekDone += done; weekTotal += total;
-        const isToday = key === todayKey;
-        const complete = done === total;
-
-        return `
-          <div class="day-wrap" id="wrap-${key}">
-            <div class="day-row ${isToday ? "today" : ""}" data-date="${key}">
-              <div class="day-badge">
-                <div class="d">${d.getDate()}</div>
-                <div class="m">${MONTH_ABBR[d.getMonth()]}</div>
-              </div>
-              <div class="day-info">
-                <div class="day-name">${plan.name}</div>
-                <div class="day-sub">${total} tasks · ${plan.tasks[0]}</div>
-              </div>
-              <div class="day-frac mono ${complete ? "complete" : ""}">${done}/${total}</div>
-              ${chevronIcon}
+  // Render Quests function
+  function renderQuests() {
+    const renderList = (containerId, limit = null) => {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      const toRender = limit ? quests.slice(0, limit) : quests;
+      
+      toRender.forEach(q => {
+        const div = document.createElement('div');
+        div.className = `quest-card ${q.completed ? 'completed' : ''}`;
+        div.innerHTML = `
+          <button class="quest-check" onclick="toggleQuest(${q.id}, this)">
+            <div class="check-circle">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <div class="day-panel" id="panel-${key}"></div>
+          </button>
+          <div class="quest-details">
+            <div class="quest-title">${q.title}</div>
+            <div class="quest-meta">
+              <span>${q.category}</span> • <span>${q.time}</span> • <span class="quest-xp">+${q.xp} XP</span>
+            </div>
           </div>
         `;
-      }).join("");
-
-      this.els.weekList.innerHTML = rows;
-      this.els.weekStatNum.textContent = `${weekDone}/${weekTotal}`;
-
-      dates.forEach(d => {
-        const dow = d.getDay();
-        const key = DateUtils.toKey(d);
-        const plan = SCHEDULE[dow];
-        const wrap = document.getElementById(`wrap-${key}`);
-        wrap.querySelector(".day-row").addEventListener("click", () => {
-          const isOpen = wrap.classList.contains("open");
-          document.querySelectorAll(".day-wrap.open").forEach(w => { if(w !== wrap) w.classList.remove("open"); });
-          wrap.classList.toggle("open", !isOpen);
-          const panel = document.getElementById(`panel-${key}`);
-          if(!isOpen && !panel.dataset.built){
-            const completions = Store.getCompletions(key, plan.tasks.length);
-            panel.innerHTML = this.tasksListHTML(key, plan.tasks, completions, true);
-            this.bindTaskRows(panel, plan.tasks, () => {
-              this.renderWeek();
-              if(key === DateUtils.todayKey()) this.renderToday();
-            });
-            panel.dataset.built = "1";
-          }
-        });
+        container.appendChild(div);
       });
-    },
+    };
 
-    showToast(msg){
-      clearTimeout(this._toastTimer);
-      this.els.toast.textContent = msg;
-      this.els.toast.classList.add("show");
-      this._toastTimer = setTimeout(() => this.els.toast.classList.remove("show"), 1600);
-    },
+    renderList('home-timeline', 4);
+    renderList('full-quest-list');
+  }
 
-    switchView(view){
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      document.getElementById(`view-${view}`).classList.add("active");
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
-      if(view === "week") this.renderWeek();
-      if(view === "today") this.renderToday();
-    },
-
-    openModal(){ document.getElementById("modal").classList.add("open"); },
-    closeModal(){ document.getElementById("modal").classList.remove("open"); }
-  };
-
-  /* =========================================================
-     PWA bootstrap — registers the service worker so the app
-     is fully installable (removes Chrome's "shortcut" badge)
-     and keeps working offline.
-  ========================================================= */
-  function bootstrapPWA(){
-    if("serviceWorker" in navigator){
-      navigator.serviceWorker.register("./sw.js").catch(function(){
-        /* offline support is a bonus, not a requirement -- fail silently */
-      });
+  // Quest Interaction
+  window.toggleQuest = function(id, btnElement) {
+    const quest = quests.find(q => q.id === id);
+    if (!quest.completed) {
+      quest.completed = true;
+      
+      // Haptic feedback mock
+      if (navigator.vibrate) navigator.vibrate(50);
+      
+      // UI Updates
+      currentXP += quest.xp;
+      dailyXPGained += quest.xp;
+      
+      // Animate XP Bar
+      const newPct = Math.min((currentXP - 2000) / 1000 * 100, 100); 
+      document.getElementById('home-xp-fill').style.width = `${newPct}%`;
+      document.getElementById('stat-xp').innerText = dailyXPGained;
+      
+      // Trigger floating XP animation
+      const flyout = document.getElementById('xp-flyout');
+      flyout.innerText = `+${quest.xp} XP`;
+      flyout.style.animation = 'none';
+      void flyout.offsetWidth; // trigger reflow
+      flyout.style.animation = 'floatUp 1.2s ease forwards';
+    } else {
+      quest.completed = false;
+      currentXP -= quest.xp;
+      dailyXPGained -= quest.xp;
+      document.getElementById('stat-xp').innerText = dailyXPGained;
     }
+    renderQuests();
   }
 
-  /* =========================================================
-     INIT
-  ========================================================= */
-  function init(){
-    bootstrapPWA();
-    UI.init();
-    UI.renderToday();
+  // Navigation Logic
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      // Handle button visual state
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      const targetBtn = e.currentTarget;
+      targetBtn.classList.add('active');
+      
+      // Handle view switching
+      const targetView = targetBtn.getAttribute('data-target');
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(`view-${targetView}`).classList.add('active');
+    });
+  });
 
-    document.querySelectorAll(".nav-btn").forEach(btn => {
-      btn.addEventListener("click", () => UI.switchView(btn.dataset.view));
-    });
+  // Settings Toggles
+  document.querySelectorAll('.toggle').forEach(t => {
+    t.addEventListener('click', () => t.classList.toggle('on'));
+  });
 
-    document.getElementById("settings-btn").addEventListener("click", UI.openModal);
-    document.getElementById("cancel-reset").addEventListener("click", UI.closeModal);
-    document.getElementById("modal").addEventListener("click", (e) => {
-      if(e.target.id === "modal") UI.closeModal();
-    });
-    document.getElementById("confirm-reset").addEventListener("click", () => {
-      const keys = DateUtils.weekDates(DateUtils.today()).map(DateUtils.toKey.bind(DateUtils));
-      Store.resetDates(keys);
-      UI.closeModal();
-      UI.renderToday();
-      document.querySelectorAll(".day-panel").forEach(p => { p.innerHTML = ""; delete p.dataset.built; });
-      UI.renderWeek();
-      UI.showToast("Week reset — clean slate 🔄");
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if((e.key === "Enter" || e.key === " ") && document.activeElement.classList.contains("task-card")){
-        e.preventDefault();
-        document.activeElement.click();
-      }
-    });
+  // Mock GitHub Graph Generation for Progress Tab
+  const ghGrid = document.getElementById('gh-grid');
+  for(let i=0; i<28; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'gh-cell';
+    // Randomize some past activity
+    if (Math.random() > 0.3) {
+      const level = Math.floor(Math.random() * 3) + 1;
+      cell.classList.add(`lvl-${level}`);
+    }
+    ghGrid.appendChild(cell);
   }
 
-  document.addEventListener("DOMContentLoaded", init);
-})();
+  // Init
+  renderQuests();
+
 </script>
 </body>
 </html>
