@@ -93,10 +93,18 @@
 
 
   /* QUESTS TAB */
-  .category-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 8px; scrollbar-width: none; }
-  .category-scroll::-webkit-scrollbar { display: none; }
-  .chip { background: var(--surface); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; color: var(--text-dim); white-space: nowrap; transition: all 0.2s; }
-  .chip.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .quest-date { font-size: 13px; color: var(--text-dim); font-weight: 600; margin: -10px 0 20px; }
+
+  .qcat-row { display: flex; justify-content: space-between; gap: 4px; margin-bottom: 26px; }
+  .qcat-dial { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .qcat-ring-box { position: relative; width: 52px; height: 52px; transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
+  .qcat-ring-box.pulse { transform: scale(1.14); }
+  .qcat-ring-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .qcat-ring-track { fill: none; stroke: var(--surface-hi); stroke-width: 5; }
+  .qcat-ring-fill { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset .5s cubic-bezier(0.4,0,0.2,1); }
+  .qcat-ring-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .qcat-frac { font-family: 'JetBrains Mono'; font-size: 9.5px; color: var(--text-dim); font-weight: 700; }
+  .qcat-label { font-size: 9px; color: var(--text-faint); font-weight: 700; text-align: center; }
 
   .quest-list { display: flex; flex-direction: column; gap: 12px; }
   .quest-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: stretch; gap: 16px; transition: all 0.2s; position: relative; overflow: hidden; }
@@ -252,13 +260,107 @@
 
   <div class="view" id="view-quests">
     <h2>Quest Board</h2>
-    <div class="category-scroll">
-      <div class="chip active">All</div>
-      <div class="chip">Basketball</div>
-      <div class="chip">Coding</div>
-      <div class="chip">Fitness</div>
-      <div class="chip">Faith</div>
+    <div class="quest-date" id="quest-date">Monday, January 1</div>
+
+    <div class="qcat-row" id="qcat-row">
+      <div class="qcat-dial" data-cat="Basketball">
+        <div class="qcat-ring-box">
+          <svg class="qcat-ring-svg" viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="qcatGrad-basketball" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9B5DE5"/><stop offset="55%" stop-color="#F0367C"/><stop offset="100%" stop-color="#FF7A45"/>
+              </linearGradient>
+            </defs>
+            <circle class="qcat-ring-track" cx="30" cy="30" r="25"></circle>
+            <circle class="qcat-ring-fill" data-ring="Basketball" cx="30" cy="30" r="25" stroke="url(#qcatGrad-basketball)"></circle>
+          </svg>
+          <div class="qcat-ring-icon">🏀</div>
+        </div>
+        <div class="qcat-frac" data-frac="Basketball">0/0</div>
+        <div class="qcat-label">Basketball</div>
+      </div>
+      <div class="qcat-dial" data-cat="Faith">
+        <div class="qcat-ring-box">
+          <svg class="qcat-ring-svg" viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="qcatGrad-faith" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9B5DE5"/><stop offset="55%" stop-color="#F0367C"/><stop offset="100%" stop-color="#FF7A45"/>
+              </linearGradient>
+            </defs>
+            <circle class="qcat-ring-track" cx="30" cy="30" r="25"></circle>
+            <circle class="qcat-ring-fill" data-ring="Faith" cx="30" cy="30" r="25" stroke="url(#qcatGrad-faith)"></circle>
+          </svg>
+          <div class="qcat-ring-icon">✝️</div>
+        </div>
+        <div class="qcat-frac" data-frac="Faith">0/0</div>
+        <div class="qcat-label">Faith</div>
+      </div>
+      <div class="qcat-dial" data-cat="Fitness">
+        <div class="qcat-ring-box">
+          <svg class="qcat-ring-svg" viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="qcatGrad-fitness" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9B5DE5"/><stop offset="55%" stop-color="#F0367C"/><stop offset="100%" stop-color="#FF7A45"/>
+              </linearGradient>
+            </defs>
+            <circle class="qcat-ring-track" cx="30" cy="30" r="25"></circle>
+            <circle class="qcat-ring-fill" data-ring="Fitness" cx="30" cy="30" r="25" stroke="url(#qcatGrad-fitness)"></circle>
+          </svg>
+          <div class="qcat-ring-icon">💪</div>
+        </div>
+        <div class="qcat-frac" data-frac="Fitness">0/0</div>
+        <div class="qcat-label">Fitness</div>
+      </div>
+      <div class="qcat-dial" data-cat="School">
+        <div class="qcat-ring-box">
+          <svg class="qcat-ring-svg" viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="qcatGrad-school" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9B5DE5"/><stop offset="55%" stop-color="#F0367C"/><stop offset="100%" stop-color="#FF7A45"/>
+              </linearGradient>
+            </defs>
+            <circle class="qcat-ring-track" cx="30" cy="30" r="25"></circle>
+            <circle class="qcat-ring-fill" data-ring="School" cx="30" cy="30" r="25" stroke="url(#qcatGrad-school)"></circle>
+          </svg>
+          <div class="qcat-ring-icon">🎓</div>
+        </div>
+        <div class="qcat-frac" data-frac="School">0/0</div>
+        <div class="qcat-label">School</div>
+      </div>
+      <div class="qcat-dial" data-cat="Skills">
+        <div class="qcat-ring-box">
+          <svg class="qcat-ring-svg" viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="qcatGrad-skills" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9B5DE5"/><stop offset="55%" stop-color="#F0367C"/><stop offset="100%" stop-color="#FF7A45"/>
+              </linearGradient>
+            </defs>
+            <circle class="qcat-ring-track" cx="30" cy="30" r="25"></circle>
+            <circle class="qcat-ring-fill" data-ring="Skills" cx="30" cy="30" r="25" stroke="url(#qcatGrad-skills)"></circle>
+          </svg>
+          <div class="qcat-ring-icon">🎯</div>
+        </div>
+        <div class="qcat-frac" data-frac="Skills">0/0</div>
+        <div class="qcat-label">Skills</div>
+      </div>
+      <div class="qcat-dial" data-cat="Business">
+        <div class="qcat-ring-box">
+          <svg class="qcat-ring-svg" viewBox="0 0 60 60">
+            <defs>
+              <linearGradient id="qcatGrad-business" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#9B5DE5"/><stop offset="55%" stop-color="#F0367C"/><stop offset="100%" stop-color="#FF7A45"/>
+              </linearGradient>
+            </defs>
+            <circle class="qcat-ring-track" cx="30" cy="30" r="25"></circle>
+            <circle class="qcat-ring-fill" data-ring="Business" cx="30" cy="30" r="25" stroke="url(#qcatGrad-business)"></circle>
+          </svg>
+          <div class="qcat-ring-icon">💼</div>
+        </div>
+        <div class="qcat-frac" data-frac="Business">0/0</div>
+        <div class="qcat-label">Business</div>
+      </div>
     </div>
+
     <div class="quest-list" id="full-quest-list"></div>
   </div>
 
@@ -376,15 +478,50 @@
 </div>
 
 <script>
-  const quests = [
-    { id: 1, title: "Film Study: LeBron James Playmaking", category: "Basketball", xp: 150, time: "30m", completed: false },
-    { id: 2, title: "Architect p5.js Game Engine Structure", category: "Coding", xp: 300, time: "90m", completed: false },
-    { id: 3, title: "Refactor Windows Forms .NET logic", category: "Coding", xp: 200, time: "45m", completed: false },
-    { id: 4, title: "Upper Body Strength Protocol", category: "Fitness", xp: 125, time: "60m", completed: false },
-    { id: 5, title: "Contrast Therapy (Hot/Cold)", category: "Fitness", xp: 50, time: "20m", completed: false },
-    { id: 6, title: "Read Chapter: Romans 8", category: "Faith", xp: 50, time: "15m", completed: false },
-    { id: 7, title: "Group Project Sync / Architecture Review", category: "School", xp: 100, time: "30m", completed: false }
-  ];
+  // Every task that recurs across the week, with its category + reward baked in once.
+  const TASK_LIBRARY = {
+    "Devos":                          { category: "Faith",      xp: 50,  time: "15m" },
+    "Mobility":                       { category: "Fitness",    xp: 40,  time: "15m" },
+    "Dynamic Warmup":                 { category: "Fitness",    xp: 30,  time: "10m" },
+    "Skill Work (Shooting)":          { category: "Basketball", xp: 150, time: "45m" },
+    "Skill Work (Finishing)":         { category: "Basketball", xp: 150, time: "45m" },
+    "Skill Work (Shooting & Finishing)": { category: "Basketball", xp: 200, time: "60m" },
+    "Light Shoot Around":             { category: "Basketball", xp: 80,  time: "30m" },
+    "Low Intensity Hooping Session":  { category: "Basketball", xp: 100, time: "45m" },
+    "Stretch":                        { category: "Fitness",    xp: 30,  time: "10m" },
+    "Upper Body Work":                { category: "Fitness",    xp: 130, time: "50m" },
+    "Lower Body Work":                { category: "Fitness",    xp: 130, time: "50m" },
+    "Plyometrics":                    { category: "Fitness",    xp: 100, time: "30m" },
+    "Sprints":                        { category: "Fitness",    xp: 100, time: "25m" },
+    "Long Distance Run":              { category: "Fitness",    xp: 110, time: "25m" },
+    "Hill Sprints":                   { category: "Fitness",    xp: 120, time: "30m" },
+    "Cold Outreach":                  { category: "Business",   xp: 120, time: "30m" },
+    "Trading":                        { category: "Business",   xp: 100, time: "30m" },
+    "Practice Instrument":            { category: "Skills",     xp: 70,  time: "30m" },
+    "Work On App":                    { category: "Skills",     xp: 150, time: "60m" },
+    "Journal":                        { category: "Faith",      xp: 40,  time: "10m" }
+  };
+
+  // The recurring weekly structure — same plan every week, keyed by Date.getDay() (0 = Sunday).
+  const WEEKLY_PLAN = {
+    1: ["Devos","Mobility","Dynamic Warmup","Skill Work (Shooting)","Stretch","Upper Body Work","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
+    2: ["Devos","Mobility","Dynamic Warmup","Skill Work (Finishing)","Stretch","Lower Body Work","Plyometrics","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
+    3: ["Devos","Mobility","Dynamic Warmup","Light Shoot Around","Stretch","Sprints","Long Distance Run","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
+    4: ["Devos","Mobility","Dynamic Warmup","Skill Work (Shooting)","Stretch","Upper Body Work","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
+    5: ["Devos","Mobility","Dynamic Warmup","Skill Work (Finishing)","Stretch","Lower Body Work","Hill Sprints","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
+    6: ["Devos","Mobility","Dynamic Warmup","Skill Work (Shooting & Finishing)","Stretch","Upper Body Work","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
+    0: ["Devos","Mobility","Dynamic Warmup","Low Intensity Hooping Session","Stretch","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"]
+  };
+
+  function buildTodaysQuests() {
+    const dow = new Date().getDay();
+    return WEEKLY_PLAN[dow].map((name, i) => {
+      const meta = TASK_LIBRARY[name];
+      return { id: `${dow}-${i}`, title: name, category: meta.category, xp: meta.xp, time: meta.time, completed: false };
+    });
+  }
+
+  const quests = buildTodaysQuests();
 
   let currentXP = 2450;
   let dailyXPGained = 350;
@@ -393,7 +530,7 @@
     const div = document.createElement('div');
     div.className = `quest-card ${q.completed ? 'completed' : ''}`;
     div.innerHTML = `
-      <button class="quest-check" onclick="toggleQuest(${q.id}, this)">
+      <button class="quest-check" onclick="toggleQuest('${q.id}', this)">
         <div class="check-circle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
         </div>
@@ -409,14 +546,11 @@
   }
 
   function renderQuests() {
-    const renderList = (containerId, limit = null) => {
-      const container = document.getElementById(containerId);
-      container.innerHTML = '';
-      const toRender = limit ? quests.slice(0, limit) : quests;
-      toRender.forEach(q => renderQuestCard(container, q));
-    };
-    renderList('full-quest-list');
+    const container = document.getElementById('full-quest-list');
+    container.innerHTML = '';
+    quests.forEach(q => renderQuestCard(container, q));
     updateDial();
+    updateCategoryDials();
   }
 
   const DIAL_CIRCUMFERENCE = 2 * Math.PI * 68;
@@ -441,24 +575,30 @@
   }
   updateGreeting();
 
-  function filterQuestsByLabel(label) {
-    const container = document.getElementById('full-quest-list');
-    container.innerHTML = '';
-    const list = label.toLowerCase() === 'all' ? quests : quests.filter(q => q.category.toLowerCase() === label.toLowerCase());
-    if (list.length === 0) {
-      container.innerHTML = `<div class="empty-hint">No quests logged in ${label} yet.</div>`;
-      return;
-    }
-    list.forEach(q => renderQuestCard(container, q));
+  function setQuestDate() {
+    const today = new Date();
+    document.getElementById('quest-date').innerText = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   }
+  setQuestDate();
 
-  document.querySelectorAll('#view-quests .chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('#view-quests .chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      filterQuestsByLabel(chip.innerText.trim());
-    });
+  const QUEST_CATEGORIES = ["Basketball", "Faith", "Fitness", "School", "Skills", "Business"];
+  const QCAT_CIRCUMFERENCE = 2 * Math.PI * 25;
+  document.querySelectorAll('.qcat-ring-fill').forEach(ring => {
+    ring.style.strokeDasharray = `${QCAT_CIRCUMFERENCE}`;
   });
+
+  function updateCategoryDials() {
+    QUEST_CATEGORIES.forEach(cat => {
+      const inCat = quests.filter(q => q.category === cat);
+      const total = inCat.length;
+      const completed = inCat.filter(q => q.completed).length;
+      const pct = total ? completed / total : 0;
+      const ring = document.querySelector(`.qcat-ring-fill[data-ring="${cat}"]`);
+      if (ring) ring.style.strokeDashoffset = `${QCAT_CIRCUMFERENCE * (1 - pct)}`;
+      const frac = document.querySelector(`.qcat-frac[data-frac="${cat}"]`);
+      if (frac) frac.innerText = `${completed}/${total}`;
+    });
+  }
 
   document.querySelectorAll('.cat-item').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -468,15 +608,13 @@
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById('view-quests').classList.add('active');
 
-      const chips = document.querySelectorAll('#view-quests .chip');
-      let matched = false;
-      chips.forEach(chip => {
-        const isMatch = chip.innerText.trim().toLowerCase() === cat.toLowerCase();
-        chip.classList.toggle('active', isMatch);
-        if (isMatch) matched = true;
-      });
-      if (!matched) chips[0].classList.add('active');
-      filterQuestsByLabel(matched ? cat : 'All');
+      const ringBox = document.querySelector(`.qcat-dial[data-cat="${cat}"] .qcat-ring-box`);
+      if (ringBox) {
+        ringBox.classList.remove('pulse');
+        void ringBox.offsetWidth;
+        ringBox.classList.add('pulse');
+        setTimeout(() => ringBox.classList.remove('pulse'), 350);
+      }
     });
   });
 
