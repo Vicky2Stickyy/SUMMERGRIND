@@ -28,11 +28,12 @@
     --text: #F4F4F5;
     --text-dim: #A1A1AA;
     --text-faint: #52525B;
-    --primary: #ff00ff;
-    --primary-glow: rgba(255, 69, 0, 0.2);
-    --secondary: #6366F1;
+    --accent-1: #9B5DE5;
+    --accent-2: #F0367C;
+    --accent-3: #FF7A45;
+    --accent-gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
+    --accent-glow: rgba(155, 93, 229, 0.22);
     --success: #10B981;
-    --xp-color: #F59E0B;
     --radius-lg: 24px;
     --radius-md: 16px;
     --radius-sm: 10px;
@@ -47,7 +48,7 @@
   button { border: none; background: none; color: inherit; cursor: pointer; padding: 0; font-family: inherit; }
   .glass { background: rgba(14, 14, 16, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
 
-  #app { display: flex; flex-direction: column; height: 100%; max-width: 500px; margin: 0 auto; position: relative; background: var(--bg); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+  #app { display: flex; flex-direction: column; height: 100%; max-width: 500px; margin: 0 auto; position: relative; background: var(--bg); }
   
   .view { display: none; flex: 1; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 100px); animation: fadeIn 0.3s ease; }
   .view.active { display: block; }
@@ -59,15 +60,15 @@
   
   /* HOME TAB */
   .header-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; position: relative; overflow: hidden; }
-  .header-card::before { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); z-index: 0; }
+  .header-card::before { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); z-index: 0; }
   .header-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-end; }
-  .user-info .rank { font-size: 12px; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+  .user-info .rank { font-size: 12px; color: var(--accent-2); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
   .level-badge { text-align: right; }
   .level-badge .num { font-size: 42px; font-weight: 800; line-height: 1; font-family: 'JetBrains Mono'; }
   .level-badge .lbl { font-size: 12px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; }
 
   .xp-bar-container { width: 100%; height: 8px; background: var(--border); border-radius: 4px; margin-top: 16px; position: relative; z-index: 1; overflow: hidden; }
-  .xp-bar-fill { height: 100%; background: var(--xp-color); border-radius: 4px; width: 65%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 10px var(--xp-color); }
+  .xp-bar-fill { height: 100%; background: var(--accent-gradient); border-radius: 4px; width: 65%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 0 12px var(--accent-glow); }
   .xp-text { display: flex; justify-content: space-between; font-size: 11px; margin-top: 8px; color: var(--text-dim); font-weight: 600; position: relative; z-index: 1; }
 
   .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
@@ -75,11 +76,21 @@
   .stat-card .val { font-size: 24px; font-weight: 800; font-family: 'JetBrains Mono'; color: var(--text); }
   .stat-card .lbl { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-top: 4px; }
 
-  .mission-card { background: linear-gradient(135deg, var(--surface-hi), var(--surface)); border: 1px solid var(--border-hi); border-radius: var(--radius-md); padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-  .mission-info h4 { margin: 0; font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .mission-info p { margin: 0; font-size: 16px; font-weight: 700; }
-  .btn-start { background: var(--text); color: var(--bg); font-weight: 800; padding: 12px 20px; border-radius: 100px; font-size: 13px; transition: transform 0.2s; }
-  .btn-start:active { transform: scale(0.95); }
+  .dial-wrap { display: flex; justify-content: center; margin: 4px 0 22px; }
+  .dial-box { position: relative; width: 170px; height: 170px; }
+  .dial-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .dial-track { fill: none; stroke: var(--surface-hi); stroke-width: 14; }
+  .dial-fill { fill: none; stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+  .dial-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .dial-num { font-family: 'JetBrains Mono'; font-size: 42px; font-weight: 800; line-height: 1; }
+  .dial-sub { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-top: 6px; }
+
+  .cat-row { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+  .cat-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 7px; transition: transform 0.15s ease; }
+  .cat-item:active { transform: scale(0.92); }
+  .cat-icon { width: 46px; height: 46px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--surface); border: 1px solid var(--border); }
+  .cat-label { font-size: 9.5px; color: var(--text-dim); font-weight: 700; text-align: center; }
+
 
   /* QUESTS TAB */
   .category-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 8px; scrollbar-width: none; }
@@ -101,11 +112,12 @@
   .quest-details { flex: 1; }
   .quest-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; transition: color 0.2s; }
   .quest-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-faint); font-weight: 600; }
-  .quest-xp { color: var(--xp-color); font-family: 'JetBrains Mono'; }
+  .quest-xp { color: var(--accent-3); font-family: 'JetBrains Mono'; }
+  .empty-hint { text-align: center; padding: 30px 14px; color: var(--text-faint); font-size: 12.5px; }
 
   /* CHARACTER TAB */
   .avatar-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; }
-  .avatar-ring { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--secondary), var(--primary), var(--secondary)); display: flex; justify-content: center; align-items: center; margin-bottom: 16px; box-shadow: 0 0 30px rgba(99, 102, 241, 0.2); }
+  .avatar-ring { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-1)); display: flex; justify-content: center; align-items: center; margin-bottom: 16px; box-shadow: 0 0 30px var(--accent-glow); }
   .avatar-inner { width: 112px; height: 112px; border-radius: 50%; background: var(--surface-hi); display: flex; justify-content: center; align-items: center; font-size: 40px; border: 4px solid var(--bg); }
   
   .attribute-list { display: flex; flex-direction: column; gap: 16px; }
@@ -140,7 +152,7 @@
   .nav-label { font-size: 10px; font-weight: 700; }
   
   /* Floating XP UI */
-  .floating-xp { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--xp-color); font-weight: 800; font-size: 24px; font-family: 'JetBrains Mono'; text-shadow: 0 0 20px rgba(245, 158, 11, 0.5); opacity: 0; pointer-events: none; z-index: 999; }
+  .floating-xp { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-3); font-weight: 800; font-size: 24px; font-family: 'JetBrains Mono'; text-shadow: 0 0 20px rgba(255, 122, 69, 0.5); opacity: 0; pointer-events: none; z-index: 999; }
   @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 0); } 20% { opacity: 1; transform: translate(-50%, -20px); } 80% { opacity: 1; transform: translate(-50%, -40px); } 100% { opacity: 0; transform: translate(-50%, -60px); } }
 
 </style>
@@ -153,7 +165,7 @@
     <div class="header-card">
       <div class="header-content">
         <div class="user-info">
-          <h1>Good morning.</h1>
+          <h1 id="greeting">Good morning, Victor</h1>
           <div class="rank">Rank: Architect</div>
         </div>
         <div class="level-badge">
@@ -168,14 +180,6 @@
         <span>XP: 2,450</span>
         <span>Next: 3,000</span>
       </div>
-    </div>
-
-    <div class="mission-card">
-      <div class="mission-info">
-        <h4>Current Priority</h4>
-        <p>Architect p5.js Game Engine Structure</p>
-      </div>
-      <button class="btn-start">Start</button>
     </div>
 
     <div class="stats-grid">
@@ -197,8 +201,53 @@
       </div>
     </div>
     
-    <h3>Today's Timeline</h3>
-    <div class="quest-list" id="home-timeline"></div>
+    <h3>Today's Progress</h3>
+    <div class="dial-wrap">
+      <div class="dial-box">
+        <svg class="dial-svg" viewBox="0 0 160 160">
+          <defs>
+            <linearGradient id="dialGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#9B5DE5"/>
+              <stop offset="55%" stop-color="#F0367C"/>
+              <stop offset="100%" stop-color="#FF7A45"/>
+            </linearGradient>
+          </defs>
+          <circle class="dial-track" cx="80" cy="80" r="68"></circle>
+          <circle class="dial-fill" id="dial-fill" cx="80" cy="80" r="68" stroke="url(#dialGrad)"></circle>
+        </svg>
+        <div class="dial-center">
+          <div class="dial-num" id="dial-num">0</div>
+          <div class="dial-sub">of <span id="dial-total">0</span> quests</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-row" id="cat-row">
+      <button class="cat-item" data-cat="Basketball">
+        <div class="cat-icon">🏀</div>
+        <div class="cat-label">Basketball</div>
+      </button>
+      <button class="cat-item" data-cat="Faith">
+        <div class="cat-icon">✝️</div>
+        <div class="cat-label">Faith</div>
+      </button>
+      <button class="cat-item" data-cat="Business">
+        <div class="cat-icon">💼</div>
+        <div class="cat-label">Business</div>
+      </button>
+      <button class="cat-item" data-cat="Fitness">
+        <div class="cat-icon">💪</div>
+        <div class="cat-label">Fitness</div>
+      </button>
+      <button class="cat-item" data-cat="School">
+        <div class="cat-icon">🎓</div>
+        <div class="cat-label">School</div>
+      </button>
+      <button class="cat-item" data-cat="Skills">
+        <div class="cat-icon">🎯</div>
+        <div class="cat-label">Skills</div>
+      </button>
+    </div>
   </div>
 
   <div class="view" id="view-quests">
@@ -219,19 +268,19 @@
         <div class="avatar-inner">🐺</div>
       </div>
       <h2>Player One</h2>
-      <div style="color: var(--primary); font-weight: 800; font-size: 14px; letter-spacing: 1px;">LVL 14 · ARCHITECT</div>
+      <div style="color: var(--accent-2); font-weight: 800; font-size: 14px; letter-spacing: 1px;">LVL 14 · ARCHITECT</div>
     </div>
 
     <h3>Attributes</h3>
     <div class="attribute-list">
       <div class="attr-row">
         <div class="attr-name">Discipline</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 80%; background: var(--primary);"></div></div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 80%; background: var(--accent-1);"></div></div>
         <div class="attr-val">24</div>
       </div>
       <div class="attr-row">
         <div class="attr-name">Athleticism</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 65%; background: var(--secondary);"></div></div>
+        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 65%; background: var(--accent-2);"></div></div>
         <div class="attr-val">18</div>
       </div>
       <div class="attr-row">
@@ -269,7 +318,7 @@
         <div style="flex:1; background: var(--border-hi); height: 60%; border-radius: 4px 4px 0 0;"></div>
         <div style="flex:1; background: var(--border-hi); height: 50%; border-radius: 4px 4px 0 0;"></div>
         <div style="flex:1; background: var(--border-hi); height: 90%; border-radius: 4px 4px 0 0;"></div>
-        <div style="flex:1; background: var(--primary); height: 75%; border-radius: 4px 4px 0 0; box-shadow: 0 0 10px rgba(255,69,0,0.3);"></div>
+        <div style="flex:1; background: var(--accent-gradient); height: 75%; border-radius: 4px 4px 0 0; box-shadow: 0 0 10px var(--accent-glow);"></div>
       </div>
       <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; color: var(--text-dim); font-weight: 700;">
         <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span>
@@ -340,34 +389,96 @@
   let currentXP = 2450;
   let dailyXPGained = 350;
 
+  function renderQuestCard(container, q) {
+    const div = document.createElement('div');
+    div.className = `quest-card ${q.completed ? 'completed' : ''}`;
+    div.innerHTML = `
+      <button class="quest-check" onclick="toggleQuest(${q.id}, this)">
+        <div class="check-circle">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+      </button>
+      <div class="quest-details">
+        <div class="quest-title">${q.title}</div>
+        <div class="quest-meta">
+          <span>${q.category}</span> • <span>${q.time}</span> • <span class="quest-xp">+${q.xp} XP</span>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+
   function renderQuests() {
     const renderList = (containerId, limit = null) => {
       const container = document.getElementById(containerId);
       container.innerHTML = '';
       const toRender = limit ? quests.slice(0, limit) : quests;
-      
-      toRender.forEach(q => {
-        const div = document.createElement('div');
-        div.className = `quest-card ${q.completed ? 'completed' : ''}`;
-        div.innerHTML = `
-          <button class="quest-check" onclick="toggleQuest(${q.id}, this)">
-            <div class="check-circle">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-          </button>
-          <div class="quest-details">
-            <div class="quest-title">${q.title}</div>
-            <div class="quest-meta">
-              <span>${q.category}</span> • <span>${q.time}</span> • <span class="quest-xp">+${q.xp} XP</span>
-            </div>
-          </div>
-        `;
-        container.appendChild(div);
-      });
+      toRender.forEach(q => renderQuestCard(container, q));
     };
-    renderList('home-timeline', 4);
     renderList('full-quest-list');
+    updateDial();
   }
+
+  const DIAL_CIRCUMFERENCE = 2 * Math.PI * 68;
+  const dialFillEl = document.getElementById('dial-fill');
+  dialFillEl.style.strokeDasharray = `${DIAL_CIRCUMFERENCE}`;
+
+  function updateDial() {
+    const total = quests.length;
+    const completed = quests.filter(q => q.completed).length;
+    const pct = total ? completed / total : 0;
+    document.getElementById('dial-num').innerText = completed;
+    document.getElementById('dial-total').innerText = total;
+    dialFillEl.style.strokeDashoffset = `${DIAL_CIRCUMFERENCE * (1 - pct)}`;
+  }
+
+  function updateGreeting() {
+    const hour = new Date().getHours();
+    let greeting = 'Good evening';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 18) greeting = 'Good afternoon';
+    document.getElementById('greeting').innerText = `${greeting}, Victor`;
+  }
+  updateGreeting();
+
+  function filterQuestsByLabel(label) {
+    const container = document.getElementById('full-quest-list');
+    container.innerHTML = '';
+    const list = label.toLowerCase() === 'all' ? quests : quests.filter(q => q.category.toLowerCase() === label.toLowerCase());
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-hint">No quests logged in ${label} yet.</div>`;
+      return;
+    }
+    list.forEach(q => renderQuestCard(container, q));
+  }
+
+  document.querySelectorAll('#view-quests .chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#view-quests .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      filterQuestsByLabel(chip.innerText.trim());
+    });
+  });
+
+  document.querySelectorAll('.cat-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.getAttribute('data-cat');
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelector('.nav-item[data-target="quests"]').classList.add('active');
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-quests').classList.add('active');
+
+      const chips = document.querySelectorAll('#view-quests .chip');
+      let matched = false;
+      chips.forEach(chip => {
+        const isMatch = chip.innerText.trim().toLowerCase() === cat.toLowerCase();
+        chip.classList.toggle('active', isMatch);
+        if (isMatch) matched = true;
+      });
+      if (!matched) chips[0].classList.add('active');
+      filterQuestsByLabel(matched ? cat : 'All');
+    });
+  });
 
   window.toggleQuest = function(id, btnElement) {
     const quest = quests.find(q => q.id === id);
