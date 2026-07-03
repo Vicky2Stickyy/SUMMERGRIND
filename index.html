@@ -123,18 +123,110 @@
   .quest-xp { color: var(--accent-3); font-family: 'JetBrains Mono'; }
   .empty-hint { text-align: center; padding: 30px 14px; color: var(--text-faint); font-size: 12.5px; }
 
-  /* CHARACTER TAB */
-  .avatar-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 32px; }
-  .avatar-ring { width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-1)); display: flex; justify-content: center; align-items: center; margin-bottom: 16px; box-shadow: 0 0 30px var(--accent-glow); }
-  .avatar-inner { width: 112px; height: 112px; border-radius: 50%; background: var(--surface-hi); display: flex; justify-content: center; align-items: center; font-size: 40px; border: 4px solid var(--bg); }
-  
-  .attribute-list { display: flex; flex-direction: column; gap: 16px; }
-  .attr-row { display: flex; align-items: center; gap: 16px; }
-  .attr-name { flex: 0 0 80px; font-size: 13px; font-weight: 700; color: var(--text-dim); }
-  .attr-bar-bg { flex: 1; height: 6px; background: var(--surface-hi); border-radius: 3px; overflow: hidden; }
-  .attr-bar-fill { height: 100%; border-radius: 3px; }
-  .attr-val { flex: 0 0 30px; text-align: right; font-size: 13px; font-weight: 800; font-family: 'JetBrains Mono'; }
+  /* ============ CHARACTER TAB ============ */
+  .char-hero { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; padding-top: 4px; }
+  .char-avatar-ring { width: 128px; height: 128px; border-radius: 50%; background: conic-gradient(var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-1)); display: flex; justify-content: center; align-items: center; margin-bottom: 16px; box-shadow: 0 0 40px var(--accent-glow); animation: ringPulse 4s ease-in-out infinite; position: relative; }
+  @keyframes ringPulse { 0%,100% { box-shadow: 0 0 30px var(--accent-glow); } 50% { box-shadow: 0 0 50px var(--accent-glow); } }
+  .char-avatar-inner { width: 118px; height: 118px; border-radius: 50%; background: var(--surface-hi); display: flex; justify-content: center; align-items: center; font-size: 42px; border: 4px solid var(--bg); }
+  .char-lvl-chip { position: absolute; bottom: -4px; right: -2px; background: var(--bg); border-radius: 100px; padding: 3px; }
+  .char-lvl-chip-inner { background: var(--accent-gradient); color: #fff; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 100px; }
+  .char-name { font-size: 22px; font-weight: 800; margin-top: 2px; }
+  .char-title { font-size: 12.5px; font-weight: 700; margin-top: 5px; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.3px; }
+  .char-xp-wrap { width: 100%; max-width: 320px; margin-top: 18px; }
+  .char-xp-top { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); font-weight: 700; margin-bottom: 7px; }
+  .char-xp-top .cx-mono { font-family: 'JetBrains Mono'; color: var(--text); }
+  .char-xp-bar-bg { height: 9px; border-radius: 100px; background: var(--surface-hi); overflow: hidden; }
+  .char-xp-bar-fill { height: 100%; border-radius: 100px; background: var(--accent-gradient); width: 0%; transition: width 1.1s cubic-bezier(0.16,1,0.3,1); position: relative; }
+  .char-xp-bar-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent); animation: shimmer 2.5s ease-in-out infinite; }
+  @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
+  /* Boss card */
+  .boss-card { background: linear-gradient(160deg, var(--surface-hi), var(--surface)); border: 1px solid var(--border-hi); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .boss-card::before { content: ''; position: absolute; top: -55%; right: -20%; width: 220px; height: 220px; background: radial-gradient(circle, var(--accent-glow), transparent 70%); }
+  .boss-eyebrow { font-size: 10.5px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--text-dim); font-weight: 800; position: relative; }
+  .boss-title { font-size: 19px; font-weight: 800; margin-top: 8px; position: relative; }
+  .boss-progress-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 16px; position: relative; }
+  .boss-progress-frac { font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 700; color: var(--text-dim); }
+  .boss-bar-bg { height: 10px; border-radius: 100px; background: var(--surface-hi); overflow: hidden; margin-top: 8px; position: relative; }
+  .boss-bar-fill { height: 100%; border-radius: 100px; background: var(--accent-gradient); width: 0%; transition: width 1.1s cubic-bezier(0.16,1,0.3,1); }
+  .boss-meta-row { display: flex; gap: 10px; margin-top: 16px; position: relative; flex-wrap: wrap; }
+  .boss-meta-chip { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 100px; padding: 7px 13px; font-size: 11px; font-weight: 700; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+  .boss-reward { margin-top: 14px; position: relative; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .boss-reward-lbl { font-size: 11px; color: var(--text-dim); font-weight: 700; }
+  .boss-reward-val { font-family: 'JetBrains Mono'; font-size: 13px; font-weight: 800; color: var(--accent-3); }
+
+  /* Attribute cards */
+  .attr-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 10px; overflow: hidden; }
+  .attr-card-head { display: flex; align-items: center; gap: 12px; padding: 15px 16px; cursor: pointer; }
+  .attr-card-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex: 0 0 auto; }
+  .attr-card-body { flex: 1; min-width: 0; }
+  .attr-card-top { display: flex; justify-content: space-between; align-items: baseline; }
+  .attr-card-name { font-size: 14px; font-weight: 700; }
+  .attr-card-lvl { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--text-dim); font-weight: 700; }
+  .attr-card-bar-bg { height: 5px; border-radius: 100px; background: var(--surface-hi); margin-top: 8px; overflow: hidden; }
+  .attr-card-bar-fill { height: 100%; border-radius: 100px; background: var(--accent-gradient); width: 0%; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+  .attr-chevron { width: 16px; height: 16px; color: var(--text-faint); flex: 0 0 auto; transition: transform .25s cubic-bezier(0.16,1,0.3,1); }
+  .attr-card.open .attr-chevron { transform: rotate(180deg); }
+  .attr-card-expand { max-height: 0; overflow: hidden; transition: max-height .35s cubic-bezier(0.16,1,0.3,1); }
+  .attr-card.open .attr-card-expand { max-height: 420px; }
+  .attr-expand-inner { padding: 0 16px 18px; border-top: 1px solid var(--border); margin-top: 2px; }
+  .attr-rank-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .attr-rank-lbl { font-size: 10.5px; color: var(--text-faint); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .attr-rank-val { font-size: 12.5px; font-weight: 800; color: var(--text); }
+  .attr-desc { font-size: 12px; color: var(--text-dim); line-height: 1.55; margin-top: 10px; }
+  .attr-sub-block { margin-top: 12px; }
+  .attr-sub-lbl { font-size: 10px; color: var(--text-faint); font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 5px; }
+  .attr-sub-val { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+  .attr-tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .attr-tag { font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 100px; background: var(--surface-hi); border: 1px solid var(--border); color: var(--text-dim); }
+
+  /* Buffs / Debuffs */
+  .buff-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .buff-scroll::-webkit-scrollbar { display: none; }
+  .buff-card { flex: 0 0 auto; width: 168px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; }
+  .buff-card.debuff { border-color: rgba(255,84,112,0.35); background: linear-gradient(160deg, rgba(255,84,112,0.07), var(--surface)); }
+  .buff-icon { font-size: 18px; }
+  .buff-title { font-size: 12.5px; font-weight: 700; margin-top: 9px; }
+  .buff-sub { font-size: 10.5px; color: var(--text-dim); margin-top: 4px; line-height: 1.4; }
+  .buff-card.debuff .buff-sub { color: #FF8A9A; }
+  .buff-rec { font-size: 10px; color: var(--text-faint); margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); line-height: 1.4; }
+
+  /* Skill Trees */
+  .tree-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .tree-scroll::-webkit-scrollbar { display: none; }
+  .tree-card { flex: 0 0 auto; width: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; }
+  .tree-top { display: flex; align-items: center; gap: 10px; }
+  .tree-icon { width: 36px; height: 36px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+  .tree-name { font-size: 13.5px; font-weight: 700; }
+  .tree-lvl { font-size: 10.5px; color: var(--text-dim); font-weight: 600; margin-top: 1px; }
+  .tree-bar-bg { height: 5px; border-radius: 100px; background: var(--surface-hi); margin-top: 13px; overflow: hidden; }
+  .tree-bar-fill { height: 100%; border-radius: 100px; background: var(--accent-gradient); width: 0%; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+  .tree-focus { font-size: 10.5px; color: var(--text-dim); margin-top: 10px; }
+  .tree-focus b { color: var(--text); font-weight: 700; }
+  .tree-next { font-size: 10px; color: var(--text-faint); margin-top: 6px; line-height: 1.4; }
+
+  /* Equipment */
+  .equip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .equip-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; position: relative; }
+  .equip-icon { font-size: 22px; }
+  .equip-fav { position: absolute; top: 12px; right: 12px; font-size: 12px; }
+  .equip-name { font-size: 12.5px; font-weight: 700; margin-top: 10px; }
+  .equip-meta { font-size: 10px; color: var(--text-faint); margin-top: 4px; }
+
+  /* Achievements */
+  .achv-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .achv-scroll::-webkit-scrollbar { display: none; }
+  .achv-card { flex: 0 0 auto; width: 128px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; text-align: center; }
+  .achv-art { width: 52px; height: 52px; border-radius: 16px; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto; box-shadow: 0 6px 18px -6px var(--accent-glow); }
+  .achv-title { font-size: 11.5px; font-weight: 700; margin-top: 10px; line-height: 1.3; }
+  .achv-date { font-size: 9.5px; color: var(--text-faint); margin-top: 4px; }
+  .achv-xp { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--accent-3); font-weight: 700; margin-top: 3px; }
+
+  /* Mission */
+  .mission-final-card { background: rgba(20,20,24,0.6); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid var(--border-hi); border-radius: var(--radius-lg); padding: 22px; text-align: center; margin-bottom: 8px; }
+  .mission-eyebrow { font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); font-weight: 800; }
+  .mission-lines { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .mission-line { font-size: 13.5px; color: var(--text); font-weight: 600; line-height: 1.5; }
   /* PROGRESS TAB */
   .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; }
 
@@ -500,40 +592,62 @@
   </div>
 
   <div class="view" id="view-character">
-    <div class="avatar-section">
-      <div class="avatar-ring">
-        <div class="avatar-inner">🐺</div>
+    <div class="char-hero">
+      <div class="char-avatar-ring">
+        <div class="char-avatar-inner">🐺</div>
+        <div class="char-lvl-chip"><div class="char-lvl-chip-inner">LVL 27</div></div>
       </div>
-      <h2>Player One</h2>
-      <div style="color: var(--accent-2); font-weight: 800; font-size: 14px; letter-spacing: 1px;">LVL 14 · ARCHITECT</div>
+      <div class="char-name">Victor</div>
+      <div class="char-title">"The Disciplined"</div>
+      <div class="char-xp-wrap">
+        <div class="char-xp-top"><span>Level 27</span><span class="cx-mono" id="char-xp-frac">4,820 / 6,000 XP</span></div>
+        <div class="char-xp-bar-bg"><div class="char-xp-bar-fill" id="char-xp-fill"></div></div>
+      </div>
     </div>
 
-    <h3>Attributes</h3>
-    <div class="attribute-list">
-      <div class="attr-row">
-        <div class="attr-name">Discipline</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 80%; background: var(--accent-1);"></div></div>
-        <div class="attr-val">24</div>
+    <div class="prog-section-head"><h3 style="margin:0;">Current Boss</h3></div>
+    <div class="boss-card">
+      <div class="boss-eyebrow">Long-Term Objective</div>
+      <div class="boss-title">🐉 30-Day Consistency Streak</div>
+      <div class="boss-progress-row"><span class="boss-progress-frac">18 / 30 Days</span><span class="boss-progress-frac">60%</span></div>
+      <div class="boss-bar-bg"><div class="boss-bar-fill" id="boss-bar-fill"></div></div>
+      <div class="boss-meta-row">
+        <div class="boss-meta-chip">📅 Est. completion: 12 days</div>
+        <div class="boss-meta-chip">⚔️ Difficulty: Elite</div>
       </div>
-      <div class="attr-row">
-        <div class="attr-name">Athleticism</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 65%; background: var(--accent-2);"></div></div>
-        <div class="attr-val">18</div>
+      <div class="boss-reward">
+        <div class="boss-reward-lbl">Reward: Unlock "The Relentless" title</div>
+        <div class="boss-reward-val">+500 XP</div>
       </div>
-      <div class="attr-row">
-        <div class="attr-name">Knowledge</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 90%; background: #0EA5E9;"></div></div>
-        <div class="attr-val">29</div>
-      </div>
-      <div class="attr-row">
-        <div class="attr-name">Faith</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 50%; background: #F59E0B;"></div></div>
-        <div class="attr-val">14</div>
-      </div>
-      <div class="attr-row">
-        <div class="attr-name">Recovery</div>
-        <div class="attr-bar-bg"><div class="attr-bar-fill" style="width: 35%; background: #10B981;"></div></div>
-        <div class="attr-val">9</div>
+    </div>
+
+    <div class="prog-section-head"><h3 style="margin:0;">Attributes</h3></div>
+    <div id="attr-list"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Active Buffs</h3></div>
+    <div class="buff-scroll" id="buff-scroll"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Debuffs</h3></div>
+    <div class="buff-scroll" id="debuff-scroll"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Skill Trees</h3></div>
+    <div class="tree-scroll" id="tree-scroll"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Equipment</h3></div>
+    <div class="equip-grid" id="equip-grid"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Achievements</h3></div>
+    <div class="achv-scroll" id="achv-scroll"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Mission</h3></div>
+    <div class="mission-final-card">
+      <div class="mission-eyebrow">Why I'm Doing This</div>
+      <div class="mission-lines">
+        <div class="mission-line">Become an elite basketball player.</div>
+        <div class="mission-line">Grow closer to God every day.</div>
+        <div class="mission-line">Build meaningful businesses.</div>
+        <div class="mission-line">Become disciplined in every area of life.</div>
+        <div class="mission-line">Never settle for average.</div>
       </div>
     </div>
   </div>
@@ -918,6 +1032,180 @@
     { name: "Business",   icon: "💼", color: "#FFAD5A" }
   ];
 
+  /* ============ CHARACTER TAB ============ */
+  const ATTRIBUTES = [
+    { name: "Faith",        icon: "✝️", color: "#F0367C", rank: "Devoted",          desc: "Grows through devotionals, prayer, and quiet consistency — not just church attendance.", earnedBy: "Completing Devos, Journal, and Faith-tagged quests.", bonuses: "+8% XP on all Faith quests while streak is active.", suggested: ["Devos", "Journal"], next: "Level 15 unlocks the \"Steadfast\" title." },
+    { name: "Discipline",   icon: "🔥", color: "#FF7A45", rank: "Elite Prospect",   desc: "The meta-attribute — rises whenever you complete a quest on time, especially unglamorous ones.", earnedBy: "On-time completion of any daily quest.", bonuses: "+5% XP on all quests while streak ≥ 7 days.", suggested: ["Stretch", "Mobility"], next: "Level 20 unlocks Boss difficulty: Legendary." },
+    { name: "Athleticism",  icon: "⚡", color: "#9B5DE5", rank: "Elite Prospect",   desc: "General physical capability — speed, explosiveness, and conditioning.", earnedBy: "Sprints, Plyometrics, Hill Sprints, Dynamic Warmup.", bonuses: "+10% Athleticism XP on back-to-back training days.", suggested: ["Sprints", "Plyometrics"], next: "Level 20 unlocks the \"Explosive\" title." },
+    { name: "Strength",     icon: "🏋️", color: "#FF5FA2", rank: "Rising",          desc: "Raw physical power built through upper and lower body training blocks.", earnedBy: "Upper Body Work, Lower Body Work.", bonuses: "Unlocks harder strength quest variants at Level 10.", suggested: ["Upper Body Work", "Lower Body Work"], next: "Level 12 unlocks weighted variations." },
+    { name: "Recovery",     icon: "❄️", color: "#4C9EFF", rank: "Developing",      desc: "How well your body bounces back — sleep, stretching, and mobility work.", earnedBy: "Stretch, Mobility, sleep logged 7h+.", bonuses: "Reduces injury-risk debuff chance.", suggested: ["Stretch", "Mobility"], next: "Level 10 unlocks Contrast Therapy tracking." },
+    { name: "Knowledge",    icon: "📚", color: "#6C7DFF", rank: "Sharp",           desc: "What you're learning — school, reading, and self-education.", earnedBy: "School quests, reading, studying.", bonuses: "+6% XP on Knowledge quests before noon.", suggested: ["Study Session"], next: "Level 15 unlocks the \"Scholar\" title." },
+    { name: "Leadership",   icon: "🧭", color: "#E8B84B", rank: "Emerging",        desc: "Your ability to guide, coach, and take initiative with others.", earnedBy: "Team practice reps, mentoring, group work.", bonuses: "Unlocks Guild features in a future update.", suggested: ["Cold Outreach"], next: "Level 8 unlocks the \"Captain\" title." },
+    { name: "Confidence",   icon: "💥", color: "#FF7A45", rank: "Building",        desc: "Grows from stacking small consistent wins over time.", earnedBy: "Any completed quest — compounding effect.", bonuses: "Small XP bonus on \"Hard\" and \"Elite\" difficulty quests.", suggested: ["Skill Work"], next: "Level 10 unlocks Confidence-tier avatar frame." },
+    { name: "Creativity",   icon: "🎨", color: "#C9509B", rank: "Developing",      desc: "Fed by music practice and creative/expressive work on the app.", earnedBy: "Practice Instrument, Work On App.", bonuses: "Unlocks custom themes at Level 12.", suggested: ["Practice Instrument", "Work On App"], next: "Level 12 unlocks the \"Creator\" title." },
+    { name: "Business",     icon: "💼", color: "#FFAD5A", rank: "Founder",         desc: "Your hustle stat — sales, trading, and building something real.", earnedBy: "Cold Outreach, Trading.", bonuses: "+10% Business XP on days with 2+ Business quests.", suggested: ["Cold Outreach", "Trading"], next: "Level 10 unlocks the \"Closer\" title." }
+  ];
+
+  function buildAttributes() {
+    const list = document.getElementById('attr-list');
+    ATTRIBUTES.forEach((a, i) => {
+      const level = Math.floor(4 + rand() * 22);
+      const xp = Math.round(300 + rand() * 2800);
+      const xpNext = xp + Math.round(300 + rand() * 900);
+      const pct = Math.round((xp / xpNext) * 100);
+      const growth = Math.round(rand() * 20);
+      const card = document.createElement('div');
+      card.className = 'attr-card';
+      card.innerHTML = `
+        <div class="attr-card-head" data-idx="${i}">
+          <div class="attr-card-icon" style="background:${a.color}22; color:${a.color};">${a.icon}</div>
+          <div class="attr-card-body">
+            <div class="attr-card-top"><span class="attr-card-name">${a.name}</span><span class="attr-card-lvl">LVL ${level}</span></div>
+            <div class="attr-card-bar-bg"><div class="attr-card-bar-fill" data-w="${pct}"></div></div>
+          </div>
+          <svg class="attr-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="attr-card-expand">
+          <div class="attr-expand-inner">
+            <div class="attr-rank-row"><span class="attr-rank-lbl">Current Rank</span><span class="attr-rank-val">${a.rank}</span></div>
+            <div class="attr-rank-row" style="margin-top:6px;"><span class="attr-rank-lbl">XP</span><span class="attr-rank-val mono">${xp.toLocaleString()} / ${xpNext.toLocaleString()}</span></div>
+            <div class="attr-rank-row" style="margin-top:6px;"><span class="attr-rank-lbl">Recent Growth</span><span class="attr-rank-val" style="color:var(--success);">↑ ${growth}% this month</span></div>
+            <div class="attr-desc">${a.desc}</div>
+            <div class="attr-sub-block"><div class="attr-sub-lbl">How XP Is Earned</div><div class="attr-sub-val">${a.earnedBy}</div></div>
+            <div class="attr-sub-block"><div class="attr-sub-lbl">Current Bonuses</div><div class="attr-sub-val">${a.bonuses}</div></div>
+            <div class="attr-sub-block"><div class="attr-sub-lbl">Suggested Quests</div><div class="attr-tag-row">${a.suggested.map(s => `<span class="attr-tag">${s}</span>`).join('')}</div></div>
+            <div class="attr-sub-block"><div class="attr-sub-lbl">Next Unlock</div><div class="attr-sub-val">${a.next}</div></div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+      card.querySelector('.attr-card-head').addEventListener('click', () => {
+        card.classList.toggle('open');
+      });
+    });
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.attr-card-bar-fill').forEach(bar => { bar.style.width = `${bar.dataset.w}%`; });
+    });
+  }
+
+  function buildBuffs() {
+    const buffs = [
+      { icon: "🔥", title: "7 Day Streak", sub: "+10% Discipline XP" },
+      { icon: "⚡", title: "Energy Boost", sub: "Perfect sleep logged" },
+      { icon: "🏀", title: "Training Momentum", sub: "Completed Basketball today" },
+      { icon: "✝️", title: "Faith Streak", sub: "Daily devotions completed" },
+      { icon: "💪", title: "Recovery", sub: "Hydration goal completed" }
+    ];
+    const scroll = document.getElementById('buff-scroll');
+    buffs.forEach(b => {
+      const card = document.createElement('div');
+      card.className = 'buff-card';
+      card.innerHTML = `<div class="buff-icon">${b.icon}</div><div class="buff-title">${b.title}</div><div class="buff-sub">${b.sub}</div>`;
+      scroll.appendChild(card);
+    });
+
+    const debuffs = [
+      { icon: "😴", title: "Poor Sleep", sub: "Recovery reduced today.", rec: "Recommendation: sleep before 11:00 PM tonight." },
+      { icon: "💧", title: "Low Hydration", sub: "Only 40% of water goal logged.", rec: "Recommendation: add a bottle before your next session." }
+    ];
+    const dScroll = document.getElementById('debuff-scroll');
+    if (debuffs.length === 0) {
+      dScroll.innerHTML = `<div class="empty-hint" style="padding:14px 4px;">No active debuffs — clean sheet today.</div>`;
+    } else {
+      debuffs.forEach(d => {
+        const card = document.createElement('div');
+        card.className = 'buff-card debuff';
+        card.innerHTML = `<div class="buff-icon">${d.icon}</div><div class="buff-title">${d.title}</div><div class="buff-sub">${d.sub}</div><div class="buff-rec">${d.rec}</div>`;
+        dScroll.appendChild(card);
+      });
+    }
+  }
+
+  function buildSkillTrees() {
+    const trees = [
+      { name: "Basketball",       icon: "🏀", color: "#FF7A45", focus: "Finishing at the rim", unlocked: 12, next: "Advanced Eurostep chain" },
+      { name: "Faith",            icon: "✝️", color: "#F0367C", focus: "Daily devotional streak", unlocked: 9,  next: "Scripture memory track" },
+      { name: "Business",         icon: "💼", color: "#FFAD5A", focus: "Cold outreach volume", unlocked: 6,  next: "Negotiation fundamentals" },
+      { name: "Coding",           icon: "💻", color: "#6C7DFF", focus: "Shipping the app", unlocked: 8,  next: "Backend + persistence" },
+      { name: "Fitness",          icon: "💪", color: "#9B5DE5", focus: "Strength foundations", unlocked: 11, next: "Progressive overload block" },
+      { name: "Music",            icon: "🎸", color: "#C9509B", focus: "Instrument fundamentals", unlocked: 5,  next: "First full song" },
+      { name: "Personal Growth",  icon: "🌱", color: "#3DDC97", focus: "Journaling consistency", unlocked: 7,  next: "30-day reflection streak" }
+    ];
+    const scroll = document.getElementById('tree-scroll');
+    trees.forEach(t => {
+      const level = Math.floor(3 + rand() * 15);
+      const pct = Math.round(20 + rand() * 70);
+      const card = document.createElement('div');
+      card.className = 'tree-card';
+      card.innerHTML = `
+        <div class="tree-top">
+          <div class="tree-icon" style="background:${t.color}22; color:${t.color};">${t.icon}</div>
+          <div><div class="tree-name">${t.name}</div><div class="tree-lvl">Level ${level} · ${pct}% complete</div></div>
+        </div>
+        <div class="tree-bar-bg"><div class="tree-bar-fill" data-w="${pct}"></div></div>
+        <div class="tree-focus">Focus: <b>${t.focus}</b></div>
+        <div class="tree-next">${t.unlocked} skills unlocked · Next: ${t.next}</div>
+      `;
+      scroll.appendChild(card);
+    });
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.tree-bar-fill').forEach(bar => { bar.style.width = `${bar.dataset.w}%`; });
+    });
+  }
+
+  function buildEquipment() {
+    const equipment = [
+      { icon: "🏀", name: "Wilson Evolution", meta: "Acquired Jan 2026 · Daily use", fav: true },
+      { icon: "⌚", name: "Apple Watch", meta: "Acquired Nov 2025 · Daily use", fav: false },
+      { icon: "💻", name: "MacBook", meta: "Acquired 2025 · Daily use", fav: true },
+      { icon: "🎸", name: "Guitar", meta: "Acquired 2024 · 3x/week", fav: false },
+      { icon: "🎧", name: "AirPods", meta: "Acquired 2025 · Daily use", fav: false },
+      { icon: "📖", name: "Bible", meta: "Daily use", fav: true }
+    ];
+    const grid = document.getElementById('equip-grid');
+    equipment.forEach(e => {
+      const card = document.createElement('div');
+      card.className = 'equip-card';
+      card.innerHTML = `${e.fav ? '<div class="equip-fav">⭐</div>' : ''}<div class="equip-icon">${e.icon}</div><div class="equip-name">${e.name}</div><div class="equip-meta">${e.meta}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function buildAchievements() {
+    const achievements = [
+      { icon: "🥇", title: "First Workout", date: "Jan 4", xp: 100 },
+      { icon: "🔥", title: "7 Day Streak", date: "Jan 11", xp: 250 },
+      { icon: "🏀", title: "100 Basketball Sessions", date: "May 2", xp: 800 },
+      { icon: "💼", title: "First Client", date: "Apr 30", xp: 400 },
+      { icon: "📚", title: "Read 10 Books", date: "Jun 1", xp: 350 },
+      { icon: "💻", title: "Complete First App", date: "Jun 9", xp: 600 },
+      { icon: "🎯", title: "Perfect Week", date: "Jun 22", xp: 300 }
+    ];
+    const scroll = document.getElementById('achv-scroll');
+    achievements.forEach(a => {
+      const card = document.createElement('div');
+      card.className = 'achv-card';
+      card.innerHTML = `<div class="achv-art">${a.icon}</div><div class="achv-title">${a.title}</div><div class="achv-date">${a.date}</div><div class="achv-xp">+${a.xp} XP</div>`;
+      scroll.appendChild(card);
+    });
+  }
+
+  let characterBuilt = false;
+  function renderCharacter() {
+    if (!characterBuilt) {
+      buildAttributes();
+      buildBuffs();
+      buildSkillTrees();
+      buildEquipment();
+      buildAchievements();
+      characterBuilt = true;
+    }
+    requestAnimationFrame(() => {
+      document.getElementById('char-xp-fill').style.width = '80%';
+      document.getElementById('boss-bar-fill').style.width = '60%';
+    });
+  }
+
   let progressBuilt = false;
 
   function renderProgress() {
@@ -1224,6 +1512,7 @@
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${targetView}`).classList.add('active');
       if (targetView === 'progress') renderProgress();
+      if (targetView === 'character') renderCharacter();
     });
   });
 
