@@ -1,4 +1,4 @@
-const CACHE = "summer-grind-v5";
+const CACHE = "summer-grind-v6";
 const ASSETS = [
   "./",
   "./index.html",
