@@ -401,10 +401,10 @@
       <div class="header-content">
         <div class="user-info">
           <h1 id="greeting">Good morning, Victor</h1>
-          <div class="rank">Rank: Architect</div>
+          <div class="rank" id="home-rank">Rank: Recruit</div>
         </div>
         <div class="level-badge">
-          <div class="num">14</div>
+          <div class="num" id="home-level-num">1</div>
           <div class="lbl">Level</div>
         </div>
       </div>
@@ -412,26 +412,26 @@
         <div class="xp-bar-fill" id="home-xp-fill"></div>
       </div>
       <div class="xp-text">
-        <span>XP: 2,450</span>
-        <span>Next: 3,000</span>
+        <span id="home-xp-current">XP: 0</span>
+        <span id="home-xp-next">Next: 1,200</span>
       </div>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="val" id="stat-xp">350</div>
+        <div class="val" id="stat-xp">0</div>
         <div class="lbl">XP Gained Today</div>
       </div>
       <div class="stat-card">
-        <div class="val">12</div>
+        <div class="val" id="stat-streak">0</div>
         <div class="lbl">Day Streak 🔥</div>
       </div>
-      <div class="stat-card">
-        <div class="val">7.5h</div>
-        <div class="lbl">Sleep Logged</div>
+      <div class="stat-card" id="sleep-stat-card" style="cursor:pointer;">
+        <div class="val" id="stat-sleep">—</div>
+        <div class="lbl">Sleep Logged (tap to log)</div>
       </div>
       <div class="stat-card">
-        <div class="val">4/7</div>
+        <div class="val" id="stat-quests">0/0</div>
         <div class="lbl">Quests Cleared</div>
       </div>
     </div>
@@ -594,13 +594,13 @@
   <div class="view" id="view-character">
     <div class="char-hero">
       <div class="char-avatar-ring">
-        <div class="char-avatar-inner">💆🏾‍♂️</div>
-        <div class="char-lvl-chip"><div class="char-lvl-chip-inner">LVL 27</div></div>
+        <div class="char-avatar-inner">🐺</div>
+        <div class="char-lvl-chip"><div class="char-lvl-chip-inner" id="char-lvl-chip-inner">LVL 1</div></div>
       </div>
       <div class="char-name">Victor</div>
-      <div class="char-title">"The Disciplined"</div>
+      <div class="char-title" id="char-title">"New Recruit"</div>
       <div class="char-xp-wrap">
-        <div class="char-xp-top"><span>Level 27</span><span class="cx-mono" id="char-xp-frac">4,820 / 6,000 XP</span></div>
+        <div class="char-xp-top"><span id="char-level-lbl">Level 1</span><span class="cx-mono" id="char-xp-frac">0 / 1,200 XP</span></div>
         <div class="char-xp-bar-bg"><div class="char-xp-bar-fill" id="char-xp-fill"></div></div>
       </div>
     </div>
@@ -609,11 +609,11 @@
     <div class="boss-card">
       <div class="boss-eyebrow">Long-Term Objective</div>
       <div class="boss-title">🐉 30-Day Consistency Streak</div>
-      <div class="boss-progress-row"><span class="boss-progress-frac">18 / 30 Days</span><span class="boss-progress-frac">60%</span></div>
+      <div class="boss-progress-row"><span class="boss-progress-frac" id="boss-frac-days">0 / 30 Days</span><span class="boss-progress-frac" id="boss-frac-pct">0%</span></div>
       <div class="boss-bar-bg"><div class="boss-bar-fill" id="boss-bar-fill"></div></div>
       <div class="boss-meta-row">
-        <div class="boss-meta-chip">📅 Est. completion: 12 days</div>
-        <div class="boss-meta-chip">⚔️ Difficulty: Elite</div>
+        <div class="boss-meta-chip" id="boss-est">📅 Est. completion: 30 days</div>
+        <div class="boss-meta-chip" id="boss-difficulty">⚔️ Difficulty: Building</div>
       </div>
       <div class="boss-reward">
         <div class="boss-reward-lbl">Reward: Unlock "The Relentless" title</div>
@@ -692,8 +692,6 @@
           <div class="cal-detail-item"><div class="cdi-val" id="cdi-quests">—</div><div class="cdi-lbl">Quests</div></div>
           <div class="cal-detail-item"><div class="cdi-val" id="cdi-hours">—</div><div class="cdi-lbl">Hours</div></div>
           <div class="cal-detail-item"><div class="cdi-val" id="cdi-sleep">—</div><div class="cdi-lbl">Sleep</div></div>
-          <div class="cal-detail-item"><div class="cdi-val" id="cdi-mood">—</div><div class="cdi-lbl">Mood</div></div>
-          <div class="cal-detail-item"><div class="cdi-val" id="cdi-note">—</div><div class="cdi-lbl">Note</div></div>
         </div>
       </div>
     </div>
@@ -816,7 +814,9 @@
         <div class="toggle on"><div class="toggle-knob"></div></div>
       </div>
     </div>
-    <button style="width: 100%; padding: 16px; background: var(--surface-hi); border-radius: var(--radius-md); font-weight: 700; color: var(--text); margin-top: 16px; border: 1px solid var(--border);">Export JSON Data</button>
+    <button id="export-btn" style="width: 100%; padding: 16px; background: var(--surface-hi); border-radius: var(--radius-md); font-weight: 700; color: var(--text); margin-top: 16px; border: 1px solid var(--border);">Export JSON Data</button>
+    <button id="reset-btn" style="width: 100%; padding: 16px; background: rgba(255,84,112,0.1); border-radius: var(--radius-md); font-weight: 700; color: #FF5470; margin-top: 12px; border: 1px solid rgba(255,84,112,0.35);">Reset Account</button>
+    <div style="text-align:center; font-size:10.5px; color:var(--text-faint); margin-top:10px; padding: 0 10px;">Resetting permanently erases all XP, streaks, quest history, and achievements on this device.</div>
   </div>
 
   <nav class="bottom-nav glass">
@@ -846,7 +846,14 @@
 </div>
 
 <script>
-  // Every task that recurs across the week, with its category + reward baked in once.
+  /* =========================================================================
+     LIFE OS — REAL DATA ENGINE
+     Brand-new accounts start completely at zero. Every number on every tab
+     is derived from localStorage, not randomized or hardcoded. The single
+     source of truth is STATE.days — a per-date log of what was completed.
+  ========================================================================= */
+
+  // ---------- Static content: task library + weekly plan ----------
   const TASK_LIBRARY = {
     "Devos":                          { category: "Faith",      xp: 50,  time: "15m" },
     "Mobility":                       { category: "Fitness",    xp: 40,  time: "15m" },
@@ -870,7 +877,6 @@
     "Journal":                        { category: "Faith",      xp: 40,  time: "10m" }
   };
 
-  // The recurring weekly structure — same plan every week, keyed by Date.getDay() (0 = Sunday).
   const WEEKLY_PLAN = {
     1: ["Devos","Mobility","Dynamic Warmup","Skill Work (Shooting)","Stretch","Upper Body Work","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
     2: ["Devos","Mobility","Dynamic Warmup","Skill Work (Finishing)","Stretch","Lower Body Work","Plyometrics","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"],
@@ -881,24 +887,180 @@
     0: ["Devos","Mobility","Dynamic Warmup","Low Intensity Hooping Session","Stretch","Cold Outreach","Trading","Practice Instrument","Work On App","Journal","Stretch"]
   };
 
-  function buildTodaysQuests() {
-    const dow = new Date().getDay();
-    return WEEKLY_PLAN[dow].map((name, i) => {
-      const meta = TASK_LIBRARY[name];
-      return { id: `${dow}-${i}`, title: name, category: meta.category, xp: meta.xp, time: meta.time, completed: false };
-    });
+  const CATEGORY_DEFS = [
+    { name: "Basketball", icon: "🏀", color: "#FF7A45" },
+    { name: "Faith",      icon: "✝️", color: "#F0367C" },
+    { name: "Fitness",    icon: "💪", color: "#9B5DE5" },
+    { name: "School",     icon: "🎓", color: "#6C7DFF" },
+    { name: "Skills",     icon: "🎯", color: "#C9509B" },
+    { name: "Business",   icon: "💼", color: "#FFAD5A" }
+  ];
+
+  // Which attributes each category feeds, and what share of the (post-Discipline) XP each gets.
+  const CATEGORY_TO_ATTRIBUTES = {
+    Basketball: [["Athleticism", 0.6], ["Confidence", 0.4]],
+    Faith:      [["Faith", 1.0]],
+    Fitness:    [["Strength", 0.4], ["Recovery", 0.3], ["Athleticism", 0.3]],
+    School:     [["Knowledge", 1.0]],
+    Skills:     [["Creativity", 0.5], ["Knowledge", 0.5]],
+    Business:   [["Business", 0.7], ["Leadership", 0.3]]
+  };
+  const DISCIPLINE_SHARE = 0.2;
+
+  const ATTRIBUTE_DEFS = [
+    { name: "Faith",        icon: "✝️", color: "#F0367C", desc: "Grows through devotionals, prayer, and quiet consistency.", earnedBy: "Devos and Journal quests.", suggested: ["Devos", "Journal"] },
+    { name: "Discipline",   icon: "🔥", color: "#FF7A45", desc: "The meta-attribute — rises whenever you complete any quest.", earnedBy: "A small share of every completed quest.", suggested: ["Any daily quest"] },
+    { name: "Athleticism",  icon: "⚡", color: "#9B5DE5", desc: "General physical capability — speed, explosiveness, conditioning.", earnedBy: "Basketball and Fitness quests.", suggested: ["Sprints", "Skill Work"] },
+    { name: "Strength",     icon: "🏋️", color: "#FF5FA2", desc: "Raw physical power built through training blocks.", earnedBy: "Upper Body Work, Lower Body Work.", suggested: ["Upper Body Work", "Lower Body Work"] },
+    { name: "Recovery",     icon: "❄️", color: "#4C9EFF", desc: "How well your body bounces back — stretching and mobility.", earnedBy: "Stretch, Mobility.", suggested: ["Stretch", "Mobility"] },
+    { name: "Knowledge",    icon: "📚", color: "#6C7DFF", desc: "What you're learning — school and skill-building.", earnedBy: "School and Skills quests.", suggested: ["Work On App"] },
+    { name: "Leadership",   icon: "🧭", color: "#E8B84B", desc: "Your ability to guide, coach, and take initiative.", earnedBy: "Business quests.", suggested: ["Cold Outreach"] },
+    { name: "Confidence",   icon: "💥", color: "#FF7A45", desc: "Grows from stacking small consistent wins over time.", earnedBy: "Basketball quests.", suggested: ["Skill Work"] },
+    { name: "Creativity",   icon: "🎨", color: "#C9509B", desc: "Fed by music practice and creative work on the app.", earnedBy: "Practice Instrument, Work On App.", suggested: ["Practice Instrument", "Work On App"] },
+    { name: "Business",     icon: "💼", color: "#FFAD5A", desc: "Your hustle stat — sales, trading, building something real.", earnedBy: "Cold Outreach, Trading.", suggested: ["Cold Outreach", "Trading"] }
+  ];
+
+  const SKILL_TREE_DEFS = [
+    { name: "Basketball",      icon: "🏀", color: "#FF7A45", match: q => q.category === "Basketball" },
+    { name: "Faith",           icon: "✝️", color: "#F0367C", match: q => q.category === "Faith" },
+    { name: "Business",        icon: "💼", color: "#FFAD5A", match: q => q.category === "Business" },
+    { name: "Coding",          icon: "💻", color: "#6C7DFF", match: q => q.title === "Work On App" },
+    { name: "Fitness",         icon: "💪", color: "#9B5DE5", match: q => q.category === "Fitness" },
+    { name: "Music",           icon: "🎸", color: "#C9509B", match: q => q.title === "Practice Instrument" },
+    { name: "Personal Growth", icon: "🌱", color: "#3DDC97", match: q => q.title === "Journal" }
+  ];
+
+  const ACHIEVEMENT_DEFS = [
+    { id: "first_quest", icon: "🥇", title: "First Quest Completed", xp: 100, check: s => s.totalCompletions >= 1 },
+    { id: "streak_7",    icon: "🔥", title: "7 Day Streak",          xp: 250, check: s => s.longestStreak >= 7 },
+    { id: "streak_30",   icon: "🏆", title: "30 Day Streak",         xp: 750, check: s => s.longestStreak >= 30 },
+    { id: "level_5",     icon: "⭐", title: "Reached Level 5",       xp: 200, check: s => getLevelInfo(s.totalXP).level >= 5 },
+    { id: "level_10",    icon: "🌟", title: "Reached Level 10",      xp: 400, check: s => getLevelInfo(s.totalXP).level >= 10 },
+    { id: "quests_50",   icon: "✅", title: "50 Quests Completed",   xp: 300, check: s => s.totalCompletions >= 50 },
+    { id: "quests_200",  icon: "💯", title: "200 Quests Completed",  xp: 600, check: s => s.totalCompletions >= 200 },
+    { id: "basketball_20", icon: "🏀", title: "20 Basketball Sessions", xp: 300, check: s => (s.categoryCompletions.Basketball || 0) >= 20 },
+    { id: "faith_20",    icon: "✝️", title: "20 Faith Quests",       xp: 300, check: s => (s.categoryCompletions.Faith || 0) >= 20 },
+    { id: "app_10",      icon: "💻", title: "10 App Work Sessions",  xp: 250, check: s => (s.treeCompletions.Coding || 0) >= 10 }
+  ];
+
+  // ---------- State persistence ----------
+  const STORAGE_KEY = "lifeos.state.v1";
+
+  function defaultState() {
+    const cats = {}; CATEGORY_DEFS.forEach(c => cats[c.name] = 0);
+    const attrs = {}; ATTRIBUTE_DEFS.forEach(a => attrs[a.name] = 0);
+    const trees = {}; SKILL_TREE_DEFS.forEach(t => trees[t.name] = 0);
+    return {
+      createdAt: new Date().toISOString(),
+      totalXP: 0,
+      totalCompletions: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      categoryXP: cats,
+      categoryCompletions: { ...cats },
+      attributeXP: attrs,
+      treeCompletions: trees,
+      minutesTrained: 0,
+      days: {},
+      unlockedAchievements: [],
+      achievementDates: {}
+    };
   }
 
-  const quests = buildTodaysQuests();
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      const base = defaultState();
+      return Object.assign(base, parsed, {
+        categoryXP: Object.assign(base.categoryXP, parsed.categoryXP || {}),
+        categoryCompletions: Object.assign(base.categoryCompletions, parsed.categoryCompletions || {}),
+        attributeXP: Object.assign(base.attributeXP, parsed.attributeXP || {}),
+        treeCompletions: Object.assign(base.treeCompletions, parsed.treeCompletions || {}),
+        days: parsed.days || {},
+        unlockedAchievements: parsed.unlockedAchievements || [],
+        achievementDates: parsed.achievementDates || {}
+      });
+    } catch (e) { return defaultState(); }
+  }
 
-  let currentXP = 2450;
-  let dailyXPGained = 350;
+  let STATE = loadState();
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }
+    catch (e) { /* storage unavailable — app still works in-memory for this session */ }
+  }
+
+  // ---------- Date / level helpers ----------
+  function dateKeyFor(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  function todayKey() { return dateKeyFor(new Date()); }
+  function parseMinutes(timeStr) { const m = parseInt(timeStr, 10); return isNaN(m) ? 0 : m; }
+  function categoryForId(id) { const [dow, idx] = id.split('-').map(Number); const name = WEEKLY_PLAN[dow][idx]; return TASK_LIBRARY[name] ? TASK_LIBRARY[name].category : null; }
+  function taskNameForId(id) { const [dow, idx] = id.split('-').map(Number); return WEEKLY_PLAN[dow][idx]; }
+  function getAllDayKeysSorted() { return Object.keys(STATE.days).sort(); }
+  function daysSinceCreation() {
+    const created = new Date(STATE.createdAt);
+    const diff = Math.max(1, Math.round((new Date() - created) / 86400000) + 1);
+    return diff;
+  }
+
+  const XP_PER_LEVEL = 1200;
+  function getLevelInfo(totalXP) {
+    const level = Math.floor(totalXP / XP_PER_LEVEL) + 1;
+    return { level, intoLevel: totalXP % XP_PER_LEVEL, xpForNext: XP_PER_LEVEL };
+  }
+  function getRankName(level) {
+    if (level < 3) return "Recruit";
+    if (level < 6) return "Initiate";
+    if (level < 10) return "Architect";
+    if (level < 15) return "Operative";
+    if (level < 20) return "Elite";
+    if (level < 30) return "Master";
+    return "Legend";
+  }
+  function getCharacterTitle(level) {
+    if (level < 3) return '"New Recruit"';
+    if (level < 6) return '"The Committed"';
+    if (level < 10) return '"The Disciplined"';
+    if (level < 15) return '"The Builder"';
+    if (level < 20) return '"The Relentless"';
+    return '"The Legend"';
+  }
+  function bossDifficulty(streak) { return streak < 10 ? "Building" : streak < 20 ? "Hard" : "Elite"; }
+
+  function recomputeStreak() {
+    let streak = 0;
+    const cursor = new Date();
+    const hasToday = STATE.days[todayKey()] && STATE.days[todayKey()].completedIds.length > 0;
+    if (!hasToday) cursor.setDate(cursor.getDate() - 1);
+    while (true) {
+      const key = dateKeyFor(cursor);
+      const day = STATE.days[key];
+      if (day && day.completedIds.length > 0) { streak++; cursor.setDate(cursor.getDate() - 1); }
+      else break;
+    }
+    STATE.currentStreak = streak;
+    STATE.longestStreak = Math.max(STATE.longestStreak, streak);
+  }
+
+  // ---------- Quests engine ----------
+  function buildTodaysQuests() {
+    const dow = new Date().getDay();
+    const dayLog = STATE.days[todayKey()];
+    return WEEKLY_PLAN[dow].map((name, i) => {
+      const meta = TASK_LIBRARY[name];
+      const id = `${dow}-${i}`;
+      const completed = !!(dayLog && dayLog.completedIds.includes(id));
+      return { id, title: name, category: meta.category, xp: meta.xp, time: meta.time, completed };
+    });
+  }
+  let quests = buildTodaysQuests();
 
   function renderQuestCard(container, q) {
     const div = document.createElement('div');
     div.className = `quest-card ${q.completed ? 'completed' : ''}`;
     div.innerHTML = `
-      <button class="quest-check" onclick="toggleQuest('${q.id}', this)">
+      <button class="quest-check" onclick="toggleQuest('${q.id}')">
         <div class="check-circle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
         </div>
@@ -922,10 +1084,9 @@
   }
 
   const DIAL_CIRCUMFERENCE = 2 * Math.PI * 68;
-  const dialFillEl = document.getElementById('dial-fill');
-  dialFillEl.style.strokeDasharray = `${DIAL_CIRCUMFERENCE}`;
-
   function updateDial() {
+    const dialFillEl = document.getElementById('dial-fill');
+    dialFillEl.style.strokeDasharray = `${DIAL_CIRCUMFERENCE}`;
     const total = quests.length;
     const completed = quests.filter(q => q.completed).length;
     const pct = total ? completed / total : 0;
@@ -941,119 +1102,639 @@
     else if (hour < 18) greeting = 'Good afternoon';
     document.getElementById('greeting').innerText = `${greeting}, Victor`;
   }
-  updateGreeting();
 
   function setQuestDate() {
-    const today = new Date();
-    document.getElementById('quest-date').innerText = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    document.getElementById('quest-date').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   }
-  setQuestDate();
 
-  const QUEST_CATEGORIES = ["Basketball", "Faith", "Fitness", "School", "Skills", "Business"];
   const QCAT_CIRCUMFERENCE = 2 * Math.PI * 25;
-  document.querySelectorAll('.qcat-ring-fill').forEach(ring => {
-    ring.style.strokeDasharray = `${QCAT_CIRCUMFERENCE}`;
-  });
-
   function updateCategoryDials() {
-    QUEST_CATEGORIES.forEach(cat => {
-      const inCat = quests.filter(q => q.category === cat);
+    document.querySelectorAll('.qcat-ring-fill').forEach(ring => { ring.style.strokeDasharray = `${QCAT_CIRCUMFERENCE}`; });
+    CATEGORY_DEFS.forEach(cat => {
+      const inCat = quests.filter(q => q.category === cat.name);
       const total = inCat.length;
       const completed = inCat.filter(q => q.completed).length;
       const pct = total ? completed / total : 0;
-      const ring = document.querySelector(`.qcat-ring-fill[data-ring="${cat}"]`);
+      const ring = document.querySelector(`.qcat-ring-fill[data-ring="${cat.name}"]`);
       if (ring) ring.style.strokeDashoffset = `${QCAT_CIRCUMFERENCE * (1 - pct)}`;
-      const frac = document.querySelector(`.qcat-frac[data-frac="${cat}"]`);
+      const frac = document.querySelector(`.qcat-frac[data-frac="${cat.name}"]`);
       if (frac) frac.innerText = `${completed}/${total}`;
     });
   }
 
-  document.querySelectorAll('.cat-item').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cat = btn.getAttribute('data-cat');
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      document.querySelector('.nav-item[data-target="quests"]').classList.add('active');
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-quests').classList.add('active');
+  function showXpFlyout(xp) {
+    const flyout = document.getElementById('xp-flyout');
+    flyout.innerText = `+${xp} XP`;
+    flyout.style.animation = 'none';
+    void flyout.offsetWidth;
+    flyout.style.animation = 'floatUp 1.2s ease forwards';
+  }
 
-      const ringBox = document.querySelector(`.qcat-dial[data-cat="${cat}"] .qcat-ring-box`);
-      if (ringBox) {
-        ringBox.classList.remove('pulse');
-        void ringBox.offsetWidth;
-        ringBox.classList.add('pulse');
-        setTimeout(() => ringBox.classList.remove('pulse'), 350);
+  function checkAchievements() {
+    const key = todayKey();
+    ACHIEVEMENT_DEFS.forEach(a => {
+      if (!STATE.unlockedAchievements.includes(a.id) && a.check(STATE)) {
+        STATE.unlockedAchievements.push(a.id);
+        STATE.achievementDates[a.id] = new Date().toISOString();
+        STATE.totalXP += a.xp;
+        if (STATE.days[key]) STATE.days[key].xp += a.xp;
       }
     });
-  });
+  }
 
-  window.toggleQuest = function(id, btnElement) {
+  window.toggleQuest = function(id) {
     const quest = quests.find(q => q.id === id);
+    if (!quest) return;
+    const key = todayKey();
+    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null };
+    const day = STATE.days[key];
+    const mins = parseMinutes(quest.time);
+
     if (!quest.completed) {
       quest.completed = true;
+      day.completedIds.push(id);
+      day.xp += quest.xp;
+      day.minutes += mins;
+
+      STATE.totalXP += quest.xp;
+      STATE.totalCompletions += 1;
+      STATE.minutesTrained += mins;
+      STATE.categoryXP[quest.category] = (STATE.categoryXP[quest.category] || 0) + quest.xp;
+      STATE.categoryCompletions[quest.category] = (STATE.categoryCompletions[quest.category] || 0) + 1;
+
+      const disciplineCut = Math.round(quest.xp * DISCIPLINE_SHARE);
+      STATE.attributeXP.Discipline = (STATE.attributeXP.Discipline || 0) + disciplineCut;
+      const remaining = quest.xp - disciplineCut;
+      (CATEGORY_TO_ATTRIBUTES[quest.category] || []).forEach(([attr, share]) => {
+        STATE.attributeXP[attr] = (STATE.attributeXP[attr] || 0) + Math.round(remaining * share);
+      });
+      SKILL_TREE_DEFS.forEach(t => { if (t.match(quest)) STATE.treeCompletions[t.name] = (STATE.treeCompletions[t.name] || 0) + 1; });
+
+      recomputeStreak();
       if (navigator.vibrate) navigator.vibrate(50);
-      currentXP += quest.xp;
-      dailyXPGained += quest.xp;
-      const newPct = Math.min((currentXP - 2000) / 1000 * 100, 100); 
-      document.getElementById('home-xp-fill').style.width = `${newPct}%`;
-      document.getElementById('stat-xp').innerText = dailyXPGained;
-      
-      const flyout = document.getElementById('xp-flyout');
-      flyout.innerText = `+${quest.xp} XP`;
-      flyout.style.animation = 'none';
-      void flyout.offsetWidth; 
-      flyout.style.animation = 'floatUp 1.2s ease forwards';
+      showXpFlyout(quest.xp);
+      checkAchievements();
     } else {
       quest.completed = false;
-      currentXP -= quest.xp;
-      dailyXPGained -= quest.xp;
-      document.getElementById('stat-xp').innerText = dailyXPGained;
+      day.completedIds = day.completedIds.filter(x => x !== id);
+      day.xp -= quest.xp;
+      day.minutes -= mins;
+
+      STATE.totalXP = Math.max(0, STATE.totalXP - quest.xp);
+      STATE.totalCompletions = Math.max(0, STATE.totalCompletions - 1);
+      STATE.minutesTrained = Math.max(0, STATE.minutesTrained - mins);
+      STATE.categoryXP[quest.category] = Math.max(0, (STATE.categoryXP[quest.category] || 0) - quest.xp);
+      STATE.categoryCompletions[quest.category] = Math.max(0, (STATE.categoryCompletions[quest.category] || 0) - 1);
+
+      const disciplineCut = Math.round(quest.xp * DISCIPLINE_SHARE);
+      STATE.attributeXP.Discipline = Math.max(0, (STATE.attributeXP.Discipline || 0) - disciplineCut);
+      const remaining = quest.xp - disciplineCut;
+      (CATEGORY_TO_ATTRIBUTES[quest.category] || []).forEach(([attr, share]) => {
+        STATE.attributeXP[attr] = Math.max(0, (STATE.attributeXP[attr] || 0) - Math.round(remaining * share));
+      });
+      SKILL_TREE_DEFS.forEach(t => { if (t.match(quest)) STATE.treeCompletions[t.name] = Math.max(0, (STATE.treeCompletions[t.name] || 0) - 1); });
+
+      recomputeStreak();
     }
+
+    saveState();
     renderQuests();
+    updateHomeStats();
+  };
+
+  // ---------- Sleep logging (tap the Home Sleep card) ----------
+  function logSleep() {
+    const val = prompt("How many hours did you sleep last night? (e.g. 7.5)");
+    if (val === null) return;
+    const num = parseFloat(val);
+    if (isNaN(num) || num < 0 || num > 24) { alert("Enter a number between 0 and 24."); return; }
+    const key = todayKey();
+    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null };
+    STATE.days[key].sleep = num;
+    saveState();
+    updateHomeStats();
   }
 
-  /* ============ PROGRESS TAB ============ */
-  // Small seeded PRNG so the mock data is stable across reloads instead of reshuffling every render.
-  function mulberry32(seed) {
-    return function() {
-      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
-      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
+  // ---------- Home stats ----------
+  function updateHomeStats() {
+    const { level, intoLevel, xpForNext } = getLevelInfo(STATE.totalXP);
+    document.getElementById('home-level-num').innerText = level;
+    document.getElementById('home-xp-fill').style.width = `${(intoLevel / xpForNext) * 100}%`;
+    document.getElementById('home-xp-current').innerText = `XP: ${intoLevel.toLocaleString()}`;
+    document.getElementById('home-xp-next').innerText = `Next: ${xpForNext.toLocaleString()}`;
+    document.getElementById('home-rank').innerText = `Rank: ${getRankName(level)}`;
+
+    const today = STATE.days[todayKey()] || { xp: 0, completedIds: [], sleep: null };
+    document.getElementById('stat-xp').innerText = today.xp;
+    document.getElementById('stat-streak').innerText = STATE.currentStreak;
+    document.getElementById('stat-sleep').innerText = today.sleep != null ? `${today.sleep}h` : '—';
+    document.getElementById('stat-quests').innerText = `${today.completedIds.length}/${quests.length}`;
   }
-  const rand = mulberry32(2026);
 
-  const PROG_CATEGORIES = [
-    { name: "Basketball", icon: "🏀", color: "#FF7A45" },
-    { name: "Faith",      icon: "✝️", color: "#F0367C" },
-    { name: "Fitness",    icon: "💪", color: "#9B5DE5" },
-    { name: "School",     icon: "🎓", color: "#6C7DFF" },
-    { name: "Skills",     icon: "🎯", color: "#C9509B" },
-    { name: "Business",   icon: "💼", color: "#FFAD5A" }
-  ];
+  // ---------- Home category row → jump to Quests + pulse ----------
+  function wireHomeCategoryRow() {
+    document.querySelectorAll('.cat-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-cat');
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        document.querySelector('.nav-item[data-target="quests"]').classList.add('active');
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-quests').classList.add('active');
+        const ringBox = document.querySelector(`.qcat-dial[data-cat="${cat}"] .qcat-ring-box`);
+        if (ringBox) {
+          ringBox.classList.remove('pulse');
+          void ringBox.offsetWidth;
+          ringBox.classList.add('pulse');
+          setTimeout(() => ringBox.classList.remove('pulse'), 350);
+        }
+      });
+    });
+  }
 
-  /* ============ CHARACTER TAB ============ */
-  const ATTRIBUTES = [
-    { name: "Faith",        icon: "✝️", color: "#F0367C", rank: "Devoted",          desc: "Grows through devotionals, prayer, and quiet consistency — not just church attendance.", earnedBy: "Completing Devos, Journal, and Faith-tagged quests.", bonuses: "+8% XP on all Faith quests while streak is active.", suggested: ["Devos", "Journal"], next: "Level 15 unlocks the \"Steadfast\" title." },
-    { name: "Discipline",   icon: "🔥", color: "#FF7A45", rank: "Elite Prospect",   desc: "The meta-attribute — rises whenever you complete a quest on time, especially unglamorous ones.", earnedBy: "On-time completion of any daily quest.", bonuses: "+5% XP on all quests while streak ≥ 7 days.", suggested: ["Stretch", "Mobility"], next: "Level 20 unlocks Boss difficulty: Legendary." },
-    { name: "Athleticism",  icon: "⚡", color: "#9B5DE5", rank: "Elite Prospect",   desc: "General physical capability — speed, explosiveness, and conditioning.", earnedBy: "Sprints, Plyometrics, Hill Sprints, Dynamic Warmup.", bonuses: "+10% Athleticism XP on back-to-back training days.", suggested: ["Sprints", "Plyometrics"], next: "Level 20 unlocks the \"Explosive\" title." },
-    { name: "Strength",     icon: "🏋️", color: "#FF5FA2", rank: "Rising",          desc: "Raw physical power built through upper and lower body training blocks.", earnedBy: "Upper Body Work, Lower Body Work.", bonuses: "Unlocks harder strength quest variants at Level 10.", suggested: ["Upper Body Work", "Lower Body Work"], next: "Level 12 unlocks weighted variations." },
-    { name: "Recovery",     icon: "❄️", color: "#4C9EFF", rank: "Developing",      desc: "How well your body bounces back — sleep, stretching, and mobility work.", earnedBy: "Stretch, Mobility, sleep logged 7h+.", bonuses: "Reduces injury-risk debuff chance.", suggested: ["Stretch", "Mobility"], next: "Level 10 unlocks Contrast Therapy tracking." },
-    { name: "Knowledge",    icon: "📚", color: "#6C7DFF", rank: "Sharp",           desc: "What you're learning — school, reading, and self-education.", earnedBy: "School quests, reading, studying.", bonuses: "+6% XP on Knowledge quests before noon.", suggested: ["Study Session"], next: "Level 15 unlocks the \"Scholar\" title." },
-    { name: "Leadership",   icon: "🧭", color: "#E8B84B", rank: "Emerging",        desc: "Your ability to guide, coach, and take initiative with others.", earnedBy: "Team practice reps, mentoring, group work.", bonuses: "Unlocks Guild features in a future update.", suggested: ["Cold Outreach"], next: "Level 8 unlocks the \"Captain\" title." },
-    { name: "Confidence",   icon: "💥", color: "#FF7A45", rank: "Building",        desc: "Grows from stacking small consistent wins over time.", earnedBy: "Any completed quest — compounding effect.", bonuses: "Small XP bonus on \"Hard\" and \"Elite\" difficulty quests.", suggested: ["Skill Work"], next: "Level 10 unlocks Confidence-tier avatar frame." },
-    { name: "Creativity",   icon: "🎨", color: "#C9509B", rank: "Developing",      desc: "Fed by music practice and creative/expressive work on the app.", earnedBy: "Practice Instrument, Work On App.", bonuses: "Unlocks custom themes at Level 12.", suggested: ["Practice Instrument", "Work On App"], next: "Level 12 unlocks the \"Creator\" title." },
-    { name: "Business",     icon: "💼", color: "#FFAD5A", rank: "Founder",         desc: "Your hustle stat — sales, trading, and building something real.", earnedBy: "Cold Outreach, Trading.", bonuses: "+10% Business XP on days with 2+ Business quests.", suggested: ["Cold Outreach", "Trading"], next: "Level 10 unlocks the \"Closer\" title." }
-  ];
+  /* ============ PROGRESS TAB (fully real, rebuilt every visit) ============ */
+  function categoryWeekCompletions(catName, weeksAgo) {
+    const end = new Date(); end.setDate(end.getDate() - weeksAgo * 7);
+    const start = new Date(end); start.setDate(end.getDate() - 6);
+    let count = 0;
+    Object.entries(STATE.days).forEach(([key, day]) => {
+      const d = new Date(key + 'T00:00:00');
+      if (d >= start && d <= end) count += day.completedIds.filter(id => categoryForId(id) === catName).length;
+    });
+    return count;
+  }
 
-  function buildAttributes() {
+  function categoryBestStreak(catName) {
+    const keys = getAllDayKeysSorted().filter(k => STATE.days[k].completedIds.some(id => categoryForId(id) === catName));
+    if (keys.length === 0) return 0;
+    let best = 1, cur = 1;
+    for (let i = 1; i < keys.length; i++) {
+      const diff = Math.round((new Date(keys[i] + 'T00:00:00') - new Date(keys[i-1] + 'T00:00:00')) / 86400000);
+      if (diff === 1) { cur++; best = Math.max(best, cur); } else cur = 1;
+    }
+    return best;
+  }
+
+  function buildSnapshotReal() {
+    const now = new Date();
+    let possible = 0, completed = 0, xp = 0, minutes = 0;
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now); d.setDate(now.getDate() - i);
+      possible += WEEKLY_PLAN[d.getDay()].length;
+      const day = STATE.days[dateKeyFor(d)];
+      if (day) { completed += day.completedIds.length; xp += day.xp; minutes += day.minutes; }
+    }
+    const score = possible > 0 ? Math.round((completed / possible) * 100) : 0;
+    document.getElementById('snap-score').innerText = `${score}%`;
+    document.getElementById('snap-xp').innerText = `+${xp.toLocaleString()} XP`;
+    document.getElementById('snap-streak').innerText = `${STATE.currentStreak} Day${STATE.currentStreak === 1 ? '' : 's'}`;
+    document.getElementById('snap-quests').innerText = `${completed}`;
+    document.getElementById('snap-hours').innerText = `${(minutes / 60).toFixed(1)}h`;
+  }
+
+  function buildCalendarReal() {
+    const grid = document.getElementById('cal-grid');
+    grid.innerHTML = '';
+    document.getElementById('cal-detail').classList.remove('show');
+    const today = new Date();
+    for (let i = 125; i >= 0; i--) {
+      const d = new Date(today); d.setDate(today.getDate() - i);
+      const key = dateKeyFor(d);
+      const day = STATE.days[key];
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      if (day && day.completedIds.length > 0) {
+        cell.classList.add('has-data');
+        const ratio = Math.min(1, day.completedIds.length / 8);
+        const opacity = 0.35 + ratio * 0.55;
+        cell.style.background = ratio > 0.66 ? `rgba(255,122,69,${opacity})` : ratio > 0.33 ? `rgba(240,54,124,${opacity})` : `rgba(155,93,229,${opacity})`;
+        cell.addEventListener('click', () => showDayDetailReal(key, d, cell));
+      }
+      grid.appendChild(cell);
+    }
+    grid.parentElement.scrollLeft = grid.scrollWidth;
+  }
+
+  function showDayDetailReal(key, dateObj, cellEl) {
+    document.querySelectorAll('.cal-cell.selected').forEach(el => el.classList.remove('selected'));
+    cellEl.classList.add('selected');
+    const day = STATE.days[key];
+    document.getElementById('cal-detail').classList.add('show');
+    document.getElementById('cal-detail-date').innerText = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    document.getElementById('cdi-xp').innerText = day.xp;
+    document.getElementById('cdi-quests').innerText = day.completedIds.length;
+    document.getElementById('cdi-hours').innerText = `${(day.minutes / 60).toFixed(1)}h`;
+    document.getElementById('cdi-sleep').innerText = day.sleep != null ? `${day.sleep}h` : '—';
+  }
+
+  function generateXpSeriesReal(range) {
+    const keys = getAllDayKeysSorted();
+    const end = new Date();
+    const start = new Date(end);
+    if (range === 'all') {
+      if (keys.length > 0) start.setTime(new Date(keys[0] + 'T00:00:00').getTime());
+    } else {
+      start.setDate(end.getDate() - (parseInt(range, 10) - 1));
+    }
+    const points = [];
+    const cursor = new Date(start);
+    while (cursor <= end) {
+      const day = STATE.days[dateKeyFor(cursor)];
+      points.push(day ? day.xp : 0);
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return points.length ? points : [0];
+  }
+
+  function drawXpChart(points) {
+    const w = 320, h = 140, pad = 8;
+    const max = Math.max(...points), min = Math.min(...points);
+    const step = points.length > 1 ? w / (points.length - 1) : 0;
+    const scaleY = (v) => h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
+    let d = `M 0 ${scaleY(points[0]).toFixed(1)}`;
+    points.forEach((p, i) => { if (i > 0) d += ` L ${(i * step).toFixed(1)} ${scaleY(p).toFixed(1)}`; });
+    const linePath = document.getElementById('xp-line-path');
+    const areaPath = document.getElementById('xp-area-path');
+    linePath.setAttribute('d', d);
+    areaPath.setAttribute('d', `${d} L ${points.length > 1 ? w : 0} ${h} L 0 ${h} Z`);
+
+    const len = linePath.getTotalLength();
+    linePath.style.transition = 'none';
+    linePath.style.strokeDasharray = `${len}`;
+    linePath.style.strokeDashoffset = `${len}`;
+    linePath.getBoundingClientRect();
+    linePath.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1)';
+    linePath.style.strokeDashoffset = '0';
+
+    const svg = document.getElementById('xp-chart-svg');
+    svg.dataset.points = JSON.stringify(points);
+  }
+
+  function getActiveRangeValue() {
+    const active = document.querySelector('.range-tab.active');
+    return active ? active.dataset.range : '30';
+  }
+
+  function wireXpChartOnce() {
+    document.querySelectorAll('.range-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        drawXpChart(generateXpSeriesReal(tab.dataset.range));
+      });
+    });
+    const holder = document.getElementById('xp-chart-holder');
+    const tooltip = document.getElementById('xp-tooltip');
+    holder.addEventListener('click', (e) => {
+      const svg = document.getElementById('xp-chart-svg');
+      const points = JSON.parse(svg.dataset.points || '[]');
+      if (!points.length) return;
+      const rect = holder.getBoundingClientRect();
+      const relX = (e.clientX - rect.left) / rect.width;
+      const idx = Math.max(0, Math.min(points.length - 1, Math.round(relX * (points.length - 1))));
+      const xPct = points.length > 1 ? (idx / (points.length - 1)) * 100 : 50;
+      tooltip.style.left = `${xPct}%`;
+      tooltip.style.top = '0px';
+      tooltip.innerHTML = `<span class="xt-xp">+${points[idx]} XP</span>`;
+      tooltip.classList.add('show');
+      clearTimeout(holder._tt);
+      holder._tt = setTimeout(() => tooltip.classList.remove('show'), 1800);
+    });
+  }
+
+  function selectDonutSegment(name, pct) {
+    document.querySelectorAll('.donut-seg').forEach(seg => seg.classList.toggle('dim', seg.dataset.cat !== name));
+    document.getElementById('donut-pct').innerText = `${pct}%`;
+    document.getElementById('donut-lbl').innerText = name;
+  }
+
+  function buildDonutReal() {
+    const svg = document.getElementById('donut-svg');
+    svg.innerHTML = '';
+    const legend = document.getElementById('donut-legend');
+    legend.innerHTML = '';
+    const total = CATEGORY_DEFS.reduce((s, c) => s + (STATE.categoryCompletions[c.name] || 0), 0);
+
+    if (total === 0) {
+      const track = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      track.setAttribute('cx', 66); track.setAttribute('cy', 66); track.setAttribute('r', 51);
+      track.setAttribute('fill', 'none'); track.setAttribute('stroke', 'var(--surface-hi)'); track.setAttribute('stroke-width', '15');
+      svg.appendChild(track);
+      document.getElementById('donut-pct').innerText = '0';
+      document.getElementById('donut-lbl').innerText = 'No quests yet';
+      CATEGORY_DEFS.forEach(cat => {
+        const row = document.createElement('div');
+        row.className = 'dl-row';
+        row.innerHTML = `<div class="dl-left"><span class="dl-dot" style="background:${cat.color};"></span>${cat.icon} ${cat.name}</div><span class="dl-val">0%</span>`;
+        legend.appendChild(row);
+      });
+      return;
+    }
+
+    const r = 51, cx = 66, cy = 66, circumference = 2 * Math.PI * r;
+    let offsetAcc = 0;
+    CATEGORY_DEFS.forEach(cat => {
+      const frac = (STATE.categoryCompletions[cat.name] || 0) / total;
+      if (frac <= 0) return;
+      const dash = frac * circumference;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', r);
+      circle.setAttribute('stroke', cat.color);
+      circle.classList.add('donut-seg');
+      circle.style.strokeDasharray = `${dash} ${circumference - dash}`;
+      circle.style.strokeDashoffset = `${-offsetAcc}`;
+      circle.dataset.cat = cat.name;
+      circle.addEventListener('click', () => selectDonutSegment(cat.name, Math.round(frac * 100)));
+      svg.appendChild(circle);
+      offsetAcc += dash;
+    });
+    document.getElementById('donut-pct').innerText = `${total}`;
+    document.getElementById('donut-lbl').innerText = 'Total Quests';
+
+    CATEGORY_DEFS.forEach(cat => {
+      const count = STATE.categoryCompletions[cat.name] || 0;
+      const pct = Math.round((count / total) * 100);
+      const row = document.createElement('div');
+      row.className = 'dl-row';
+      row.innerHTML = `<div class="dl-left"><span class="dl-dot" style="background:${cat.color};"></span>${cat.icon} ${cat.name}</div><span class="dl-val">${count} · ${pct}%</span>`;
+      row.addEventListener('click', () => selectDonutSegment(cat.name, pct));
+      legend.appendChild(row);
+    });
+  }
+
+  function buildCategoryCardsReal() {
+    const list = document.getElementById('cat-progress-list');
+    list.innerHTML = '';
+    const totalDays = daysSinceCreation();
+    CATEGORY_DEFS.forEach(cat => {
+      const xp = STATE.categoryXP[cat.name] || 0;
+      const completions = STATE.categoryCompletions[cat.name] || 0;
+      const level = Math.floor(xp / 300) + 1;
+      const activeDays = getAllDayKeysSorted().filter(k => STATE.days[k].completedIds.some(id => categoryForId(id) === cat.name)).length;
+      const completion = totalDays > 0 ? Math.round((activeDays / totalDays) * 100) : 0;
+      const streak = categoryBestStreak(cat.name);
+      const thisWeek = categoryWeekCompletions(cat.name, 0);
+      const lastWeek = categoryWeekCompletions(cat.name, 1);
+      let growthHTML = '';
+      if (lastWeek === 0 && thisWeek > 0) growthHTML = `<div class="cpc-growth up">New</div>`;
+      else if (lastWeek > 0) {
+        const pct = Math.round(((thisWeek - lastWeek) / lastWeek) * 100);
+        growthHTML = `<div class="cpc-growth ${pct >= 0 ? 'up' : 'down'}">${pct >= 0 ? '↑' : '↓'} ${Math.abs(pct)}%</div>`;
+      }
+      const card = document.createElement('div');
+      card.className = 'cat-prog-card';
+      card.innerHTML = `
+        <div class="cpc-top">
+          <div class="cpc-left">
+            <div class="cpc-icon" style="background:${cat.color}22; color:${cat.color};">${cat.icon}</div>
+            <div><div class="cpc-name">${cat.name}</div><div class="cpc-lvl">Level ${level} · ${xp.toLocaleString()} XP</div></div>
+          </div>
+          ${growthHTML}
+        </div>
+        <div class="cpc-bar-bg"><div class="cpc-bar-fill" data-w="${Math.min(100, completion)}"></div></div>
+        <div class="cpc-meta"><span>${completion}% of days active</span><span>${completions} quests</span><span>🔥 ${streak}d best</span></div>
+      `;
+      list.appendChild(card);
+    });
+    requestAnimationFrame(() => document.querySelectorAll('.cpc-bar-fill').forEach(bar => { bar.style.width = `${bar.dataset.w}%`; }));
+  }
+
+  function buildRecordsReal() {
+    const grid = document.getElementById('pr-grid');
+    grid.innerHTML = '';
+    const keys = getAllDayKeysSorted();
+    const hasData = keys.length > 0;
+    const highestXpDay = hasData ? Math.max(...keys.map(k => STATE.days[k].xp)) : 0;
+    const mostQuestsDay = hasData ? Math.max(...keys.map(k => STATE.days[k].completedIds.length)) : 0;
+    const longestDayMin = hasData ? Math.max(...keys.map(k => STATE.days[k].minutes)) : 0;
+    let bestWeekXp = 0;
+    keys.forEach(k => {
+      const end = new Date(k + 'T00:00:00');
+      const start = new Date(end); start.setDate(end.getDate() - 6);
+      let sum = 0;
+      keys.forEach(k2 => { const d2 = new Date(k2 + 'T00:00:00'); if (d2 >= start && d2 <= end) sum += STATE.days[k2].xp; });
+      bestWeekXp = Math.max(bestWeekXp, sum);
+    });
+    const disciplinePct = STATE.totalXP > 0 ? Math.round((STATE.attributeXP.Discipline / STATE.totalXP) * 100) : 0;
+
+    const records = [
+      { icon: "🔥", val: STATE.longestStreak > 0 ? `${STATE.longestStreak} Days` : "—", lbl: "Longest Streak" },
+      { icon: "⚡", val: highestXpDay > 0 ? `${highestXpDay} XP` : "—", lbl: "Highest XP Day" },
+      { icon: "✅", val: mostQuestsDay > 0 ? `${mostQuestsDay}` : "—", lbl: "Most Quests in a Day" },
+      { icon: "⏱️", val: longestDayMin > 0 ? `${longestDayMin} min` : "—", lbl: "Longest Day (minutes)" },
+      { icon: "📈", val: bestWeekXp > 0 ? `${bestWeekXp.toLocaleString()} XP` : "—", lbl: "Best XP Week" },
+      { icon: "🏀", val: (STATE.categoryCompletions.Basketball || 0) > 0 ? `${STATE.categoryCompletions.Basketball}` : "—", lbl: "Basketball Sessions" },
+      { icon: "✝️", val: categoryBestStreak('Faith') > 0 ? `${categoryBestStreak('Faith')} Days` : "—", lbl: "Highest Faith Streak" },
+      { icon: "🧠", val: disciplinePct > 0 ? `${disciplinePct}%` : "—", lbl: "Discipline Share of XP" }
+    ];
+    records.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'pr-card';
+      card.innerHTML = `<div class="pr-icon">${r.icon}</div><div class="pr-val">${r.val}</div><div class="pr-lbl">${r.lbl}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function buildTrendsReal() {
+    const scroll = document.getElementById('trend-scroll');
+    scroll.innerHTML = '';
+    if (daysSinceCreation() < 8 || STATE.totalCompletions === 0) {
+      scroll.innerHTML = `<div class="empty-hint" style="padding:14px 4px; white-space:normal;">Trends unlock after your first couple weeks of activity — keep logging quests.</div>`;
+      return;
+    }
+    let any = false;
+    CATEGORY_DEFS.forEach(cat => {
+      const thisWeek = categoryWeekCompletions(cat.name, 0);
+      const lastWeek = categoryWeekCompletions(cat.name, 1);
+      if (thisWeek === 0 && lastWeek === 0) return;
+      any = true;
+      let dir, pctLabel, note;
+      if (lastWeek === 0) { dir = 'up'; pctLabel = 'New'; note = `${cat.name} activity is new this week.`; }
+      else {
+        const pct = Math.round(((thisWeek - lastWeek) / lastWeek) * 100);
+        dir = pct >= 0 ? 'up' : 'down';
+        pctLabel = `${pct >= 0 ? '+' : ''}${pct}%`;
+        note = `${Math.abs(pct)}% ${dir === 'up' ? 'more' : 'fewer'} ${cat.name} quests than last week.`;
+      }
+      const card = document.createElement('div');
+      card.className = 'trend-card';
+      card.innerHTML = `
+        <div class="trend-top"><div class="trend-name">${cat.name}</div><div class="trend-arrow ${dir}">${dir === 'up' ? '↑' : '↓'}</div></div>
+        <div class="trend-pct" style="color:${dir === 'up' ? 'var(--success)' : '#FF5470'};">${pctLabel}</div>
+        <div class="trend-insight">${note}</div>
+      `;
+      scroll.appendChild(card);
+    });
+    if (!any) scroll.innerHTML = `<div class="empty-hint" style="padding:14px 4px; white-space:normal;">No category activity yet this week or last.</div>`;
+  }
+
+  function buildMonthlyReviewReal() {
+    const keys = getAllDayKeysSorted();
+    const now = new Date();
+    const thirtyAgo = new Date(now); thirtyAgo.setDate(now.getDate() - 29);
+    const monthKeys = keys.filter(k => { const d = new Date(k + 'T00:00:00'); return d >= thirtyAgo && d <= now; });
+    document.getElementById('review-month').innerText = `${now.toLocaleDateString('en-US', { month: 'long' })} Review`;
+
+    if (monthKeys.length === 0) {
+      ['review-grade','rv-avgxp','rv-avgsleep','rv-completion','rv-mostcat','rv-leastcat','rv-bestday'].forEach(id => document.getElementById(id).innerText = '—');
+      return;
+    }
+    const totalXpMonth = monthKeys.reduce((s, k) => s + STATE.days[k].xp, 0);
+    const avgXp = Math.round(totalXpMonth / 30);
+    const sleepDays = monthKeys.filter(k => STATE.days[k].sleep != null);
+    const avgSleep = sleepDays.length ? (sleepDays.reduce((s, k) => s + STATE.days[k].sleep, 0) / sleepDays.length).toFixed(1) : null;
+
+    let possible = 0, completed = 0;
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(now); d.setDate(now.getDate() - i);
+      possible += WEEKLY_PLAN[d.getDay()].length;
+      const day = STATE.days[dateKeyFor(d)];
+      if (day) completed += day.completedIds.length;
+    }
+    const completionRate = possible > 0 ? Math.round((completed / possible) * 100) : 0;
+
+    const catCounts = {}; CATEGORY_DEFS.forEach(c => catCounts[c.name] = 0);
+    monthKeys.forEach(k => STATE.days[k].completedIds.forEach(id => { const c = categoryForId(id); if (c) catCounts[c]++; }));
+    const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]);
+    const mostCat = sortedCats[0][1] > 0 ? sortedCats[0][0] : '—';
+    const leastCat = sortedCats[sortedCats.length - 1][1] === 0 ? '—' : sortedCats[sortedCats.length - 1][0];
+
+    const dowXp = [0,0,0,0,0,0,0], dowCount = [0,0,0,0,0,0,0];
+    monthKeys.forEach(k => { const d = new Date(k + 'T00:00:00'); dowXp[d.getDay()] += STATE.days[k].xp; dowCount[d.getDay()]++; });
+    let bestDowIdx = 0, bestAvg = -1;
+    for (let i = 0; i < 7; i++) { const avg = dowCount[i] ? dowXp[i] / dowCount[i] : 0; if (avg > bestAvg) { bestAvg = avg; bestDowIdx = i; } }
+    const dowNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const bestDay = bestAvg > 0 ? dowNames[bestDowIdx] : '—';
+
+    const grade = monthKeys.length >= 3 ? (completionRate >= 90 ? 'A+' : completionRate >= 80 ? 'A' : completionRate >= 70 ? 'B' : completionRate >= 50 ? 'C' : 'D') : '—';
+
+    document.getElementById('review-grade').innerText = grade;
+    document.getElementById('rv-avgxp').innerText = avgXp > 0 ? avgXp.toLocaleString() : '—';
+    document.getElementById('rv-avgsleep').innerText = avgSleep ? `${avgSleep}h` : '—';
+    document.getElementById('rv-completion').innerText = `${completionRate}%`;
+    document.getElementById('rv-mostcat').innerText = mostCat;
+    document.getElementById('rv-leastcat').innerText = leastCat;
+    document.getElementById('rv-bestday').innerText = bestDay;
+  }
+
+  let yearCounterFrame = null;
+  function animateYearCountersReal() {
+    const now = new Date();
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    const keys = getAllDayKeysSorted().filter(k => new Date(k + 'T00:00:00') >= yearStart);
+    const yearXp = keys.reduce((s, k) => s + STATE.days[k].xp, 0);
+    const yearQuests = keys.reduce((s, k) => s + STATE.days[k].completedIds.length, 0);
+    const yearMinutes = keys.reduce((s, k) => s + STATE.days[k].minutes, 0);
+    const levelsGained = Math.max(0, getLevelInfo(STATE.totalXP).level - 1);
+    const targets = { 'yr-xp': yearXp, 'yr-levels': levelsGained, 'yr-quests': yearQuests, 'yr-hours': Math.round(yearMinutes / 60) };
+    Object.entries(targets).forEach(([id, target]) => {
+      const el = document.getElementById(id);
+      const duration = 1100;
+      const startTime = performance.now();
+      function tick(now2) {
+        const p = Math.min(1, (now2 - startTime) / duration);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.innerText = Math.round(target * eased).toLocaleString();
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function buildTimelineReal() {
+    const wrap = document.getElementById('timeline-wrap');
+    wrap.innerHTML = '<div class="timeline-line"></div>';
+    const items = [{ icon: "🚀", title: "Started the Journey", date: new Date(STATE.createdAt), xp: 0 }];
+    STATE.unlockedAchievements.forEach(id => {
+      const def = ACHIEVEMENT_DEFS.find(a => a.id === id);
+      if (!def) return;
+      const iso = STATE.achievementDates[id];
+      items.push({ icon: def.icon, title: def.title, date: iso ? new Date(iso) : new Date(), xp: def.xp });
+    });
+    items.sort((a, b) => a.date - b.date);
+    items.forEach(m => {
+      const item = document.createElement('div');
+      item.className = 'tl-item';
+      item.innerHTML = `
+        <div class="tl-icon milestone">${m.icon}</div>
+        <div class="tl-card">
+          <div class="tl-title">${m.title}</div>
+          <div class="tl-date-row"><span class="tl-date">${m.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span><span class="tl-xp">${m.xp ? `+${m.xp} XP` : ''}</span></div>
+        </div>
+      `;
+      wrap.appendChild(item);
+    });
+  }
+
+  function buildCoachReal() {
+    const msg1 = document.getElementById('coach-msg-1');
+    const msg2 = document.getElementById('coach-msg-2');
+    if (STATE.totalCompletions === 0) {
+      msg1.innerText = "You haven't logged a quest yet — complete your first one today to start building momentum.";
+      msg2.innerText = "Your streak, XP history, and category breakdown will start filling in as soon as you do.";
+      return;
+    }
+    if (STATE.currentStreak >= 7) msg1.innerText = `You're on a ${STATE.currentStreak}-day streak — that's real consistency. Keep the chain alive.`;
+    else if (STATE.currentStreak > 0) msg1.innerText = `You're ${STATE.currentStreak} day${STATE.currentStreak === 1 ? '' : 's'} into your current streak. A few more days locks in the habit.`;
+    else msg1.innerText = `Your streak reset — that's normal. Complete a quest today to start a new one.`;
+
+    const sortedCats = Object.entries(STATE.categoryCompletions).sort((a, b) => b[1] - a[1]);
+    msg2.innerText = sortedCats[0][1] > 0
+      ? `${sortedCats[0][0]} is your most active category so far with ${sortedCats[0][1]} quests completed. Nice focus.`
+      : `Keep logging quests across categories to see where you're strongest.`;
+  }
+
+  function renderProgress() {
+    buildSnapshotReal();
+    buildCalendarReal();
+    drawXpChart(generateXpSeriesReal(getActiveRangeValue()));
+    buildDonutReal();
+    buildCategoryCardsReal();
+    buildRecordsReal();
+    buildTrendsReal();
+    buildMonthlyReviewReal();
+    animateYearCountersReal();
+    buildTimelineReal();
+    buildCoachReal();
+  }
+
+  /* ============ CHARACTER TAB (fully real, rebuilt every visit) ============ */
+  function attributeLevelInfo(xp) { return { level: Math.floor(xp / 250) + 1, intoLevel: xp % 250, xpForNext: 250 }; }
+  function attributeRank(level) {
+    if (level < 3) return "Novice";
+    if (level < 6) return "Developing";
+    if (level < 10) return "Rising";
+    if (level < 15) return "Elite Prospect";
+    if (level < 22) return "Elite";
+    return "Master";
+  }
+
+  function buildCharHeroReal() {
+    const { level, intoLevel, xpForNext } = getLevelInfo(STATE.totalXP);
+    document.getElementById('char-lvl-chip-inner').innerText = `LVL ${level}`;
+    document.getElementById('char-xp-frac').innerText = `${intoLevel.toLocaleString()} / ${xpForNext.toLocaleString()} XP`;
+    document.getElementById('char-xp-fill').style.width = `${(intoLevel / xpForNext) * 100}%`;
+    document.getElementById('char-level-lbl').innerText = `Level ${level}`;
+    document.getElementById('char-title').innerText = getCharacterTitle(level);
+  }
+
+  function buildBossReal() {
+    const progress = Math.min(STATE.currentStreak, 30);
+    const pct = Math.round((progress / 30) * 100);
+    document.getElementById('boss-frac-days').innerText = `${progress} / 30 Days`;
+    document.getElementById('boss-frac-pct').innerText = `${pct}%`;
+    document.getElementById('boss-bar-fill').style.width = `${pct}%`;
+    const remaining = 30 - progress;
+    document.getElementById('boss-est').innerText = remaining > 0 ? `📅 Est. completion: ${remaining} day${remaining === 1 ? '' : 's'}` : '📅 Complete!';
+    document.getElementById('boss-difficulty').innerText = `⚔️ Difficulty: ${bossDifficulty(STATE.currentStreak)}`;
+  }
+
+  function buildAttributesReal() {
     const list = document.getElementById('attr-list');
-    ATTRIBUTES.forEach((a, i) => {
-      const level = Math.floor(4 + rand() * 22);
-      const xp = Math.round(300 + rand() * 2800);
-      const xpNext = xp + Math.round(300 + rand() * 900);
-      const pct = Math.round((xp / xpNext) * 100);
-      const growth = Math.round(rand() * 20);
+    list.innerHTML = '';
+    ATTRIBUTE_DEFS.forEach((a, i) => {
+      const xp = STATE.attributeXP[a.name] || 0;
+      const { level, intoLevel, xpForNext } = attributeLevelInfo(xp);
+      const pct = Math.round((intoLevel / xpForNext) * 100);
       const card = document.createElement('div');
       card.className = 'attr-card';
       card.innerHTML = `
@@ -1067,460 +1748,160 @@
         </div>
         <div class="attr-card-expand">
           <div class="attr-expand-inner">
-            <div class="attr-rank-row"><span class="attr-rank-lbl">Current Rank</span><span class="attr-rank-val">${a.rank}</span></div>
-            <div class="attr-rank-row" style="margin-top:6px;"><span class="attr-rank-lbl">XP</span><span class="attr-rank-val mono">${xp.toLocaleString()} / ${xpNext.toLocaleString()}</span></div>
-            <div class="attr-rank-row" style="margin-top:6px;"><span class="attr-rank-lbl">Recent Growth</span><span class="attr-rank-val" style="color:var(--success);">↑ ${growth}% this month</span></div>
+            <div class="attr-rank-row"><span class="attr-rank-lbl">Current Rank</span><span class="attr-rank-val">${attributeRank(level)}</span></div>
+            <div class="attr-rank-row" style="margin-top:6px;"><span class="attr-rank-lbl">Total XP</span><span class="attr-rank-val mono">${xp.toLocaleString()}</span></div>
             <div class="attr-desc">${a.desc}</div>
             <div class="attr-sub-block"><div class="attr-sub-lbl">How XP Is Earned</div><div class="attr-sub-val">${a.earnedBy}</div></div>
-            <div class="attr-sub-block"><div class="attr-sub-lbl">Current Bonuses</div><div class="attr-sub-val">${a.bonuses}</div></div>
             <div class="attr-sub-block"><div class="attr-sub-lbl">Suggested Quests</div><div class="attr-tag-row">${a.suggested.map(s => `<span class="attr-tag">${s}</span>`).join('')}</div></div>
-            <div class="attr-sub-block"><div class="attr-sub-lbl">Next Unlock</div><div class="attr-sub-val">${a.next}</div></div>
           </div>
         </div>
       `;
       list.appendChild(card);
-      card.querySelector('.attr-card-head').addEventListener('click', () => {
-        card.classList.toggle('open');
-      });
+      card.querySelector('.attr-card-head').addEventListener('click', () => card.classList.toggle('open'));
     });
-    requestAnimationFrame(() => {
-      document.querySelectorAll('.attr-card-bar-fill').forEach(bar => { bar.style.width = `${bar.dataset.w}%`; });
-    });
+    requestAnimationFrame(() => document.querySelectorAll('.attr-card-bar-fill').forEach(b => { b.style.width = `${b.dataset.w}%`; }));
   }
 
-  function buildBuffs() {
-    const buffs = [
-      { icon: "🔥", title: "7 Day Streak", sub: "+10% Discipline XP" },
-      { icon: "⚡", title: "Energy Boost", sub: "Perfect sleep logged" },
-      { icon: "🏀", title: "Training Momentum", sub: "Completed Basketball today" },
-      { icon: "✝️", title: "Faith Streak", sub: "Daily devotions completed" },
-      { icon: "💪", title: "Recovery", sub: "Hydration goal completed" }
-    ];
+  function buildBuffsReal() {
+    const today = STATE.days[todayKey()] || { completedIds: [], sleep: null };
+    const buffs = [];
+    if (STATE.currentStreak >= 7) buffs.push({ icon: "🔥", title: `${STATE.currentStreak} Day Streak`, sub: "Discipline momentum active" });
+    if (today.sleep != null && today.sleep >= 7) buffs.push({ icon: "⚡", title: "Energy Boost", sub: "7h+ sleep logged" });
+    if (today.completedIds.some(id => categoryForId(id) === 'Basketball')) buffs.push({ icon: "🏀", title: "Training Momentum", sub: "Basketball completed today" });
+    if (today.completedIds.some(id => categoryForId(id) === 'Faith')) buffs.push({ icon: "✝️", title: "Faith Streak", sub: "Devotion completed today" });
+    if (today.completedIds.some(id => taskNameForId(id) === 'Stretch')) buffs.push({ icon: "💪", title: "Recovery", sub: "Stretch completed today" });
+
     const scroll = document.getElementById('buff-scroll');
-    buffs.forEach(b => {
-      const card = document.createElement('div');
-      card.className = 'buff-card';
-      card.innerHTML = `<div class="buff-icon">${b.icon}</div><div class="buff-title">${b.title}</div><div class="buff-sub">${b.sub}</div>`;
-      scroll.appendChild(card);
-    });
+    if (buffs.length === 0) scroll.innerHTML = `<div class="empty-hint" style="padding:14px 4px; white-space:normal;">Complete quests today to start earning buffs.</div>`;
+    else { scroll.innerHTML = ''; buffs.forEach(b => { const c = document.createElement('div'); c.className = 'buff-card'; c.innerHTML = `<div class="buff-icon">${b.icon}</div><div class="buff-title">${b.title}</div><div class="buff-sub">${b.sub}</div>`; scroll.appendChild(c); }); }
 
-    const debuffs = [
-      { icon: "😴", title: "Poor Sleep", sub: "Recovery reduced today.", rec: "Recommendation: sleep before 11:00 PM tonight." },
-      { icon: "💧", title: "Low Hydration", sub: "Only 40% of water goal logged.", rec: "Recommendation: add a bottle before your next session." }
-    ];
+    const debuffs = [];
+    if (today.sleep == null) debuffs.push({ icon: "😴", title: "Sleep Not Logged", sub: "No sleep data for today yet.", rec: "Tap the Sleep card on Home to log it." });
+    if (!today.completedIds || today.completedIds.length === 0) debuffs.push({ icon: "⏳", title: "No Quests Yet Today", sub: "Nothing logged so far today.", rec: "Head to Quests and knock one out." });
+
     const dScroll = document.getElementById('debuff-scroll');
-    if (debuffs.length === 0) {
-      dScroll.innerHTML = `<div class="empty-hint" style="padding:14px 4px;">No active debuffs — clean sheet today.</div>`;
-    } else {
-      debuffs.forEach(d => {
-        const card = document.createElement('div');
-        card.className = 'buff-card debuff';
-        card.innerHTML = `<div class="buff-icon">${d.icon}</div><div class="buff-title">${d.title}</div><div class="buff-sub">${d.sub}</div><div class="buff-rec">${d.rec}</div>`;
-        dScroll.appendChild(card);
-      });
-    }
+    if (debuffs.length === 0) dScroll.innerHTML = `<div class="empty-hint" style="padding:14px 4px;">No active debuffs — clean sheet today.</div>`;
+    else { dScroll.innerHTML = ''; debuffs.forEach(d => { const c = document.createElement('div'); c.className = 'buff-card debuff'; c.innerHTML = `<div class="buff-icon">${d.icon}</div><div class="buff-title">${d.title}</div><div class="buff-sub">${d.sub}</div><div class="buff-rec">${d.rec}</div>`; dScroll.appendChild(c); }); }
   }
 
-  function buildSkillTrees() {
-    const trees = [
-      { name: "Basketball",       icon: "🏀", color: "#FF7A45", focus: "Finishing at the rim", unlocked: 12, next: "Advanced Eurostep chain" },
-      { name: "Faith",            icon: "✝️", color: "#F0367C", focus: "Daily devotional streak", unlocked: 9,  next: "Scripture memory track" },
-      { name: "Business",         icon: "💼", color: "#FFAD5A", focus: "Cold outreach volume", unlocked: 6,  next: "Negotiation fundamentals" },
-      { name: "Coding",           icon: "💻", color: "#6C7DFF", focus: "Shipping the app", unlocked: 8,  next: "Backend + persistence" },
-      { name: "Fitness",          icon: "💪", color: "#9B5DE5", focus: "Strength foundations", unlocked: 11, next: "Progressive overload block" },
-      { name: "Music",            icon: "🎸", color: "#C9509B", focus: "Instrument fundamentals", unlocked: 5,  next: "First full song" },
-      { name: "Personal Growth",  icon: "🌱", color: "#3DDC97", focus: "Journaling consistency", unlocked: 7,  next: "30-day reflection streak" }
-    ];
+  function buildSkillTreesReal() {
     const scroll = document.getElementById('tree-scroll');
-    trees.forEach(t => {
-      const level = Math.floor(3 + rand() * 15);
-      const pct = Math.round(20 + rand() * 70);
+    scroll.innerHTML = '';
+    SKILL_TREE_DEFS.forEach(t => {
+      const count = STATE.treeCompletions[t.name] || 0;
+      const level = Math.floor(count / 5) + 1;
+      const pct = Math.round(((count % 5) / 5) * 100);
       const card = document.createElement('div');
       card.className = 'tree-card';
       card.innerHTML = `
         <div class="tree-top">
           <div class="tree-icon" style="background:${t.color}22; color:${t.color};">${t.icon}</div>
-          <div><div class="tree-name">${t.name}</div><div class="tree-lvl">Level ${level} · ${pct}% complete</div></div>
+          <div><div class="tree-name">${t.name}</div><div class="tree-lvl">Level ${level} · ${count} completions</div></div>
         </div>
         <div class="tree-bar-bg"><div class="tree-bar-fill" data-w="${pct}"></div></div>
-        <div class="tree-focus">Focus: <b>${t.focus}</b></div>
-        <div class="tree-next">${t.unlocked} skills unlocked · Next: ${t.next}</div>
+        <div class="tree-next">${count === 0 ? 'Not started yet' : `${5 - (count % 5)} more to next level`}</div>
       `;
       scroll.appendChild(card);
     });
-    requestAnimationFrame(() => {
-      document.querySelectorAll('.tree-bar-fill').forEach(bar => { bar.style.width = `${bar.dataset.w}%`; });
-    });
+    requestAnimationFrame(() => document.querySelectorAll('.tree-bar-fill').forEach(b => { b.style.width = `${b.dataset.w}%`; }));
   }
 
-  function buildEquipment() {
+  function buildEquipmentOnce() {
     const equipment = [
-      { icon: "🏀", name: "Wilson Evolution", meta: "Acquired Jan 2026 · Daily use", fav: true },
-      { icon: "⌚", name: "Apple Watch", meta: "Acquired Nov 2025 · Daily use", fav: false },
-      { icon: "💻", name: "MacBook", meta: "Acquired 2025 · Daily use", fav: true },
-      { icon: "🎸", name: "Guitar", meta: "Acquired 2024 · 3x/week", fav: false },
-      { icon: "🎧", name: "AirPods", meta: "Acquired 2025 · Daily use", fav: false },
-      { icon: "📖", name: "Bible", meta: "Daily use", fav: true }
+      { icon: "🏀", name: "Basketball", meta: "Training gear" },
+      { icon: "⌚", name: "Watch", meta: "Training gear" },
+      { icon: "💻", name: "Laptop", meta: "Work On App" },
+      { icon: "🎸", name: "Instrument", meta: "Practice Instrument" },
+      { icon: "🎧", name: "Headphones", meta: "Training gear" },
+      { icon: "📖", name: "Bible", meta: "Devos" }
     ];
     const grid = document.getElementById('equip-grid');
     equipment.forEach(e => {
       const card = document.createElement('div');
       card.className = 'equip-card';
-      card.innerHTML = `${e.fav ? '<div class="equip-fav">⭐</div>' : ''}<div class="equip-icon">${e.icon}</div><div class="equip-name">${e.name}</div><div class="equip-meta">${e.meta}</div>`;
+      card.innerHTML = `<div class="equip-icon">${e.icon}</div><div class="equip-name">${e.name}</div><div class="equip-meta">${e.meta}</div>`;
       grid.appendChild(card);
     });
   }
 
-  function buildAchievements() {
-    const achievements = [
-      { icon: "🥇", title: "First Workout", date: "Jan 4", xp: 100 },
-      { icon: "🔥", title: "7 Day Streak", date: "Jan 11", xp: 250 },
-      { icon: "🏀", title: "100 Basketball Sessions", date: "May 2", xp: 800 },
-      { icon: "💼", title: "First Client", date: "Apr 30", xp: 400 },
-      { icon: "📚", title: "Read 10 Books", date: "Jun 1", xp: 350 },
-      { icon: "💻", title: "Complete First App", date: "Jun 9", xp: 600 },
-      { icon: "🎯", title: "Perfect Week", date: "Jun 22", xp: 300 }
-    ];
+  function buildAchievementsReal() {
     const scroll = document.getElementById('achv-scroll');
-    achievements.forEach(a => {
+    scroll.innerHTML = '';
+    ACHIEVEMENT_DEFS.forEach(a => {
+      const unlocked = STATE.unlockedAchievements.includes(a.id);
+      const iso = STATE.achievementDates[a.id];
       const card = document.createElement('div');
       card.className = 'achv-card';
-      card.innerHTML = `<div class="achv-art">${a.icon}</div><div class="achv-title">${a.title}</div><div class="achv-date">${a.date}</div><div class="achv-xp">+${a.xp} XP</div>`;
+      card.innerHTML = `
+        <div class="achv-art" style="${unlocked ? '' : 'background:var(--surface-hi); opacity:0.5;'}">${unlocked ? a.icon : '🔒'}</div>
+        <div class="achv-title">${a.title}</div>
+        <div class="achv-date">${unlocked && iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Locked'}</div>
+        ${unlocked ? `<div class="achv-xp">+${a.xp} XP</div>` : ''}
+      `;
       scroll.appendChild(card);
     });
   }
 
-  let characterBuilt = false;
   function renderCharacter() {
-    if (!characterBuilt) {
-      buildAttributes();
-      buildBuffs();
-      buildSkillTrees();
-      buildEquipment();
-      buildAchievements();
-      characterBuilt = true;
-    }
-    requestAnimationFrame(() => {
-      document.getElementById('char-xp-fill').style.width = '80%';
-      document.getElementById('boss-bar-fill').style.width = '60%';
+    buildCharHeroReal();
+    buildBossReal();
+    buildAttributesReal();
+    buildBuffsReal();
+    buildSkillTreesReal();
+    buildAchievementsReal();
+  }
+
+  /* ============ SETTINGS ============ */
+  function wireSettings() {
+    document.querySelectorAll('.toggle').forEach(t => t.addEventListener('click', () => t.classList.toggle('on')));
+    document.getElementById('export-btn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(STATE, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `lifeos-backup-${todayKey()}.json`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
-  }
-
-  let progressBuilt = false;
-
-  function renderProgress() {
-    if (!progressBuilt) {
-      buildCalendar();
-      buildDonut();
-      buildCategoryCards();
-      buildRecords();
-      buildTrends();
-      buildTimeline();
-      wireXpChart();
-      progressBuilt = true;
-    }
-    animateYearCounters();
-  }
-
-  // ---- Calendar ----
-  function buildCalendar() {
-    const grid = document.getElementById('cal-grid');
-    const days = 126;
-    const today = new Date();
-    const cells = [];
-    for (let i = days - 1; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const r = rand();
-      const level = r > 0.72 ? 3 : r > 0.5 ? 2 : r > 0.32 ? 1 : 0;
-      cells.push({ date: d, level });
-    }
-    cells.forEach(c => {
-      const cell = document.createElement('div');
-      cell.className = 'cal-cell';
-      if (c.level > 0) {
-        cell.classList.add('has-data');
-        const opacity = c.level === 1 ? 0.35 : c.level === 2 ? 0.6 : 0.9;
-        cell.style.background = c.level === 3 ? `rgba(255,122,69,${opacity})` : c.level === 2 ? `rgba(240,54,124,${opacity})` : `rgba(155,93,229,${opacity})`;
-        cell.addEventListener('click', () => showDayDetail(c, cell));
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      if (confirm("This permanently deletes all your XP, streaks, quest history, and achievements. This can't be undone. Continue?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
       }
-      grid.appendChild(cell);
     });
-    grid.parentElement.scrollLeft = grid.scrollWidth;
   }
 
-  function showDayDetail(c, cellEl) {
-    document.querySelectorAll('.cal-cell.selected').forEach(el => el.classList.remove('selected'));
-    cellEl.classList.add('selected');
-    const panel = document.getElementById('cal-detail');
-    panel.classList.add('show');
-    document.getElementById('cal-detail-date').innerText = c.date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-    document.getElementById('cdi-xp').innerText = `${Math.round(150 + c.level * 300 + rand() * 150)}`;
-    document.getElementById('cdi-quests').innerText = `${c.level + Math.floor(rand() * 3)}`;
-    document.getElementById('cdi-hours').innerText = `${(1 + c.level * 0.8 + rand()).toFixed(1)}h`;
-    document.getElementById('cdi-sleep').innerText = `${(6 + rand() * 2.5).toFixed(1)}h`;
-    const moods = ["🔥 Locked In", "🙂 Solid", "😌 Steady", "⚡ Energized"];
-    document.getElementById('cdi-mood').innerText = moods[Math.floor(rand() * moods.length)];
-    const notes = ["Great session", "Pushed through fatigue", "Kept the streak alive", "Focused day"];
-    document.getElementById('cdi-note').innerText = notes[Math.floor(rand() * notes.length)];
-  }
-
-  // ---- XP History Chart ----
-  function generateXpSeries(range) {
-    const n = range === 'all' ? 180 : parseInt(range, 10);
-    const points = [];
-    let base = 250;
-    for (let i = 0; i < Math.min(n, 60); i++) {
-      base += (rand() - 0.42) * 60;
-      base = Math.max(80, Math.min(650, base));
-      points.push(Math.round(base));
-    }
-    return points;
-  }
-
-  function drawXpChart(points) {
-    const w = 320, h = 140, pad = 8;
-    const max = Math.max(...points), min = Math.min(...points);
-    const step = (w) / (points.length - 1);
-    const scaleY = (v) => h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
-    let d = `M 0 ${scaleY(points[0]).toFixed(1)}`;
-    points.forEach((p, i) => { if (i > 0) d += ` L ${(i * step).toFixed(1)} ${scaleY(p).toFixed(1)}`; });
-    const linePath = document.getElementById('xp-line-path');
-    const areaPath = document.getElementById('xp-area-path');
-    linePath.setAttribute('d', d);
-    areaPath.setAttribute('d', `${d} L ${w} ${h} L 0 ${h} Z`);
-
-    const len = linePath.getTotalLength();
-    linePath.style.transition = 'none';
-    linePath.style.strokeDasharray = `${len}`;
-    linePath.style.strokeDashoffset = `${len}`;
-    linePath.getBoundingClientRect();
-    linePath.style.transition = 'stroke-dashoffset 1s cubic-bezier(0.16,1,0.3,1)';
-    linePath.style.strokeDashoffset = '0';
-
-    const svg = document.getElementById('xp-chart-svg');
-    svg.dataset.points = JSON.stringify(points);
-    svg.dataset.step = step;
-    svg.dataset.min = min;
-    svg.dataset.max = max;
-  }
-
-  function wireXpChart() {
-    drawXpChart(generateXpSeries('30'));
-    document.querySelectorAll('.range-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        drawXpChart(generateXpSeries(tab.dataset.range));
+  /* ============ NAV ============ */
+  function wireNav() {
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+        const targetBtn = e.currentTarget;
+        targetBtn.classList.add('active');
+        const targetView = targetBtn.getAttribute('data-target');
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(`view-${targetView}`).classList.add('active');
+        if (targetView === 'progress') renderProgress();
+        if (targetView === 'character') renderCharacter();
       });
     });
-
-    const holder = document.getElementById('xp-chart-holder');
-    const tooltip = document.getElementById('xp-tooltip');
-    holder.addEventListener('click', (e) => {
-      const svg = document.getElementById('xp-chart-svg');
-      const points = JSON.parse(svg.dataset.points || '[]');
-      if (!points.length) return;
-      const rect = holder.getBoundingClientRect();
-      const relX = (e.clientX - rect.left) / rect.width;
-      const idx = Math.max(0, Math.min(points.length - 1, Math.round(relX * (points.length - 1))));
-      const xPct = (idx / (points.length - 1)) * 100;
-      tooltip.style.left = `${xPct}%`;
-      tooltip.style.top = '0px';
-      tooltip.innerHTML = `<span class="xt-xp">+${points[idx]} XP</span>`;
-      tooltip.classList.add('show');
-      clearTimeout(holder._tt);
-      holder._tt = setTimeout(() => tooltip.classList.remove('show'), 1800);
-    });
   }
 
-  // ---- Donut ----
-  function buildDonut() {
-    const weights = PROG_CATEGORIES.map(() => 0.5 + rand());
-    const total = weights.reduce((a, b) => a + b, 0);
-    const pcts = weights.map(w => w / total);
-    const r = 51, cx = 66, cy = 66, circumference = 2 * Math.PI * r;
-    const svg = document.getElementById('donut-svg');
-    let offsetAcc = 0;
-    PROG_CATEGORIES.forEach((cat, i) => {
-      const frac = pcts[i];
-      const dash = frac * circumference;
-      const gap = circumference - dash;
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('cx', cx); circle.setAttribute('cy', cy); circle.setAttribute('r', r);
-      circle.setAttribute('stroke', cat.color);
-      circle.classList.add('donut-seg');
-      circle.style.strokeDasharray = `${dash} ${gap}`;
-      circle.style.strokeDashoffset = `${-offsetAcc}`;
-      circle.dataset.cat = cat.name;
-      circle.addEventListener('click', () => selectDonutSegment(cat.name, Math.round(frac * 100)));
-      svg.appendChild(circle);
-      offsetAcc += dash;
-    });
+  /* ============ INIT ============ */
+  recomputeStreak();
+  checkAchievements();
+  saveState();
 
-    const legend = document.getElementById('donut-legend');
-    PROG_CATEGORIES.forEach((cat, i) => {
-      const row = document.createElement('div');
-      row.className = 'dl-row';
-      row.dataset.cat = cat.name;
-      row.innerHTML = `<div class="dl-left"><span class="dl-dot" style="background:${cat.color};"></span>${cat.icon} ${cat.name}</div><span class="dl-val">${Math.round(pcts[i] * 100)}%</span>`;
-      row.addEventListener('click', () => selectDonutSegment(cat.name, Math.round(pcts[i] * 100)));
-      legend.appendChild(row);
-    });
-  }
-
-  function selectDonutSegment(name, pct) {
-    document.querySelectorAll('.donut-seg').forEach(seg => seg.classList.toggle('dim', seg.dataset.cat !== name));
-    document.getElementById('donut-pct').innerText = `${pct}%`;
-    document.getElementById('donut-lbl').innerText = name;
-  }
-
-  // ---- Category Progress Cards ----
-  function buildCategoryCards() {
-    const list = document.getElementById('cat-progress-list');
-    PROG_CATEGORIES.forEach(cat => {
-      const completion = Math.round(35 + rand() * 60);
-      const level = Math.floor(3 + rand() * 12);
-      const xp = Math.round(400 + rand() * 3000);
-      const totalQuests = Math.round(20 + rand() * 90);
-      const streak = Math.round(2 + rand() * 20);
-      const growth = Math.round((rand() - 0.35) * 30);
-      const card = document.createElement('div');
-      card.className = 'cat-prog-card';
-      card.innerHTML = `
-        <div class="cpc-top">
-          <div class="cpc-left">
-            <div class="cpc-icon" style="background:${cat.color}22; color:${cat.color};">${cat.icon}</div>
-            <div><div class="cpc-name">${cat.name}</div><div class="cpc-lvl">Level ${level} · ${xp.toLocaleString()} XP</div></div>
-          </div>
-          <div class="cpc-growth ${growth >= 0 ? 'up' : 'down'}">${growth >= 0 ? '↑' : '↓'} ${Math.abs(growth)}%</div>
-        </div>
-        <div class="cpc-bar-bg"><div class="cpc-bar-fill" data-w="${completion}"></div></div>
-        <div class="cpc-meta"><span>${completion}% complete</span><span>${totalQuests} quests</span><span>🔥 ${streak}d best</span></div>
-      `;
-      list.appendChild(card);
-    });
-    requestAnimationFrame(() => {
-      document.querySelectorAll('.cpc-bar-fill').forEach(bar => { bar.style.width = `${bar.dataset.w}%`; });
-    });
-  }
-
-  // ---- Personal Records ----
-  function buildRecords() {
-    const records = [
-      { icon: "🔥", val: "23 Days", lbl: "Longest Streak" },
-      { icon: "⚡", val: "980 XP", lbl: "Highest XP Day" },
-      { icon: "✅", val: "12", lbl: "Most Quests in a Day" },
-      { icon: "🏋️", val: "90 min", lbl: "Longest Workout" },
-      { icon: "📈", val: "4,120 XP", lbl: "Best XP Week" },
-      { icon: "🏀", val: "9/9", lbl: "Best Basketball Week" },
-      { icon: "✝️", val: "31 Days", lbl: "Highest Faith Streak" },
-      { icon: "🧠", val: "94%", lbl: "Best Discipline Score" }
-    ];
-    const grid = document.getElementById('pr-grid');
-    records.forEach(r => {
-      const card = document.createElement('div');
-      card.className = 'pr-card';
-      card.innerHTML = `<div class="pr-icon">${r.icon}</div><div class="pr-val">${r.val}</div><div class="pr-lbl">${r.lbl}</div>`;
-      grid.appendChild(card);
-    });
-  }
-
-  // ---- Trends ----
-  function buildTrends() {
-    const trends = [
-      { name: "Basketball", dir: "up", pct: 18, note: "Consistency up 18% this month." },
-      { name: "Faith", dir: "up", pct: 12, note: "Devotionals completed most mornings." },
-      { name: "Sleep", dir: "up", pct: 6, note: "Averaging 7.4h, up from 7.0h." },
-      { name: "Recovery", dir: "down", pct: 9, note: "Stretch sessions skipped twice." },
-      { name: "Skills", dir: "up", pct: 22, note: "App + instrument reps trending up." },
-      { name: "Business", dir: "down", pct: 4, note: "Cold outreach slipped this week." }
-    ];
-    const scroll = document.getElementById('trend-scroll');
-    trends.forEach(t => {
-      const pts = Array.from({ length: 10 }, () => 20 + rand() * 60);
-      const w = 110, h = 28;
-      const step = w / (pts.length - 1);
-      const max = Math.max(...pts), min = Math.min(...pts);
-      let d = `M 0 ${(h - ((pts[0]-min)/(max-min||1))*h).toFixed(1)}`;
-      pts.forEach((p, i) => { if (i > 0) d += ` L ${(i*step).toFixed(1)} ${(h - ((p-min)/(max-min||1))*h).toFixed(1)}`; });
-      const card = document.createElement('div');
-      card.className = 'trend-card';
-      card.innerHTML = `
-        <div class="trend-top"><div class="trend-name">${t.name}</div><div class="trend-arrow ${t.dir}">${t.dir === 'up' ? '↑' : '↓'}</div></div>
-        <div class="trend-pct" style="color:${t.dir === 'up' ? 'var(--success)' : '#FF5470'};">${t.dir === 'up' ? '+' : '-'}${t.pct}%</div>
-        <svg class="trend-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="${d}" fill="none" stroke="${t.dir === 'up' ? '#3DDC97' : '#FF5470'}" stroke-width="2" stroke-linecap="round"/></svg>
-        <div class="trend-insight">${t.note}</div>
-      `;
-      scroll.appendChild(card);
-    });
-  }
-
-  // ---- Journey Timeline ----
-  function buildTimeline() {
-    const milestones = [
-      { icon: "🚀", title: "Started the Journey", date: "Jan 3", xp: 0 },
-      { icon: "🏀", title: "First Basketball Quest Logged", date: "Jan 4", xp: 100 },
-      { icon: "🔥", title: "7-Day Streak", date: "Jan 11", xp: 250 },
-      { icon: "⭐", title: "Reached Level 5", date: "Feb 2", xp: 500 },
-      { icon: "✝️", title: "30-Day Faith Streak", date: "Mar 14", xp: 750 },
-      { icon: "💼", title: "First Cold Outreach Client", date: "Apr 30", xp: 400 },
-      { icon: "💻", title: "Shipped v1 of the App", date: "Jun 9", xp: 600 },
-      { icon: "🏆", title: "Reached Level 14", date: "Jun 28", xp: 1000 }
-    ];
-    const wrap = document.getElementById('timeline-wrap');
-    milestones.forEach(m => {
-      const item = document.createElement('div');
-      item.className = 'tl-item';
-      item.innerHTML = `
-        <div class="tl-icon milestone">${m.icon}</div>
-        <div class="tl-card">
-          <div class="tl-title">${m.title}</div>
-          <div class="tl-date-row"><span class="tl-date">${m.date}</span><span class="tl-xp">${m.xp ? `+${m.xp} XP` : ''}</span></div>
-        </div>
-      `;
-      wrap.appendChild(item);
-    });
-  }
-
-  // ---- Year in Review counters ----
-  let yearAnimated = false;
-  function animateYearCounters() {
-    if (yearAnimated) return;
-    yearAnimated = true;
-    const targets = { 'yr-xp': 48200, 'yr-levels': 9, 'yr-quests': 612, 'yr-hours': 214 };
-    Object.entries(targets).forEach(([id, target]) => {
-      const el = document.getElementById(id);
-      const duration = 1100;
-      const startTime = performance.now();
-      function tick(now) {
-        const p = Math.min(1, (now - startTime) / duration);
-        const eased = 1 - Math.pow(1 - p, 3);
-        el.innerText = Math.round(target * eased).toLocaleString();
-        if (p < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    });
-  }
-
-  document.querySelectorAll('.nav-item').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      const targetBtn = e.currentTarget;
-      targetBtn.classList.add('active');
-      const targetView = targetBtn.getAttribute('data-target');
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(`view-${targetView}`).classList.add('active');
-      if (targetView === 'progress') renderProgress();
-      if (targetView === 'character') renderCharacter();
-    });
-  });
-
-  document.querySelectorAll('.toggle').forEach(t => {
-    t.addEventListener('click', () => t.classList.toggle('on'));
-  });
-
+  updateGreeting();
+  setQuestDate();
   renderQuests();
+  updateHomeStats();
+  wireHomeCategoryRow();
+  wireXpChartOnce();
+  buildEquipmentOnce();
+  wireSettings();
+  wireNav();
+  document.getElementById('sleep-stat-card').addEventListener('click', logSleep);
+
 </script>
 </body>
 </html>
