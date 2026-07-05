@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Elevate">
+<meta name="apple-mobile-web-app-title" content="Summer Grind">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
@@ -50,7 +50,9 @@
 
   #app { display: flex; flex-direction: column; height: 100%; max-width: 500px; margin: 0 auto; position: relative; background: var(--bg); }
   
-  .view { display: none; flex: 1; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 100px); animation: fadeIn 0.3s ease; }
+  .view { display: none; flex: 1; overflow-y: auto; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 100px); animation: fadeIn 0.3s ease; position: relative; }
+  .skeleton-overlay { position: absolute; inset: 0; background: var(--bg); z-index: 5; padding: calc(var(--safe-top) + 20px) 20px; display: none; }
+  .skeleton-overlay.show { display: block; }
   .view.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -204,6 +206,79 @@
   .version-tag { display: inline-block; background: var(--accent-gradient); color: #fff; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; padding: 4px 11px; border-radius: 100px; margin-bottom: 12px; }
   .update-item { display: flex; align-items: center; gap: 9px; padding: 8px 0; font-size: 12.5px; color: var(--text-dim); }
   .update-item .check-mark { color: var(--success); font-weight: 800; }
+
+  /* ============ LOADING SCREEN ============ */
+  #boot-screen { position: fixed; inset: 0; z-index: 999; background: var(--void); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; transition: opacity 0.4s ease, visibility 0.4s ease; }
+  #boot-screen.hide { opacity: 0; visibility: hidden; pointer-events: none; }
+  .boot-mark { width: 64px; height: 64px; border-radius: 20px; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk'; font-weight: 800; font-size: 28px; color: #fff; animation: bootPulse 1.4s ease-in-out infinite; }
+  @keyframes bootPulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.92); opacity: 0.75; } }
+  .boot-ring { width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--surface-hi); border-top-color: var(--accent-2); animation: bootSpin 0.8s linear infinite; }
+  @keyframes bootSpin { to { transform: rotate(360deg); } }
+
+  /* ============ SKELETON LOADERS ============ */
+  .skel { background: linear-gradient(100deg, var(--surface) 30%, var(--surface-hi) 50%, var(--surface) 70%); background-size: 200% 100%; animation: skelShimmer 1.4s ease-in-out infinite; border-radius: var(--radius-md); }
+  @keyframes skelShimmer { 0% { background-position: 160% 0; } 100% { background-position: -60% 0; } }
+  .skel-card { height: 84px; margin-bottom: 10px; }
+  .skel-line { height: 14px; border-radius: 7px; margin-bottom: 8px; }
+  .skel-row { display: flex; gap: 10px; margin-bottom: 14px; }
+  .skel-circle { width: 46px; height: 46px; border-radius: 50%; flex: 0 0 auto; }
+
+  /* ============ CUSTOM FIELD BUTTON (replaces native inputs) ============ */
+  .field-btn { width: 100%; background: var(--surface-hi); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: inherit; text-align: left; display: flex; align-items: center; justify-content: space-between; transition: transform 0.12s ease, border-color 0.15s ease; }
+  .field-btn:active { transform: scale(0.98); }
+  .field-btn.placeholder { color: var(--text-faint); }
+  .field-btn .fb-chevron { width: 14px; height: 14px; color: var(--text-faint); flex: 0 0 auto; }
+
+  /* ============ WHEEL TIME PICKER ============ */
+  .wheel-row { display: flex; justify-content: center; gap: 4px; position: relative; height: 220px; margin: 6px 0 18px; }
+  .wheel-col { width: 74px; height: 220px; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; -ms-overflow-style: none; position: relative; z-index: 2; }
+  .wheel-col::-webkit-scrollbar { display: none; }
+  .wheel-col.ampm { width: 62px; }
+  .wheel-pad { height: 88px; scroll-snap-align: none; }
+  .wheel-item { height: 44px; display: flex; align-items: center; justify-content: center; scroll-snap-align: center; font-family: 'JetBrains Mono'; font-size: 17px; font-weight: 600; color: var(--text-faint); transition: color 0.15s ease, transform 0.15s ease, font-size 0.15s ease; }
+  .wheel-item.selected { color: var(--text); font-size: 21px; font-weight: 800; }
+  .wheel-selection-band { position: absolute; top: 50%; left: 0; right: 0; height: 44px; transform: translateY(-50%); background: rgba(255,255,255,0.045); border-top: 1px solid var(--border-hi); border-bottom: 1px solid var(--border-hi); border-radius: 12px; pointer-events: none; z-index: 1; }
+  .wheel-fade-top, .wheel-fade-bottom { position: absolute; left: 0; right: 0; height: 70px; pointer-events: none; z-index: 3; }
+  .wheel-fade-top { top: 0; background: linear-gradient(var(--surface) 10%, transparent); }
+  .wheel-fade-bottom { bottom: 0; background: linear-gradient(transparent, var(--surface) 90%); }
+
+  /* ============ CALENDAR DATE PICKER ============ */
+  .cal-picker-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .cal-picker-title { font-size: 15px; font-weight: 800; }
+  .cal-picker-nav { display: flex; gap: 6px; }
+  .cal-nav-btn { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-hi); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-dim); }
+  .cal-nav-btn:active { transform: scale(0.9); }
+  .cal-nav-btn svg { width: 15px; height: 15px; }
+  .cal-picker-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 6px; }
+  .cal-picker-weekdays span { text-align: center; font-size: 10px; color: var(--text-faint); font-weight: 800; text-transform: uppercase; }
+  .cal-picker-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .cal-picker-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 13px; font-weight: 600; color: var(--text); position: relative; }
+  .cal-picker-day.empty { pointer-events: none; }
+  .cal-picker-day.today::after { content: ''; position: absolute; bottom: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--accent-3); }
+  .cal-picker-day.selected { background: var(--accent-gradient); color: #fff; font-weight: 800; }
+  .cal-picker-day.disabled { color: var(--text-faint); opacity: 0.3; pointer-events: none; }
+  .cal-picker-day:active:not(.disabled):not(.empty) { transform: scale(0.88); }
+
+  /* ============ OPTION PICKER SHEET ============ */
+  .option-row { display: flex; align-items: center; justify-content: space-between; padding: 15px 4px; border-bottom: 1px solid var(--border); }
+  .option-row:last-child { border-bottom: none; }
+  .option-row:active { background: var(--surface-hi); }
+  .option-left { display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 600; }
+  .option-swatch { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
+  .option-check { width: 18px; height: 18px; color: var(--accent-2); opacity: 0; }
+  .option-row.active .option-check { opacity: 1; }
+
+  /* ============ CONFIRM DIALOG ============ */
+  .confirm-icon { width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 14px; background: var(--surface-hi); }
+  .confirm-icon.danger { background: rgba(255,84,112,0.12); }
+  .confirm-title { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+  .confirm-msg { font-size: 13px; color: var(--text-dim); line-height: 1.55; margin-bottom: 4px; }
+  .modal-save-btn.danger-btn { background: linear-gradient(135deg, #FF5470, #D6304C); }
+
+  /* ============ QUALITY CHIPS (replaces range slider) ============ */
+  .quality-chip-row { display: flex; gap: 6px; }
+  .quality-chip { flex: 1; padding: 11px 0; border-radius: 12px; background: var(--surface-hi); border: 1px solid var(--border); text-align: center; font-size: 10.5px; font-weight: 700; color: var(--text-faint); transition: all 0.15s ease; }
+  .quality-chip.active { background: var(--accent-gradient); color: #fff; border-color: transparent; }
 
   /* ============ CHARACTER TAB ============ */
   .char-hero { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; padding-top: 4px; }
@@ -476,6 +551,11 @@
 </head>
 <body>
 
+<div id="boot-screen">
+  <div class="boot-mark">S</div>
+  <div class="boot-ring"></div>
+</div>
+
 <div id="app">
 
   <div class="view active" id="view-home">
@@ -680,6 +760,15 @@
   </div>
 
   <div class="view" id="view-character">
+    <div class="skeleton-overlay" id="character-skeleton">
+      <div class="skel-row" style="justify-content:center; margin-bottom:20px;"><div class="skel skel-circle" style="width:96px; height:96px;"></div></div>
+      <div class="skel skel-line" style="width:40%; margin:0 auto 8px;"></div>
+      <div class="skel skel-line" style="width:60%; margin:0 auto 24px; height:10px;"></div>
+      <div class="skel skel-card" style="height:120px;"></div>
+      <div class="skel skel-card"></div>
+      <div class="skel skel-card"></div>
+      <div class="skel skel-card"></div>
+    </div>
     <div class="char-hero">
       <div class="char-avatar-ring">
         <div class="char-avatar-inner">🐺</div>
@@ -744,6 +833,15 @@
   </div>
 
   <div class="view" id="view-progress">
+    <div class="skeleton-overlay" id="progress-skeleton">
+      <div class="skel skel-line" style="width:30%; height:11px;"></div>
+      <div class="skel skel-card" style="height:150px; margin-top:14px;"></div>
+      <div class="skel skel-line" style="width:40%; margin-top:20px;"></div>
+      <div class="skel skel-card" style="height:100px;"></div>
+      <div class="skel skel-card" style="height:140px;"></div>
+      <div class="skel skel-card"></div>
+      <div class="skel skel-card"></div>
+    </div>
     <h2>Progress</h2>
     <div class="progress-sub">Your journey, visualized.</div>
 
@@ -975,34 +1073,33 @@
     <div class="form-row">
       <div class="form-group" style="flex:1;">
         <label class="form-label">Category</label>
-        <select id="task-category-input" class="form-input">
-          <option value="">None</option>
-          <option value="Basketball">🏀 Basketball</option>
-          <option value="Faith">✝️ Faith</option>
-          <option value="Fitness">💪 Fitness</option>
-          <option value="School">🎓 School</option>
-          <option value="Skills">🎯 Skills</option>
-          <option value="Business">💼 Business</option>
-        </select>
+        <button type="button" class="field-btn placeholder" id="task-category-btn" data-value="">
+          <span id="task-category-btn-text">None</span>
+          <svg class="fb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
       <div class="form-group" style="flex:1;">
         <label class="form-label">Priority</label>
-        <select id="task-priority-input" class="form-input">
-          <option value="Low">Low</option>
-          <option value="Medium" selected>Medium</option>
-          <option value="High">High</option>
-          <option value="Critical">Critical</option>
-        </select>
+        <button type="button" class="field-btn" id="task-priority-btn" data-value="Medium">
+          <span id="task-priority-btn-text">Medium</span>
+          <svg class="fb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group" style="flex:1;">
         <label class="form-label">Start Date</label>
-        <input type="date" id="task-start-input" class="form-input">
+        <button type="button" class="field-btn placeholder" id="task-start-btn" data-value="">
+          <span id="task-start-btn-text">Select date</span>
+          <svg class="fb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
       <div class="form-group" style="flex:1;">
         <label class="form-label">End Date</label>
-        <input type="date" id="task-end-input" class="form-input">
+        <button type="button" class="field-btn placeholder" id="task-end-btn" data-value="">
+          <span id="task-end-btn-text">Select date</span>
+          <svg class="fb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </div>
     <div class="task-xp-preview">Estimated Reward: <span id="task-xp-preview-val">120 XP</span></div>
@@ -1019,11 +1116,17 @@
     <div class="sleep-time-row">
       <div class="form-group" style="flex:1;">
         <label class="form-label">Bedtime</label>
-        <input type="time" id="sleep-bedtime-input" class="form-input">
+        <button type="button" class="field-btn placeholder" id="sleep-bedtime-btn" data-value="">
+          <span id="sleep-bedtime-btn-text">Select time</span>
+          <svg class="fb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
       <div class="form-group" style="flex:1;">
         <label class="form-label">Wake Time</label>
-        <input type="time" id="sleep-waketime-input" class="form-input">
+        <button type="button" class="field-btn placeholder" id="sleep-waketime-btn" data-value="">
+          <span id="sleep-waketime-btn-text">Select time</span>
+          <svg class="fb-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </div>
     <div class="sleep-total-display">
@@ -1033,9 +1136,12 @@
     </div>
     <div class="form-group">
       <label class="form-label">Sleep Quality (optional)</label>
-      <input type="range" id="sleep-quality-input" min="0" max="4" value="2" step="1">
-      <div class="slider-labels" id="sleep-quality-labels">
-        <span data-q="0">Poor</span><span data-q="1">Fair</span><span data-q="2">Good</span><span data-q="3">Great</span><span data-q="4">Excellent</span>
+      <div class="quality-chip-row" id="sleep-quality-chips">
+        <button type="button" class="quality-chip" data-q="0">Poor</button>
+        <button type="button" class="quality-chip" data-q="1">Fair</button>
+        <button type="button" class="quality-chip active" data-q="2">Good</button>
+        <button type="button" class="quality-chip" data-q="3">Great</button>
+        <button type="button" class="quality-chip" data-q="4">Excellent</button>
       </div>
     </div>
     <div class="form-group">
@@ -1088,6 +1194,62 @@
   </div>
 </div>
 <input type="file" id="import-file-input" accept="application/json" style="display:none;">
+
+<div class="modal-backdrop" id="wheel-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3 id="wheel-modal-title" style="margin-bottom:10px; text-align:center;">Set Time</h3>
+    <div class="wheel-row">
+      <div class="wheel-fade-top"></div>
+      <div class="wheel-fade-bottom"></div>
+      <div class="wheel-selection-band"></div>
+      <div class="wheel-col" id="wheel-hour"></div>
+      <div class="wheel-col" id="wheel-minute"></div>
+      <div class="wheel-col ampm" id="wheel-ampm"></div>
+    </div>
+    <button class="modal-save-btn" id="wheel-confirm-btn">Confirm</button>
+    <button class="modal-cancel-btn" id="wheel-cancel-btn">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="calendar-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="cal-picker-head">
+      <div class="cal-picker-nav">
+        <button class="cal-nav-btn" id="cal-picker-prev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div class="cal-picker-title" id="cal-picker-title">July 2026</div>
+      <div class="cal-picker-nav">
+        <button class="cal-nav-btn" id="cal-picker-next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+    <div class="cal-picker-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+    <div class="cal-picker-grid" id="cal-picker-grid"></div>
+    <button class="modal-save-btn" id="calendar-confirm-btn" style="margin-top:18px;">Confirm</button>
+    <button class="modal-cancel-btn" id="calendar-cancel-btn">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="option-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3 id="option-modal-title" style="margin-bottom:6px;">Select</h3>
+    <div id="option-modal-list"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="confirm-modal-backdrop">
+  <div class="modal-sheet" style="text-align:center;">
+    <div class="modal-handle"></div>
+    <div class="confirm-icon" id="confirm-icon" style="margin-left:auto; margin-right:auto;">⚠️</div>
+    <div class="confirm-title" id="confirm-title">Are you sure?</div>
+    <div class="confirm-msg" id="confirm-msg">This action cannot be undone.</div>
+    <button class="modal-save-btn" id="confirm-ok-btn" style="margin-top:18px;">Confirm</button>
+    <button class="modal-cancel-btn" id="confirm-cancel-btn">Cancel</button>
+  </div>
+</div>
+
 
 <script>
   /* =========================================================================
@@ -1250,6 +1412,225 @@
     catch (e) { /* storage unavailable — app still works in-memory for this session */ }
   }
 
+  /* =========================================================================
+     CUSTOM UI ENGINE — replaces every native browser control (time/date
+     pickers, selects, confirm/alert dialogs) with components matching the
+     app's own design language.
+  ========================================================================= */
+  function haptic(ms) {
+    if (!STATE.settingsToggles || !STATE.settingsToggles.haptic) return;
+    if (navigator.vibrate) navigator.vibrate(ms || 8);
+  }
+
+  // ---------- Wheel Time Picker ----------
+  const WHEEL_ITEM_H = 44;
+  let wheelConfirmCallback = null;
+
+  function buildWheelColumn(colEl, items, selectedIndex) {
+    colEl.innerHTML = '<div class="wheel-pad"></div>' + items.map(v => `<div class="wheel-item" data-val="${v}">${v}</div>`).join('') + '<div class="wheel-pad"></div>';
+    requestAnimationFrame(() => {
+      colEl.scrollTop = selectedIndex * WHEEL_ITEM_H;
+      highlightWheelCenter(colEl);
+    });
+  }
+
+  function highlightWheelCenter(colEl) {
+    const idx = Math.round(colEl.scrollTop / WHEEL_ITEM_H);
+    const items = colEl.querySelectorAll('.wheel-item');
+    items.forEach((item, i) => item.classList.toggle('selected', i === idx));
+    return idx;
+  }
+
+  function getWheelSelectedValue(colEl) {
+    const idx = Math.round(colEl.scrollTop / WHEEL_ITEM_H);
+    const items = colEl.querySelectorAll('.wheel-item');
+    return items[idx] ? items[idx].dataset.val : items[0].dataset.val;
+  }
+
+  function wireWheelColumnScroll(colEl) {
+    let lastIdx = -1;
+    let scrollTimer = null;
+    colEl.addEventListener('scroll', () => {
+      const idx = highlightWheelCenter(colEl);
+      if (idx !== lastIdx) { lastIdx = idx; haptic(4); }
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        colEl.scrollTo({ top: idx * WHEEL_ITEM_H, behavior: 'smooth' });
+      }, 100);
+    });
+    colEl.addEventListener('click', (e) => {
+      const item = e.target.closest('.wheel-item');
+      if (!item) return;
+      const items = Array.from(colEl.querySelectorAll('.wheel-item'));
+      const idx = items.indexOf(item);
+      haptic(6);
+      colEl.scrollTo({ top: idx * WHEEL_ITEM_H, behavior: 'smooth' });
+    });
+  }
+
+  let wheelColumnsWired = false;
+  function openWheelPicker(title, initialTimeStr24, onConfirm) {
+    document.getElementById('wheel-modal-title').innerText = title;
+    let h24 = 22, m = 0;
+    if (initialTimeStr24) { const parts = initialTimeStr24.split(':').map(Number); h24 = parts[0]; m = parts[1]; }
+    const period = h24 >= 12 ? 'PM' : 'AM';
+    let h12 = h24 % 12; if (h12 === 0) h12 = 12;
+
+    const hourItems = Array.from({ length: 12 }, (_, i) => i + 1);
+    const minuteItems = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'));
+    const ampmItems = ['AM', 'PM'];
+
+    buildWheelColumn(document.getElementById('wheel-hour'), hourItems, h12 - 1);
+    buildWheelColumn(document.getElementById('wheel-minute'), minuteItems, m);
+    buildWheelColumn(document.getElementById('wheel-ampm'), ampmItems, period === 'AM' ? 0 : 1);
+
+    if (!wheelColumnsWired) {
+      wireWheelColumnScroll(document.getElementById('wheel-hour'));
+      wireWheelColumnScroll(document.getElementById('wheel-minute'));
+      wireWheelColumnScroll(document.getElementById('wheel-ampm'));
+      wheelColumnsWired = true;
+    }
+
+    wheelConfirmCallback = onConfirm;
+    document.getElementById('wheel-modal-backdrop').classList.add('open');
+  }
+  function closeWheelPicker() { document.getElementById('wheel-modal-backdrop').classList.remove('open'); wheelConfirmCallback = null; }
+
+  function wireWheelModal() {
+    document.getElementById('wheel-cancel-btn').addEventListener('click', closeWheelPicker);
+    document.getElementById('wheel-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'wheel-modal-backdrop') closeWheelPicker(); });
+    document.getElementById('wheel-confirm-btn').addEventListener('click', () => {
+      const hour12 = parseInt(getWheelSelectedValue(document.getElementById('wheel-hour')), 10);
+      const minute = parseInt(getWheelSelectedValue(document.getElementById('wheel-minute')), 10);
+      const period = getWheelSelectedValue(document.getElementById('wheel-ampm'));
+      let hour24 = hour12 % 12;
+      if (period === 'PM') hour24 += 12;
+      const timeStr = `${String(hour24).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      haptic(10);
+      const cb = wheelConfirmCallback;
+      closeWheelPicker();
+      if (cb) cb(timeStr);
+    });
+  }
+
+  // ---------- Calendar Date Picker ----------
+  let calPickerViewDate = new Date();
+  let calPickerSelected = null;
+  let calPickerMin = null;
+  let calConfirmCallback = null;
+
+  function renderCalendarPickerGrid() {
+    const year = calPickerViewDate.getFullYear(), month = calPickerViewDate.getMonth();
+    document.getElementById('cal-picker-title').innerText = calPickerViewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const grid = document.getElementById('cal-picker-grid');
+    grid.innerHTML = '';
+    for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div')).className = 'cal-picker-day empty';
+    const todayStr = todayKey();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const cell = document.createElement('div');
+      cell.className = 'cal-picker-day';
+      cell.innerText = d;
+      if (dateStr === todayStr) cell.classList.add('today');
+      if (dateStr === calPickerSelected) cell.classList.add('selected');
+      if (calPickerMin && dateStr < calPickerMin) cell.classList.add('disabled');
+      cell.addEventListener('click', () => {
+        haptic(6);
+        calPickerSelected = dateStr;
+        renderCalendarPickerGrid();
+      });
+      grid.appendChild(cell);
+    }
+  }
+
+  function openCalendarPicker(initialDateStr, minDateStr, onConfirm) {
+    calPickerSelected = initialDateStr || todayKey();
+    calPickerMin = minDateStr || null;
+    calPickerViewDate = new Date(calPickerSelected + 'T00:00:00');
+    calConfirmCallback = onConfirm;
+    renderCalendarPickerGrid();
+    document.getElementById('calendar-modal-backdrop').classList.add('open');
+  }
+  function closeCalendarPicker() { document.getElementById('calendar-modal-backdrop').classList.remove('open'); calConfirmCallback = null; }
+
+  function wireCalendarModal() {
+    document.getElementById('cal-picker-prev').addEventListener('click', () => {
+      haptic(5);
+      calPickerViewDate.setMonth(calPickerViewDate.getMonth() - 1);
+      renderCalendarPickerGrid();
+    });
+    document.getElementById('cal-picker-next').addEventListener('click', () => {
+      haptic(5);
+      calPickerViewDate.setMonth(calPickerViewDate.getMonth() + 1);
+      renderCalendarPickerGrid();
+    });
+    document.getElementById('calendar-cancel-btn').addEventListener('click', closeCalendarPicker);
+    document.getElementById('calendar-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'calendar-modal-backdrop') closeCalendarPicker(); });
+    document.getElementById('calendar-confirm-btn').addEventListener('click', () => {
+      haptic(10);
+      const cb = calConfirmCallback;
+      const val = calPickerSelected;
+      closeCalendarPicker();
+      if (cb) cb(val);
+    });
+  }
+
+  // ---------- Option Picker (replaces <select>) ----------
+  function openOptionPicker(title, options, currentValue, onSelect) {
+    document.getElementById('option-modal-title').innerText = title;
+    const list = document.getElementById('option-modal-list');
+    list.innerHTML = '';
+    options.forEach(opt => {
+      const row = document.createElement('div');
+      row.className = `option-row ${opt.value === currentValue ? 'active' : ''}`;
+      row.innerHTML = `
+        <div class="option-left">${opt.color ? `<span class="option-swatch" style="background:${opt.color};"></span>` : ''}${opt.label}</div>
+        <svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      `;
+      row.addEventListener('click', () => {
+        haptic(8);
+        closeOptionPicker();
+        onSelect(opt);
+      });
+      list.appendChild(row);
+    });
+    document.getElementById('option-modal-backdrop').classList.add('open');
+  }
+  function closeOptionPicker() { document.getElementById('option-modal-backdrop').classList.remove('open'); }
+
+  function wireOptionModal() {
+    document.getElementById('option-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'option-modal-backdrop') closeOptionPicker(); });
+  }
+
+  // ---------- Confirm Dialog (replaces confirm()/alert()) ----------
+  let confirmCallback = null;
+  function showConfirm({ icon, title, message, confirmLabel, danger, hideCancel, onConfirm }) {
+    document.getElementById('confirm-icon').innerText = icon || '⚠️';
+    document.getElementById('confirm-icon').classList.toggle('danger', !!danger);
+    document.getElementById('confirm-title').innerText = title || 'Are you sure?';
+    document.getElementById('confirm-msg').innerText = message || '';
+    const okBtn = document.getElementById('confirm-ok-btn');
+    okBtn.innerText = confirmLabel || 'Confirm';
+    okBtn.classList.toggle('danger-btn', !!danger);
+    document.getElementById('confirm-cancel-btn').style.display = hideCancel ? 'none' : 'block';
+    confirmCallback = onConfirm || null;
+    document.getElementById('confirm-modal-backdrop').classList.add('open');
+  }
+  function closeConfirmDialog() { document.getElementById('confirm-modal-backdrop').classList.remove('open'); confirmCallback = null; }
+
+  function wireConfirmModal() {
+    document.getElementById('confirm-cancel-btn').addEventListener('click', closeConfirmDialog);
+    document.getElementById('confirm-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'confirm-modal-backdrop') closeConfirmDialog(); });
+    document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+      haptic(10);
+      const cb = confirmCallback;
+      closeConfirmDialog();
+      if (cb) cb();
+    });
+  }
+
   // ---------- Date / level helpers ----------
   function dateKeyFor(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
   function todayKey() { return dateKeyFor(new Date()); }
@@ -1357,6 +1738,7 @@
   window.handleQuestCheckClick = function(id) {
     const quest = quests.find(q => q.id === id);
     if (!quest) return;
+    haptic(8);
     if (quest.isSleepQuest) { openSleepModal(); return; }
     if (quest.completed) { window.toggleQuest(id); return; } // undo is instant, no modal needed
     openTimeModal(id);
@@ -1497,6 +1879,7 @@
     document.getElementById('time-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'time-modal-backdrop') closeTimeModal(); });
     document.querySelectorAll('.time-quick-btn').forEach(btn => {
       btn.addEventListener('click', () => {
+        haptic(8);
         document.querySelectorAll('.time-quick-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('time-custom-input').value = '';
@@ -1626,12 +2009,17 @@
   }
 
   window.deleteTask = function(id) {
-    if (!confirm("Delete this task? This can't be undone.")) return;
-    const task = STATE.tasks.find(t => t.id === id);
-    if (task && task.completed) { window.toggleTask(id); } // unwind its XP/stats first
-    STATE.tasks = STATE.tasks.filter(t => t.id !== id);
-    saveState();
-    renderTasks();
+    showConfirm({
+      icon: '🗑️', title: 'Delete this task?', message: "This can't be undone.",
+      confirmLabel: 'Delete', danger: true,
+      onConfirm: () => {
+        const task = STATE.tasks.find(t => t.id === id);
+        if (task && task.completed) { window.toggleTask(id); } // unwind its XP/stats first
+        STATE.tasks = STATE.tasks.filter(t => t.id !== id);
+        saveState();
+        renderTasks();
+      }
+    });
   };
 
   window.toggleTask = function(id) {
@@ -1738,10 +2126,30 @@
     });
   }
 
+  function formatDateDisplay(dateStr) {
+    return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function to12Hour(h, m) {
+    const period = h >= 12 ? 'PM' : 'AM';
+    let h12 = h % 12; if (h12 === 0) h12 = 12;
+    return `${h12}:${String(m).padStart(2, '0')} ${period}`;
+  }
+  function formatTimeDisplay(timeStr24) {
+    const [h, m] = timeStr24.split(':').map(Number);
+    return to12Hour(h, m);
+  }
+
+  function setFieldBtnValue(btnId, textId, value, displayText) {
+    const btn = document.getElementById(btnId);
+    btn.dataset.value = value;
+    btn.classList.toggle('placeholder', !value);
+    document.getElementById(textId).innerText = displayText;
+  }
+
   function updateTaskXpPreview() {
-    const priority = document.getElementById('task-priority-input').value;
-    const start = document.getElementById('task-start-input').value;
-    const end = document.getElementById('task-end-input').value;
+    const priority = document.getElementById('task-priority-btn').dataset.value;
+    const start = document.getElementById('task-start-btn').dataset.value;
+    const end = document.getElementById('task-end-btn').dataset.value;
     const errorEl = document.getElementById('task-form-error');
     const saveBtn = document.getElementById('task-save-btn');
     if (start && end && new Date(end + 'T00:00:00') < new Date(start + 'T00:00:00')) {
@@ -1755,33 +2163,73 @@
     document.getElementById('task-xp-preview-val').innerText = `${computeTaskXP(priority, start, end)} XP`;
   }
 
+  const TASK_CATEGORY_OPTIONS = [
+    { value: '', label: 'None', color: 'var(--text-faint)' },
+    { value: 'Basketball', label: '🏀 Basketball', color: '#FF7A45' },
+    { value: 'Faith', label: '✝️ Faith', color: '#F0367C' },
+    { value: 'Fitness', label: '💪 Fitness', color: '#9B5DE5' },
+    { value: 'School', label: '🎓 School', color: '#6C7DFF' },
+    { value: 'Skills', label: '🎯 Skills', color: '#C9509B' },
+    { value: 'Business', label: '💼 Business', color: '#FFAD5A' }
+  ];
+  const TASK_PRIORITY_OPTIONS = [
+    { value: 'Low', label: 'Low', color: '#6C7DFF' },
+    { value: 'Medium', label: 'Medium', color: '#9B5DE5' },
+    { value: 'High', label: 'High', color: '#F0367C' },
+    { value: 'Critical', label: 'Critical', color: '#FF3B30' }
+  ];
+
   function openTaskModal() {
     document.getElementById('task-title-input').value = '';
-    document.getElementById('task-category-input').value = '';
-    document.getElementById('task-priority-input').value = 'Medium';
+    setFieldBtnValue('task-category-btn', 'task-category-btn-text', '', 'None');
+    setFieldBtnValue('task-priority-btn', 'task-priority-btn-text', 'Medium', 'Medium');
     const today = new Date();
     const inWeek = new Date(today); inWeek.setDate(today.getDate() + 7);
-    document.getElementById('task-start-input').value = dateKeyFor(today);
-    document.getElementById('task-end-input').value = dateKeyFor(inWeek);
+    setFieldBtnValue('task-start-btn', 'task-start-btn-text', dateKeyFor(today), formatDateDisplay(dateKeyFor(today)));
+    setFieldBtnValue('task-end-btn', 'task-end-btn-text', dateKeyFor(inWeek), formatDateDisplay(dateKeyFor(inWeek)));
     updateTaskXpPreview();
     document.getElementById('task-modal-backdrop').classList.add('open');
   }
   function closeTaskModal() { document.getElementById('task-modal-backdrop').classList.remove('open'); }
 
   function wireTaskModal() {
-    document.getElementById('open-task-modal-btn').addEventListener('click', openTaskModal);
+    document.getElementById('open-task-modal-btn').addEventListener('click', () => { haptic(); openTaskModal(); });
     document.getElementById('task-cancel-btn').addEventListener('click', closeTaskModal);
     document.getElementById('task-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'task-modal-backdrop') closeTaskModal(); });
-    ['task-priority-input', 'task-start-input', 'task-end-input'].forEach(id => {
-      document.getElementById(id).addEventListener('change', updateTaskXpPreview);
+
+    document.getElementById('task-category-btn').addEventListener('click', () => {
+      openOptionPicker('Category', TASK_CATEGORY_OPTIONS, document.getElementById('task-category-btn').dataset.value, (opt) => {
+        setFieldBtnValue('task-category-btn', 'task-category-btn-text', opt.value, opt.label);
+        updateTaskXpPreview();
+      });
     });
+    document.getElementById('task-priority-btn').addEventListener('click', () => {
+      openOptionPicker('Priority', TASK_PRIORITY_OPTIONS, document.getElementById('task-priority-btn').dataset.value, (opt) => {
+        setFieldBtnValue('task-priority-btn', 'task-priority-btn-text', opt.value, opt.label);
+        updateTaskXpPreview();
+      });
+    });
+    document.getElementById('task-start-btn').addEventListener('click', () => {
+      openCalendarPicker(document.getElementById('task-start-btn').dataset.value || todayKey(), null, (dateStr) => {
+        setFieldBtnValue('task-start-btn', 'task-start-btn-text', dateStr, formatDateDisplay(dateStr));
+        updateTaskXpPreview();
+      });
+    });
+    document.getElementById('task-end-btn').addEventListener('click', () => {
+      const startVal = document.getElementById('task-start-btn').dataset.value;
+      openCalendarPicker(document.getElementById('task-end-btn').dataset.value || startVal || todayKey(), startVal || null, (dateStr) => {
+        setFieldBtnValue('task-end-btn', 'task-end-btn-text', dateStr, formatDateDisplay(dateStr));
+        updateTaskXpPreview();
+      });
+    });
+
     document.getElementById('task-save-btn').addEventListener('click', () => {
       const title = document.getElementById('task-title-input').value.trim();
       if (!title) { document.getElementById('task-title-input').focus(); return; }
-      const category = document.getElementById('task-category-input').value;
-      const priority = document.getElementById('task-priority-input').value;
-      const start = document.getElementById('task-start-input').value;
-      const end = document.getElementById('task-end-input').value;
+      const category = document.getElementById('task-category-btn').dataset.value;
+      const priority = document.getElementById('task-priority-btn').dataset.value;
+      const start = document.getElementById('task-start-btn').dataset.value;
+      const end = document.getElementById('task-end-btn').dataset.value;
       if (!start || !end || new Date(end + 'T00:00:00') < new Date(start + 'T00:00:00')) return;
       addTask(title, category, priority, start, end);
       closeTaskModal();
@@ -1824,43 +2272,48 @@
   }
 
   function updateSleepPreview() {
-    const bedtime = document.getElementById('sleep-bedtime-input').value;
-    const wake = document.getElementById('sleep-waketime-input').value;
+    const bedtime = document.getElementById('sleep-bedtime-btn').dataset.value;
+    const wake = document.getElementById('sleep-waketime-btn').dataset.value;
     const total = calcSleepDuration(bedtime, wake);
     if (total == null) {
       document.getElementById('sleep-total-val').innerText = '—';
-      document.getElementById('sleep-xp-hint').innerText = 'Log both times to see your XP';
+      document.getElementById('sleep-xp-hint').innerText = 'Set both times to see your XP';
       return;
     }
     document.getElementById('sleep-total-val').innerText = formatMinutes(total);
     document.getElementById('sleep-xp-hint').innerText = `+${sleepXpForMinutes(total)} XP for this session`;
   }
 
-  function updateSleepQualityLabels() {
-    const val = document.getElementById('sleep-quality-input').value;
-    document.querySelectorAll('#sleep-quality-labels span').forEach(s => s.classList.toggle('active', s.dataset.q === val));
+  function setSleepQuality(qVal) {
+    document.querySelectorAll('.quality-chip').forEach(c => c.classList.toggle('active', c.dataset.q === String(qVal)));
   }
 
   function openSleepModal() {
     const key = todayKey();
     const day = STATE.days[key];
     const existing = day && typeof day.sleep === 'object' ? day.sleep : null;
-    document.getElementById('sleep-bedtime-input').value = existing ? existing.bedtime : '';
-    document.getElementById('sleep-waketime-input').value = existing ? existing.wakeTime : '';
-    document.getElementById('sleep-quality-input').value = existing ? existing.quality : 2;
+    if (existing) {
+      setFieldBtnValue('sleep-bedtime-btn', 'sleep-bedtime-btn-text', existing.bedtime, formatTimeDisplay(existing.bedtime));
+      setFieldBtnValue('sleep-waketime-btn', 'sleep-waketime-btn-text', existing.wakeTime, formatTimeDisplay(existing.wakeTime));
+      setSleepQuality(SLEEP_QUALITY_LABELS.indexOf(existing.quality) >= 0 ? SLEEP_QUALITY_LABELS.indexOf(existing.quality) : 2);
+    } else {
+      setFieldBtnValue('sleep-bedtime-btn', 'sleep-bedtime-btn-text', '', 'Select time');
+      setFieldBtnValue('sleep-waketime-btn', 'sleep-waketime-btn-text', '', 'Select time');
+      setSleepQuality(2);
+    }
     document.getElementById('sleep-notes-input').value = existing ? (existing.notes || '') : '';
     updateSleepPreview();
-    updateSleepQualityLabels();
     document.getElementById('sleep-modal-backdrop').classList.add('open');
   }
   function closeSleepModal() { document.getElementById('sleep-modal-backdrop').classList.remove('open'); }
 
   function saveSleepEntry() {
-    const bedtime = document.getElementById('sleep-bedtime-input').value;
-    const wake = document.getElementById('sleep-waketime-input').value;
+    const bedtime = document.getElementById('sleep-bedtime-btn').dataset.value;
+    const wake = document.getElementById('sleep-waketime-btn').dataset.value;
     const totalMinutes = calcSleepDuration(bedtime, wake);
-    if (totalMinutes == null) { alert("Enter both a bedtime and a wake time."); return; }
-    const quality = SLEEP_QUALITY_LABELS[document.getElementById('sleep-quality-input').value];
+    if (totalMinutes == null) { showConfirm({ icon: '😴', title: 'Missing a time', message: 'Set both a bedtime and a wake time before saving.', confirmLabel: 'Got it', hideCancel: true }); return; }
+    const activeChip = document.querySelector('.quality-chip.active');
+    const quality = SLEEP_QUALITY_LABELS[activeChip ? parseInt(activeChip.dataset.q, 10) : 2];
     const notes = document.getElementById('sleep-notes-input').value.trim();
 
     const key = todayKey();
@@ -1881,7 +2334,7 @@
       day.completedIds.push('sleep-log');
       STATE.totalCompletions += 1;
       recomputeStreak();
-      if (navigator.vibrate) navigator.vibrate(50);
+      haptic(30);
       showXpFlyout(newXp);
       checkAchievements();
     }
@@ -1894,12 +2347,24 @@
   }
 
   function wireSleepModal() {
-    document.getElementById('sleep-stat-card').addEventListener('click', openSleepModal);
+    document.getElementById('sleep-stat-card').addEventListener('click', () => { haptic(); openSleepModal(); });
     document.getElementById('sleep-cancel-btn').addEventListener('click', closeSleepModal);
     document.getElementById('sleep-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'sleep-modal-backdrop') closeSleepModal(); });
-    document.getElementById('sleep-bedtime-input').addEventListener('change', updateSleepPreview);
-    document.getElementById('sleep-waketime-input').addEventListener('change', updateSleepPreview);
-    document.getElementById('sleep-quality-input').addEventListener('input', updateSleepQualityLabels);
+    document.getElementById('sleep-bedtime-btn').addEventListener('click', () => {
+      openWheelPicker('Bedtime', document.getElementById('sleep-bedtime-btn').dataset.value || '22:00', (timeStr) => {
+        setFieldBtnValue('sleep-bedtime-btn', 'sleep-bedtime-btn-text', timeStr, formatTimeDisplay(timeStr));
+        updateSleepPreview();
+      });
+    });
+    document.getElementById('sleep-waketime-btn').addEventListener('click', () => {
+      openWheelPicker('Wake Time', document.getElementById('sleep-waketime-btn').dataset.value || '07:00', (timeStr) => {
+        setFieldBtnValue('sleep-waketime-btn', 'sleep-waketime-btn-text', timeStr, formatTimeDisplay(timeStr));
+        updateSleepPreview();
+      });
+    });
+    document.querySelectorAll('.quality-chip').forEach(chip => {
+      chip.addEventListener('click', () => { haptic(); setSleepQuality(chip.dataset.q); });
+    });
     document.getElementById('sleep-save-btn').addEventListener('click', saveSleepEntry);
   }
 
@@ -1925,6 +2390,7 @@
   function wireHomeCategoryRow() {
     document.querySelectorAll('.cat-item').forEach(btn => {
       btn.addEventListener('click', () => {
+        haptic(6);
         const cat = btn.getAttribute('data-cat');
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         document.querySelector('.nav-item[data-target="quests"]').classList.add('active');
@@ -2568,12 +3034,17 @@
 
   function activateStreakFreeze() {
     if (STATE.streakFreezes <= 0 || STATE.streakFreezeArmed) return;
-    if (!confirm('Activate Streak Freeze?\n\nYour next missed day will not break your streak.')) return;
-    STATE.streakFreezes -= 1;
-    STATE.streakFreezeArmed = true;
-    saveState();
-    renderItems();
-    updateHomeStats();
+    showConfirm({
+      icon: '🎟️', title: 'Activate Streak Freeze?', message: 'Your next missed day will not break your streak.',
+      confirmLabel: 'Activate',
+      onConfirm: () => {
+        STATE.streakFreezes -= 1;
+        STATE.streakFreezeArmed = true;
+        saveState();
+        renderItems();
+        updateHomeStats();
+      }
+    });
   }
 
   function buildItemsReal() {
@@ -2623,16 +3094,18 @@
         t.classList.toggle('on');
         STATE.settingsToggles[t.dataset.setting] = t.classList.contains('on');
         saveState();
+        haptic(8);
       });
     });
 
     document.getElementById('export-btn').addEventListener('click', () => exportBackup(`LifeOS_Backup_${todayKey()}.json`));
 
     document.getElementById('reset-btn').addEventListener('click', () => {
-      if (confirm("This permanently deletes all your XP, streaks, quest history, and achievements. This can't be undone. Continue?")) {
-        localStorage.removeItem(STORAGE_KEY);
-        location.reload();
-      }
+      showConfirm({
+        icon: '⚠️', title: 'Reset your account?', message: "This permanently deletes all your XP, streaks, quest history, and achievements. This can't be undone.",
+        confirmLabel: 'Reset Everything', danger: true,
+        onConfirm: () => { localStorage.removeItem(STORAGE_KEY); location.reload(); }
+      });
     });
 
     document.getElementById('restore-btn').addEventListener('click', () => document.getElementById('import-file-input').click());
@@ -2709,14 +3182,23 @@
   function wireNav() {
     document.querySelectorAll('.nav-item').forEach(btn => {
       btn.addEventListener('click', (e) => {
+        haptic(6);
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         const targetBtn = e.currentTarget;
         targetBtn.classList.add('active');
         const targetView = targetBtn.getAttribute('data-target');
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(`view-${targetView}`).classList.add('active');
-        if (targetView === 'progress') renderProgress();
-        if (targetView === 'character') renderCharacter();
+
+        if (targetView === 'progress' || targetView === 'character') {
+          const skeleton = document.getElementById(`${targetView}-skeleton`);
+          skeleton.classList.add('show');
+          setTimeout(() => {
+            if (targetView === 'progress') renderProgress();
+            if (targetView === 'character') renderCharacter();
+            skeleton.classList.remove('show');
+          }, 260);
+        }
       });
     });
   }
@@ -2739,6 +3221,13 @@
   wireSettings();
   wireNav();
   wireSleepModal();
+  wireWheelModal();
+  wireCalendarModal();
+  wireOptionModal();
+  wireConfirmModal();
+
+  // Boot screen: brief, deliberate splash rather than an abrupt blank-to-content flash.
+  setTimeout(() => { document.getElementById('boot-screen').classList.add('hide'); }, 550);
 
 </script>
 </body>
