@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Elevate">
+<meta name="apple-mobile-web-app-title" content="Summer Grind">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
@@ -122,6 +122,88 @@
   .quest-meta { display: flex; gap: 12px; font-size: 12px; color: var(--text-faint); font-weight: 600; }
   .quest-xp { color: var(--accent-3); font-family: 'JetBrains Mono'; }
   .empty-hint { text-align: center; padding: 30px 14px; color: var(--text-faint); font-size: 12.5px; }
+
+  /* ============ TASKS & PROJECTS ============ */
+  .add-task-btn { background: var(--accent-gradient); color: #fff; font-size: 11.5px; font-weight: 800; padding: 8px 15px; border-radius: 100px; }
+  .task-item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 10px; display: flex; gap: 14px; }
+  .task-item-card.completed { opacity: 0.5; }
+  .task-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .task-delete { color: var(--text-faint); font-size: 14px; padding: 2px 4px; flex: 0 0 auto; }
+  .task-dates { font-size: 10.5px; color: var(--text-faint); margin-top: 6px; font-family: 'JetBrains Mono'; }
+  .priority-badge { font-size: 9.5px; font-weight: 800; padding: 2px 8px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .priority-low { background: rgba(108,125,255,0.15); color: #6C7DFF; }
+  .priority-medium { background: rgba(155,93,229,0.15); color: #9B5DE5; }
+  .priority-high { background: rgba(240,54,124,0.15); color: #F0367C; }
+  .priority-critical { background: rgba(255,59,48,0.15); color: #FF3B30; }
+  .task-status { font-size: 10.5px; font-weight: 700; }
+  .status-upcoming { color: var(--text-dim); }
+  .status-active { color: var(--success); }
+  .status-overdue { color: #FF5470; }
+  .status-done { color: var(--text-faint); }
+
+  /* Modal / bottom sheet (shared pattern for New Task, etc.) */
+  .modal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,0.75); display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+  .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+  .modal-sheet { width: 100%; max-width: 500px; background: var(--surface); border: 1px solid var(--border-hi); border-bottom: none; border-radius: 26px 26px 0 0; padding: 10px 22px 28px; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); max-height: 88vh; overflow-y: auto; }
+  .modal-backdrop.open .modal-sheet { transform: translateY(0); }
+  .modal-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border-hi); margin: 8px auto 18px; }
+  .form-row { display: flex; gap: 10px; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); margin-bottom: 7px; display: block; }
+  .form-input { width: 100%; background: var(--surface-hi); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: var(--text); font-size: 14px; font-family: inherit; }
+  .form-input:focus { outline: 1.5px solid var(--accent-1); }
+  select.form-input { appearance: none; -webkit-appearance: none; }
+  .task-xp-preview { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 12.5px; color: var(--text-dim); font-weight: 600; margin-bottom: 16px; }
+  .task-xp-preview span { font-family: 'JetBrains Mono'; color: var(--accent-3); font-weight: 800; }
+  .modal-save-btn { width: 100%; padding: 15px; border-radius: var(--radius-md); background: var(--accent-gradient); color: #fff; font-weight: 800; font-size: 14px; margin-top: 4px; }
+  .modal-cancel-btn { width: 100%; padding: 15px; border-radius: var(--radius-md); background: var(--surface-hi); color: var(--text-dim); font-weight: 700; font-size: 13.5px; margin-top: 10px; }
+
+  /* ============ SLEEP LOG ============ */
+  .sleep-time-row { display: flex; gap: 10px; }
+  .sleep-total-display { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 16px; text-align: center; margin: 4px 0 16px; }
+  .sleep-total-val { font-family: 'Space Grotesk'; font-size: 26px; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sleep-total-lbl { font-size: 10.5px; color: var(--text-dim); font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .sleep-xp-hint { font-size: 10.5px; color: var(--accent-3); font-weight: 700; margin-top: 6px; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 100px; background: var(--surface-hi); outline: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-gradient); border: 3px solid var(--text); cursor: pointer; }
+  input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--accent-2); border: 3px solid var(--text); cursor: pointer; }
+  .slider-labels { display: flex; justify-content: space-between; margin-top: 8px; }
+  .slider-labels span { font-size: 9.5px; color: var(--text-faint); font-weight: 700; }
+  .slider-labels span.active { color: var(--accent-2); }
+  textarea.form-input { resize: none; min-height: 68px; font-family: inherit; }
+  .sleep-analytics-summary { display: flex; gap: 10px; margin-bottom: 14px; }
+  .sleep-summary-item { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+  .sleep-summary-item .ssi-val { font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 800; }
+  .sleep-summary-item .ssi-lbl { font-size: 9.5px; color: var(--text-dim); font-weight: 600; margin-top: 3px; }
+
+  /* ============ TIME-SPENT MODAL ============ */
+  .time-modal-quest-name { font-size: 13.5px; color: var(--text-dim); font-weight: 600; margin: -8px 0 16px; }
+  .time-quick-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .time-quick-btn { padding: 12px 0; border-radius: 12px; background: var(--surface-hi); border: 1px solid var(--border); font-size: 13px; font-weight: 700; color: var(--text-dim); text-align: center; }
+  .time-quick-btn.active { background: var(--accent-gradient); color: #fff; border-color: transparent; }
+
+  /* ============ STREAK FREEZE / INVENTORY ============ */
+  .item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: center; gap: 14px; }
+  .item-icon { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(160deg, rgba(76,158,255,0.18), var(--surface-hi)); display: flex; align-items: center; justify-content: center; font-size: 22px; flex: 0 0 auto; }
+  .item-body { flex: 1; min-width: 0; }
+  .item-name { font-size: 13.5px; font-weight: 700; }
+  .item-owned { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .item-armed-badge { font-size: 10px; font-weight: 800; color: #4C9EFF; margin-top: 4px; }
+  .item-activate-btn { background: var(--surface-hi); border: 1px solid var(--border); color: var(--text); font-size: 12px; font-weight: 700; padding: 9px 15px; border-radius: 100px; flex: 0 0 auto; }
+  .item-activate-btn[disabled] { opacity: 0.35; }
+  .streak-freeze-badge { font-size: 12px; margin-left: 4px; }
+
+  /* ============ IMPORT / BACKUP PREVIEW ============ */
+  .backup-preview-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .backup-preview-row:last-child { border-bottom: none; }
+  .backup-preview-row span:first-child { color: var(--text-dim); }
+  .backup-preview-row span:last-child { font-weight: 700; font-family: 'JetBrains Mono'; }
+  .backup-error-box { text-align: center; padding: 20px 10px; color: #FF5470; font-weight: 700; font-size: 13.5px; }
+
+  /* ============ UPDATE HISTORY ============ */
+  .version-tag { display: inline-block; background: var(--accent-gradient); color: #fff; font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; padding: 4px 11px; border-radius: 100px; margin-bottom: 12px; }
+  .update-item { display: flex; align-items: center; gap: 9px; padding: 8px 0; font-size: 12.5px; color: var(--text-dim); }
+  .update-item .check-mark { color: var(--success); font-weight: 800; }
 
   /* ============ CHARACTER TAB ============ */
   .char-hero { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; padding-top: 4px; }
@@ -589,12 +671,18 @@
     </div>
 
     <div class="quest-list" id="full-quest-list"></div>
+
+    <div class="prog-section-head" style="margin-top:28px;">
+      <h3 style="margin:0;">Tasks & Projects</h3>
+      <button class="add-task-btn" id="open-task-modal-btn">+ New Task</button>
+    </div>
+    <div id="task-list"></div>
   </div>
 
   <div class="view" id="view-character">
     <div class="char-hero">
       <div class="char-avatar-ring">
-        <div class="char-avatar-inner">𝓥𝓲𝓬</div>
+        <div class="char-avatar-inner">🐺</div>
         <div class="char-lvl-chip"><div class="char-lvl-chip-inner" id="char-lvl-chip-inner">LVL 1</div></div>
       </div>
       <div class="char-name">Victor</div>
@@ -635,6 +723,9 @@
 
     <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Equipment</h3></div>
     <div class="equip-grid" id="equip-grid"></div>
+
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Items</h3></div>
+    <div id="item-list"></div>
 
     <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Achievements</h3></div>
     <div class="achv-scroll" id="achv-scroll"></div>
@@ -694,6 +785,24 @@
           <div class="cal-detail-item"><div class="cdi-val" id="cdi-sleep">—</div><div class="cdi-lbl">Sleep</div></div>
         </div>
       </div>
+    </div>
+
+    <!-- SECTION: Sleep Analytics -->
+    <div class="prog-section-head" style="margin-top:26px;"><h3 style="margin:0;">Sleep Analytics</h3></div>
+    <div class="chart-card">
+      <div class="sleep-analytics-summary">
+        <div class="sleep-summary-item"><div class="ssi-val" id="sleep-avg-30">—</div><div class="ssi-lbl">Avg (30d)</div></div>
+        <div class="sleep-summary-item"><div class="ssi-val" id="sleep-best">—</div><div class="ssi-lbl">Best Night</div></div>
+        <div class="sleep-summary-item"><div class="ssi-val" id="sleep-logged-count">—</div><div class="ssi-lbl">Nights Logged</div></div>
+      </div>
+      <svg class="xp-chart-svg" id="sleep-chart-svg" viewBox="0 0 320 100" preserveAspectRatio="none" style="height:100px;">
+        <defs>
+          <linearGradient id="sleepLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4C9EFF"/><stop offset="100%" stop-color="#9B5DE5"/>
+          </linearGradient>
+        </defs>
+        <path class="xp-chart-path" id="sleep-line-path" d="" stroke="url(#sleepLineGrad)"></path>
+      </svg>
     </div>
 
     <!-- SECTION 3: XP History -->
@@ -799,24 +908,34 @@
     <div class="chart-card" style="margin-top: 24px;">
       <div class="setting-row">
         <span class="setting-label">Haptic Feedback</span>
-        <div class="toggle on"><div class="toggle-knob"></div></div>
+        <div class="toggle on" data-setting="haptic"><div class="toggle-knob"></div></div>
       </div>
       <div class="setting-row">
         <span class="setting-label">OLED Black Theme</span>
-        <div class="toggle on"><div class="toggle-knob"></div></div>
+        <div class="toggle on" data-setting="oled"><div class="toggle-knob"></div></div>
       </div>
       <div class="setting-row">
         <span class="setting-label">Push Notifications</span>
-        <div class="toggle"><div class="toggle-knob"></div></div>
+        <div class="toggle" data-setting="notifications"><div class="toggle-knob"></div></div>
       </div>
       <div class="setting-row">
         <span class="setting-label">Cloud Sync</span>
-        <div class="toggle on"><div class="toggle-knob"></div></div>
+        <div class="toggle on" data-setting="cloudSync"><div class="toggle-knob"></div></div>
       </div>
     </div>
     <button id="export-btn" style="width: 100%; padding: 16px; background: var(--surface-hi); border-radius: var(--radius-md); font-weight: 700; color: var(--text); margin-top: 16px; border: 1px solid var(--border);">Export JSON Data</button>
+    <button id="restore-btn" style="width: 100%; padding: 16px; background: var(--surface-hi); border-radius: var(--radius-md); font-weight: 700; color: var(--text); margin-top: 12px; border: 1px solid var(--border);">Restore Backup</button>
     <button id="reset-btn" style="width: 100%; padding: 16px; background: rgba(255,84,112,0.1); border-radius: var(--radius-md); font-weight: 700; color: #FF5470; margin-top: 12px; border: 1px solid rgba(255,84,112,0.35);">Reset Account</button>
     <div style="text-align:center; font-size:10.5px; color:var(--text-faint); margin-top:10px; padding: 0 10px;">Resetting permanently erases all XP, streaks, quest history, and achievements on this device.</div>
+
+    <div class="prog-section-head" style="margin-top:28px;"><h3 style="margin:0;">Update History</h3></div>
+    <div class="chart-card">
+      <div class="version-tag">v1.1.0</div>
+      <div class="update-item"><span class="check-mark">✔</span> Custom Sleep Logging</div>
+      <div class="update-item"><span class="check-mark">✔</span> Time-Based Dynamic XP</div>
+      <div class="update-item"><span class="check-mark">✔</span> Streak Freeze</div>
+      <div class="update-item"><span class="check-mark">✔</span> JSON Backup &amp; Restore</div>
+    </div>
   </div>
 
   <nav class="bottom-nav glass">
@@ -844,6 +963,131 @@
   
   <div class="floating-xp" id="xp-flyout">+50 XP</div>
 </div>
+
+<div class="modal-backdrop" id="task-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3 style="margin-bottom:16px;">New Task</h3>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input type="text" id="task-title-input" class="form-input" placeholder="e.g. Finish trading strategy backtest">
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Category</label>
+        <select id="task-category-input" class="form-input">
+          <option value="">None</option>
+          <option value="Basketball">🏀 Basketball</option>
+          <option value="Faith">✝️ Faith</option>
+          <option value="Fitness">💪 Fitness</option>
+          <option value="School">🎓 School</option>
+          <option value="Skills">🎯 Skills</option>
+          <option value="Business">💼 Business</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Priority</label>
+        <select id="task-priority-input" class="form-input">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Start Date</label>
+        <input type="date" id="task-start-input" class="form-input">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">End Date</label>
+        <input type="date" id="task-end-input" class="form-input">
+      </div>
+    </div>
+    <div class="task-xp-preview">Estimated Reward: <span id="task-xp-preview-val">120 XP</span></div>
+    <div id="task-form-error" style="display:none; color:#FF5470; font-size:11.5px; font-weight:700; margin:-8px 0 14px;">End date must be on or after the start date.</div>
+    <button class="modal-save-btn" id="task-save-btn">Add Task</button>
+    <button class="modal-cancel-btn" id="task-cancel-btn">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="sleep-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3 style="margin-bottom:16px;">Log Sleep</h3>
+    <div class="sleep-time-row">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Bedtime</label>
+        <input type="time" id="sleep-bedtime-input" class="form-input">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Wake Time</label>
+        <input type="time" id="sleep-waketime-input" class="form-input">
+      </div>
+    </div>
+    <div class="sleep-total-display">
+      <div class="sleep-total-val" id="sleep-total-val">—</div>
+      <div class="sleep-total-lbl">Total Sleep</div>
+      <div class="sleep-xp-hint" id="sleep-xp-hint">Log both times to see your XP</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Sleep Quality (optional)</label>
+      <input type="range" id="sleep-quality-input" min="0" max="4" value="2" step="1">
+      <div class="slider-labels" id="sleep-quality-labels">
+        <span data-q="0">Poor</span><span data-q="1">Fair</span><span data-q="2">Good</span><span data-q="3">Great</span><span data-q="4">Excellent</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <textarea id="sleep-notes-input" class="form-input" placeholder="e.g. Woke up twice, felt energized..."></textarea>
+    </div>
+    <button class="modal-save-btn" id="sleep-save-btn">Save</button>
+    <button class="modal-cancel-btn" id="sleep-cancel-btn">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="time-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3 style="margin-bottom:6px;">Task Complete</h3>
+    <div class="time-modal-quest-name" id="time-modal-quest-name">Quest name</div>
+    <label class="form-label">How much time did you spend?</label>
+    <div class="time-quick-grid" id="time-quick-grid">
+      <button class="time-quick-btn" data-min="15">15 min</button>
+      <button class="time-quick-btn" data-min="30">30 min</button>
+      <button class="time-quick-btn" data-min="45">45 min</button>
+      <button class="time-quick-btn" data-min="60">60 min</button>
+      <button class="time-quick-btn" data-min="90">90 min</button>
+      <button class="time-quick-btn" data-min="120">120 min</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Or enter custom minutes</label>
+      <input type="number" id="time-custom-input" class="form-input" placeholder="e.g. 50" min="1">
+    </div>
+    <div class="task-xp-preview">Estimated Reward: <span id="time-xp-preview-val">0 XP</span></div>
+    <button class="modal-save-btn" id="time-save-btn">Complete Quest</button>
+    <button class="modal-cancel-btn" id="time-cancel-btn">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="import-modal-backdrop">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <h3 style="margin-bottom:16px;">Restore Backup</h3>
+    <div id="import-preview-body">
+      <div class="backup-preview-row"><span>Level</span><span id="import-level">—</span></div>
+      <div class="backup-preview-row"><span>Total XP</span><span id="import-xp">—</span></div>
+      <div class="backup-preview-row"><span>Current Streak</span><span id="import-streak">—</span></div>
+      <div class="backup-preview-row"><span>Last Updated</span><span id="import-date">—</span></div>
+    </div>
+    <div id="import-error-body" style="display:none;" class="backup-error-box">Invalid Backup File</div>
+    <div style="font-size:11px; color:var(--text-faint); margin-top:16px; line-height:1.5;">A backup of your current data will be downloaded automatically before restoring, in case you want to undo this.</div>
+    <button class="modal-save-btn" id="import-confirm-btn" style="margin-top:16px;">Continue</button>
+    <button class="modal-cancel-btn" id="import-cancel-btn">Cancel</button>
+  </div>
+</div>
+<input type="file" id="import-file-input" accept="application/json" style="display:none;">
 
 <script>
   /* =========================================================================
@@ -962,8 +1206,13 @@
       treeCompletions: trees,
       minutesTrained: 0,
       days: {},
+      tasks: [],
       unlockedAchievements: [],
-      achievementDates: {}
+      achievementDates: {},
+      streakFreezes: 0,
+      streakFreezeArmed: false,
+      appVersion: "1.1.0",
+      settingsToggles: { haptic: true, oled: true, notifications: false, cloudSync: true }
     };
   }
 
@@ -973,14 +1222,24 @@
       if (!raw) return defaultState();
       const parsed = JSON.parse(raw);
       const base = defaultState();
+      const days = parsed.days || {};
+      Object.values(days).forEach(d => {
+        if (!d.completionXp) d.completionXp = {};
+        if (!d.timeSpent) d.timeSpent = {};
+      });
       return Object.assign(base, parsed, {
         categoryXP: Object.assign(base.categoryXP, parsed.categoryXP || {}),
         categoryCompletions: Object.assign(base.categoryCompletions, parsed.categoryCompletions || {}),
         attributeXP: Object.assign(base.attributeXP, parsed.attributeXP || {}),
         treeCompletions: Object.assign(base.treeCompletions, parsed.treeCompletions || {}),
-        days: parsed.days || {},
+        days: days,
+        tasks: parsed.tasks || [],
         unlockedAchievements: parsed.unlockedAchievements || [],
-        achievementDates: parsed.achievementDates || {}
+        achievementDates: parsed.achievementDates || {},
+        streakFreezes: parsed.streakFreezes || 0,
+        streakFreezeArmed: !!parsed.streakFreezeArmed,
+        appVersion: "1.1.0",
+        settingsToggles: Object.assign(base.settingsToggles, parsed.settingsToggles || {})
       });
     } catch (e) { return defaultState(); }
   }
@@ -995,8 +1254,25 @@
   function dateKeyFor(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
   function todayKey() { return dateKeyFor(new Date()); }
   function parseMinutes(timeStr) { const m = parseInt(timeStr, 10); return isNaN(m) ? 0 : m; }
-  function categoryForId(id) { const [dow, idx] = id.split('-').map(Number); const name = WEEKLY_PLAN[dow][idx]; return TASK_LIBRARY[name] ? TASK_LIBRARY[name].category : null; }
-  function taskNameForId(id) { const [dow, idx] = id.split('-').map(Number); return WEEKLY_PLAN[dow][idx]; }
+  function categoryForId(id) {
+    if (id === 'sleep-log') return null;
+    if (id.startsWith('task-')) {
+      const task = STATE.tasks.find(t => t.id === id.slice(5));
+      return task ? task.category : null;
+    }
+    const [dow, idx] = id.split('-').map(Number);
+    const name = WEEKLY_PLAN[dow][idx];
+    return TASK_LIBRARY[name] ? TASK_LIBRARY[name].category : null;
+  }
+  function taskNameForId(id) {
+    if (id === 'sleep-log') return "Log Last Night's Sleep";
+    if (id.startsWith('task-')) {
+      const task = STATE.tasks.find(t => t.id === id.slice(5));
+      return task ? task.title : null;
+    }
+    const [dow, idx] = id.split('-').map(Number);
+    return WEEKLY_PLAN[dow][idx];
+  }
   function getAllDayKeysSorted() { return Object.keys(STATE.days).sort(); }
   function daysSinceCreation() {
     const created = new Date(STATE.createdAt);
@@ -1030,15 +1306,24 @@
 
   function recomputeStreak() {
     let streak = 0;
+    let freezeAvailable = STATE.streakFreezeArmed;
+    let freezeConsumedThisPass = false;
     const cursor = new Date();
     const hasToday = STATE.days[todayKey()] && STATE.days[todayKey()].completedIds.length > 0;
     if (!hasToday) cursor.setDate(cursor.getDate() - 1);
     while (true) {
       const key = dateKeyFor(cursor);
       const day = STATE.days[key];
-      if (day && day.completedIds.length > 0) { streak++; cursor.setDate(cursor.getDate() - 1); }
-      else break;
+      if (day && day.completedIds.length > 0) {
+        streak++;
+        cursor.setDate(cursor.getDate() - 1);
+      } else if (freezeAvailable && !freezeConsumedThisPass) {
+        // Bridge this single missed day: the streak neither grows nor breaks here.
+        freezeConsumedThisPass = true;
+        cursor.setDate(cursor.getDate() - 1);
+      } else break;
     }
+    if (freezeConsumedThisPass) STATE.streakFreezeArmed = false;
     STATE.currentStreak = streak;
     STATE.longestStreak = Math.max(STATE.longestStreak, streak);
   }
@@ -1047,29 +1332,57 @@
   function buildTodaysQuests() {
     const dow = new Date().getDay();
     const dayLog = STATE.days[todayKey()];
-    return WEEKLY_PLAN[dow].map((name, i) => {
+    const fixedQuests = WEEKLY_PLAN[dow].map((name, i) => {
       const meta = TASK_LIBRARY[name];
       const id = `${dow}-${i}`;
       const completed = !!(dayLog && dayLog.completedIds.includes(id));
-      return { id, title: name, category: meta.category, xp: meta.xp, time: meta.time, completed };
+      const earnedXp = (completed && dayLog.completionXp && dayLog.completionXp[id] != null) ? dayLog.completionXp[id] : meta.xp;
+      const timeSpent = (completed && dayLog.timeSpent && dayLog.timeSpent[id] != null) ? dayLog.timeSpent[id] : null;
+      return { id, title: name, category: meta.category, xp: earnedXp, time: meta.time, timeSpent, completed };
     });
+    const sleepCompleted = !!(dayLog && dayLog.sleep);
+    const sleepQuest = {
+      id: 'sleep-log',
+      title: "Log Last Night's Sleep",
+      category: null,
+      xp: sleepCompleted ? sleepXpForMinutes(sleepMinutesOf(dayLog)) : null,
+      time: null,
+      completed: sleepCompleted,
+      isSleepQuest: true
+    };
+    return [sleepQuest, ...fixedQuests];
   }
   let quests = buildTodaysQuests();
+
+  window.handleQuestCheckClick = function(id) {
+    const quest = quests.find(q => q.id === id);
+    if (!quest) return;
+    if (quest.isSleepQuest) { openSleepModal(); return; }
+    if (quest.completed) { window.toggleQuest(id); return; } // undo is instant, no modal needed
+    openTimeModal(id);
+  };
 
   function renderQuestCard(container, q) {
     const div = document.createElement('div');
     div.className = `quest-card ${q.completed ? 'completed' : ''}`;
+    let metaHTML;
+    if (q.isSleepQuest) {
+      metaHTML = q.completed
+        ? `<span>😴 Logged</span> • <span class="quest-xp">+${q.xp} XP</span>`
+        : `<span>😴 Tap to log bedtime & wake time</span> • <span class="quest-xp">Up to 60 XP</span>`;
+    } else {
+      const timeLabel = q.completed ? `Spent: ${q.timeSpent != null ? q.timeSpent + 'm' : q.time}` : `Target: ${q.time}`;
+      metaHTML = `<span>${q.category}</span> • <span>${timeLabel}</span> • <span class="quest-xp">+${q.xp} XP</span>`;
+    }
     div.innerHTML = `
-      <button class="quest-check" onclick="toggleQuest('${q.id}')">
+      <button class="quest-check" onclick="handleQuestCheckClick('${q.id}')">
         <div class="check-circle">
           <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
         </div>
       </button>
       <div class="quest-details">
         <div class="quest-title">${q.title}</div>
-        <div class="quest-meta">
-          <span>${q.category}</span> • <span>${q.time}</span> • <span class="quest-xp">+${q.xp} XP</span>
-        </div>
+        <div class="quest-meta">${metaHTML}</div>
       </div>
     `;
     container.appendChild(div);
@@ -1138,81 +1451,456 @@
         STATE.achievementDates[a.id] = new Date().toISOString();
         STATE.totalXP += a.xp;
         if (STATE.days[key]) STATE.days[key].xp += a.xp;
+        if (a.id === 'streak_7' || a.id === 'streak_30') {
+          STATE.streakFreezes = Math.min(3, (STATE.streakFreezes || 0) + 1);
+        }
       }
     });
   }
 
+  /* ============ TIME-BASED DYNAMIC XP ============ */
+  let pendingTimeQuestId = null;
+
+  function computeTimeBasedXP(minutesSpent, targetMinutes, maxXp) {
+    if (!targetMinutes || targetMinutes <= 0) return maxXp;
+    const ratio = minutesSpent / targetMinutes;
+    if (ratio >= 1) {
+      const overageRatio = Math.min(ratio - 1, 1); // cap the bonus window at 2x target time
+      const bonus = Math.round(maxXp * 0.15 * overageRatio);
+      return maxXp + bonus;
+    }
+    return Math.round(maxXp * ratio);
+  }
+
+  function openTimeModal(questId) {
+    const quest = quests.find(q => q.id === questId);
+    if (!quest) return;
+    pendingTimeQuestId = questId;
+    document.getElementById('time-modal-quest-name').innerText = quest.title;
+    document.getElementById('time-custom-input').value = '';
+    document.querySelectorAll('.time-quick-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('time-xp-preview-val').innerText = '0 XP';
+    document.getElementById('time-modal-backdrop').classList.add('open');
+  }
+  function closeTimeModal() { document.getElementById('time-modal-backdrop').classList.remove('open'); pendingTimeQuestId = null; }
+
+  function updateTimeXpPreview(minutes) {
+    const quest = quests.find(q => q.id === pendingTimeQuestId);
+    if (!quest) return;
+    const targetMinutes = parseMinutes(quest.time);
+    const xp = computeTimeBasedXP(minutes, targetMinutes, quest.xp);
+    document.getElementById('time-xp-preview-val').innerText = `${xp} XP`;
+  }
+
+  function wireTimeModal() {
+    document.getElementById('time-cancel-btn').addEventListener('click', closeTimeModal);
+    document.getElementById('time-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'time-modal-backdrop') closeTimeModal(); });
+    document.querySelectorAll('.time-quick-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.time-quick-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('time-custom-input').value = '';
+        updateTimeXpPreview(parseInt(btn.dataset.min, 10));
+      });
+    });
+    document.getElementById('time-custom-input').addEventListener('input', (e) => {
+      document.querySelectorAll('.time-quick-btn').forEach(b => b.classList.remove('active'));
+      const val = parseInt(e.target.value, 10);
+      updateTimeXpPreview(isNaN(val) ? 0 : val);
+    });
+    document.getElementById('time-save-btn').addEventListener('click', () => {
+      const activeBtn = document.querySelector('.time-quick-btn.active');
+      const customVal = parseInt(document.getElementById('time-custom-input').value, 10);
+      const minutesSpent = activeBtn ? parseInt(activeBtn.dataset.min, 10) : customVal;
+      if (!minutesSpent || minutesSpent <= 0) { document.getElementById('time-custom-input').focus(); return; }
+      completeQuestWithTime(pendingTimeQuestId, minutesSpent);
+      closeTimeModal();
+    });
+  }
+
+  function completeQuestWithTime(id, minutesSpent) {
+    const quest = quests.find(q => q.id === id);
+    if (!quest || quest.completed) return;
+    const targetMinutes = parseMinutes(quest.time);
+    const earnedXp = computeTimeBasedXP(minutesSpent, targetMinutes, quest.xp);
+
+    const key = todayKey();
+    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null, completionXp: {}, timeSpent: {} };
+    const day = STATE.days[key];
+
+    quest.completed = true;
+    quest.xp = earnedXp;
+    quest.timeSpent = minutesSpent;
+    day.completedIds.push(id);
+    day.xp += earnedXp;
+    day.minutes += minutesSpent;
+    day.completionXp[id] = earnedXp;
+    day.timeSpent[id] = minutesSpent;
+
+    STATE.totalXP += earnedXp;
+    STATE.totalCompletions += 1;
+    STATE.minutesTrained += minutesSpent;
+    STATE.categoryXP[quest.category] = (STATE.categoryXP[quest.category] || 0) + earnedXp;
+    STATE.categoryCompletions[quest.category] = (STATE.categoryCompletions[quest.category] || 0) + 1;
+
+    const disciplineCut = Math.round(earnedXp * DISCIPLINE_SHARE);
+    STATE.attributeXP.Discipline = (STATE.attributeXP.Discipline || 0) + disciplineCut;
+    const remaining = earnedXp - disciplineCut;
+    (CATEGORY_TO_ATTRIBUTES[quest.category] || []).forEach(([attr, share]) => {
+      STATE.attributeXP[attr] = (STATE.attributeXP[attr] || 0) + Math.round(remaining * share);
+    });
+    SKILL_TREE_DEFS.forEach(t => { if (t.match(quest)) STATE.treeCompletions[t.name] = (STATE.treeCompletions[t.name] || 0) + 1; });
+
+    recomputeStreak();
+    if (navigator.vibrate) navigator.vibrate(50);
+    showXpFlyout(earnedXp);
+    checkAchievements();
+
+    saveState();
+    renderQuests();
+    updateHomeStats();
+  }
+
+  // Un-completing a quest is instant (no modal) — reverses the exact XP/time that was earned,
+  // falling back to the fixed quest.xp/time for completions logged before this update existed.
   window.toggleQuest = function(id) {
     const quest = quests.find(q => q.id === id);
-    if (!quest) return;
+    if (!quest || !quest.completed) return;
     const key = todayKey();
-    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null };
     const day = STATE.days[key];
-    const mins = parseMinutes(quest.time);
+    if (!day) return;
 
-    if (!quest.completed) {
-      quest.completed = true;
-      day.completedIds.push(id);
-      day.xp += quest.xp;
-      day.minutes += mins;
+    const earnedXp = (day.completionXp && day.completionXp[id] != null) ? day.completionXp[id] : quest.xp;
+    const minutesSpent = (day.timeSpent && day.timeSpent[id] != null) ? day.timeSpent[id] : parseMinutes(quest.time);
 
-      STATE.totalXP += quest.xp;
-      STATE.totalCompletions += 1;
-      STATE.minutesTrained += mins;
-      STATE.categoryXP[quest.category] = (STATE.categoryXP[quest.category] || 0) + quest.xp;
-      STATE.categoryCompletions[quest.category] = (STATE.categoryCompletions[quest.category] || 0) + 1;
+    quest.completed = false;
+    quest.xp = TASK_LIBRARY[quest.title] ? TASK_LIBRARY[quest.title].xp : earnedXp;
+    quest.timeSpent = null;
+    day.completedIds = day.completedIds.filter(x => x !== id);
+    day.xp = Math.max(0, day.xp - earnedXp);
+    day.minutes = Math.max(0, day.minutes - minutesSpent);
+    delete day.completionXp[id];
+    delete day.timeSpent[id];
 
-      const disciplineCut = Math.round(quest.xp * DISCIPLINE_SHARE);
-      STATE.attributeXP.Discipline = (STATE.attributeXP.Discipline || 0) + disciplineCut;
-      const remaining = quest.xp - disciplineCut;
-      (CATEGORY_TO_ATTRIBUTES[quest.category] || []).forEach(([attr, share]) => {
-        STATE.attributeXP[attr] = (STATE.attributeXP[attr] || 0) + Math.round(remaining * share);
-      });
-      SKILL_TREE_DEFS.forEach(t => { if (t.match(quest)) STATE.treeCompletions[t.name] = (STATE.treeCompletions[t.name] || 0) + 1; });
+    STATE.totalXP = Math.max(0, STATE.totalXP - earnedXp);
+    STATE.totalCompletions = Math.max(0, STATE.totalCompletions - 1);
+    STATE.minutesTrained = Math.max(0, STATE.minutesTrained - minutesSpent);
+    STATE.categoryXP[quest.category] = Math.max(0, (STATE.categoryXP[quest.category] || 0) - earnedXp);
+    STATE.categoryCompletions[quest.category] = Math.max(0, (STATE.categoryCompletions[quest.category] || 0) - 1);
 
-      recomputeStreak();
-      if (navigator.vibrate) navigator.vibrate(50);
-      showXpFlyout(quest.xp);
-      checkAchievements();
-    } else {
-      quest.completed = false;
-      day.completedIds = day.completedIds.filter(x => x !== id);
-      day.xp -= quest.xp;
-      day.minutes -= mins;
+    const disciplineCut = Math.round(earnedXp * DISCIPLINE_SHARE);
+    STATE.attributeXP.Discipline = Math.max(0, (STATE.attributeXP.Discipline || 0) - disciplineCut);
+    const remaining = earnedXp - disciplineCut;
+    (CATEGORY_TO_ATTRIBUTES[quest.category] || []).forEach(([attr, share]) => {
+      STATE.attributeXP[attr] = Math.max(0, (STATE.attributeXP[attr] || 0) - Math.round(remaining * share));
+    });
+    SKILL_TREE_DEFS.forEach(t => { if (t.match(quest)) STATE.treeCompletions[t.name] = Math.max(0, (STATE.treeCompletions[t.name] || 0) - 1); });
 
-      STATE.totalXP = Math.max(0, STATE.totalXP - quest.xp);
-      STATE.totalCompletions = Math.max(0, STATE.totalCompletions - 1);
-      STATE.minutesTrained = Math.max(0, STATE.minutesTrained - mins);
-      STATE.categoryXP[quest.category] = Math.max(0, (STATE.categoryXP[quest.category] || 0) - quest.xp);
-      STATE.categoryCompletions[quest.category] = Math.max(0, (STATE.categoryCompletions[quest.category] || 0) - 1);
-
-      const disciplineCut = Math.round(quest.xp * DISCIPLINE_SHARE);
-      STATE.attributeXP.Discipline = Math.max(0, (STATE.attributeXP.Discipline || 0) - disciplineCut);
-      const remaining = quest.xp - disciplineCut;
-      (CATEGORY_TO_ATTRIBUTES[quest.category] || []).forEach(([attr, share]) => {
-        STATE.attributeXP[attr] = Math.max(0, (STATE.attributeXP[attr] || 0) - Math.round(remaining * share));
-      });
-      SKILL_TREE_DEFS.forEach(t => { if (t.match(quest)) STATE.treeCompletions[t.name] = Math.max(0, (STATE.treeCompletions[t.name] || 0) - 1); });
-
-      recomputeStreak();
-    }
-
+    recomputeStreak();
     saveState();
     renderQuests();
     updateHomeStats();
   };
 
-  // ---------- Sleep logging (tap the Home Sleep card) ----------
-  function logSleep() {
-    const val = prompt("How many hours did you sleep last night? (e.g. 7.5)");
-    if (val === null) return;
-    const num = parseFloat(val);
-    if (isNaN(num) || num < 0 || num > 24) { alert("Enter a number between 0 and 24."); return; }
-    const key = todayKey();
-    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null };
-    STATE.days[key].sleep = num;
+  /* ============ TASKS & PROJECTS (user-created, priority + date range) ============ */
+  const PRIORITY_XP = { Low: 60, Medium: 120, High: 220, Critical: 400 };
+  const PRIORITY_ORDER = { Critical: 0, High: 1, Medium: 2, Low: 3 };
+
+  function computeTaskXP(priority, startDate, endDate) {
+    const base = PRIORITY_XP[priority] || 100;
+    if (!startDate || !endDate) return base;
+    const days = Math.max(1, Math.round((new Date(endDate + 'T00:00:00') - new Date(startDate + 'T00:00:00')) / 86400000) + 1);
+    const durationBonus = Math.min(days, 30) * 10;
+    return base + durationBonus;
+  }
+
+  function addTask(title, category, priority, startDate, endDate) {
+    const xp = computeTaskXP(priority, startDate, endDate);
+    STATE.tasks.push({
+      id: `t${Date.now()}`, title, category: category || null, priority,
+      startDate, endDate, xp, completed: false, completedDate: null,
+      createdAt: new Date().toISOString()
+    });
     saveState();
+    renderTasks();
+  }
+
+  window.deleteTask = function(id) {
+    if (!confirm("Delete this task? This can't be undone.")) return;
+    const task = STATE.tasks.find(t => t.id === id);
+    if (task && task.completed) { window.toggleTask(id); } // unwind its XP/stats first
+    STATE.tasks = STATE.tasks.filter(t => t.id !== id);
+    saveState();
+    renderTasks();
+  };
+
+  window.toggleTask = function(id) {
+    const task = STATE.tasks.find(t => t.id === id);
+    if (!task) return;
+    const key = todayKey();
+    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null, completionXp: {}, timeSpent: {} };
+    const day = STATE.days[key];
+    const marker = `task-${task.id}`;
+    const disciplineCut = Math.round(task.xp * DISCIPLINE_SHARE);
+
+    if (!task.completed) {
+      task.completed = true;
+      task.completedDate = key;
+      day.completedIds.push(marker);
+      day.xp += task.xp;
+      STATE.totalXP += task.xp;
+      STATE.totalCompletions += 1;
+      STATE.attributeXP.Discipline = (STATE.attributeXP.Discipline || 0) + disciplineCut;
+      if (task.category) {
+        STATE.categoryXP[task.category] = (STATE.categoryXP[task.category] || 0) + task.xp;
+        STATE.categoryCompletions[task.category] = (STATE.categoryCompletions[task.category] || 0) + 1;
+        const remaining = task.xp - disciplineCut;
+        (CATEGORY_TO_ATTRIBUTES[task.category] || []).forEach(([attr, share]) => {
+          STATE.attributeXP[attr] = (STATE.attributeXP[attr] || 0) + Math.round(remaining * share);
+        });
+        SKILL_TREE_DEFS.forEach(t => { if (t.match({ category: task.category, title: task.title })) STATE.treeCompletions[t.name] = (STATE.treeCompletions[t.name] || 0) + 1; });
+      }
+      recomputeStreak();
+      if (navigator.vibrate) navigator.vibrate(50);
+      showXpFlyout(task.xp);
+      checkAchievements();
+    } else {
+      task.completed = false;
+      task.completedDate = null;
+      day.completedIds = day.completedIds.filter(x => x !== marker);
+      day.xp = Math.max(0, day.xp - task.xp);
+      STATE.totalXP = Math.max(0, STATE.totalXP - task.xp);
+      STATE.totalCompletions = Math.max(0, STATE.totalCompletions - 1);
+      STATE.attributeXP.Discipline = Math.max(0, (STATE.attributeXP.Discipline || 0) - disciplineCut);
+      if (task.category) {
+        STATE.categoryXP[task.category] = Math.max(0, (STATE.categoryXP[task.category] || 0) - task.xp);
+        STATE.categoryCompletions[task.category] = Math.max(0, (STATE.categoryCompletions[task.category] || 0) - 1);
+        const remaining = task.xp - disciplineCut;
+        (CATEGORY_TO_ATTRIBUTES[task.category] || []).forEach(([attr, share]) => {
+          STATE.attributeXP[attr] = Math.max(0, (STATE.attributeXP[attr] || 0) - Math.round(remaining * share));
+        });
+        SKILL_TREE_DEFS.forEach(t => { if (t.match({ category: task.category, title: task.title })) STATE.treeCompletions[t.name] = Math.max(0, (STATE.treeCompletions[t.name] || 0) - 1); });
+      }
+      recomputeStreak();
+    }
+
+    saveState();
+    renderTasks();
     updateHomeStats();
+  };
+
+  function taskStatus(task) {
+    if (task.completed) return { label: "Completed", cls: "done" };
+    const today = new Date(todayKey() + 'T00:00:00');
+    const start = new Date(task.startDate + 'T00:00:00');
+    const end = new Date(task.endDate + 'T00:00:00');
+    if (today < start) return { label: `Starts ${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`, cls: "upcoming" };
+    if (today > end) return { label: "Overdue", cls: "overdue" };
+    const daysLeft = Math.round((end - today) / 86400000);
+    return { label: daysLeft === 0 ? "Due today" : `${daysLeft} day${daysLeft === 1 ? '' : 's'} left`, cls: "active" };
+  }
+
+  function renderTasks() {
+    const list = document.getElementById('task-list');
+    list.innerHTML = '';
+    if (STATE.tasks.length === 0) {
+      list.innerHTML = `<div class="empty-hint" style="padding:20px 4px;">No tasks yet — add a one-off project or goal with its own deadline and priority.</div>`;
+      return;
+    }
+    const sorted = [...STATE.tasks].sort((a, b) => {
+      if (a.completed !== b.completed) return a.completed ? 1 : -1;
+      if (a.priority !== b.priority) return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+      return new Date(a.endDate + 'T00:00:00') - new Date(b.endDate + 'T00:00:00');
+    });
+    sorted.forEach(task => {
+      const status = taskStatus(task);
+      const catDef = CATEGORY_DEFS.find(c => c.name === task.category);
+      const card = document.createElement('div');
+      card.className = `task-item-card ${task.completed ? 'completed' : ''}`;
+      card.innerHTML = `
+        <button class="quest-check" onclick="toggleTask('${task.id}')">
+          <div class="check-circle">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+        </button>
+        <div class="quest-details">
+          <div class="task-item-top">
+            <div class="quest-title">${task.title}</div>
+            <button class="task-delete" onclick="deleteTask('${task.id}')">✕</button>
+          </div>
+          <div class="quest-meta">
+            ${catDef ? `<span>${catDef.icon} ${catDef.name}</span> • ` : ''}<span class="priority-badge priority-${task.priority.toLowerCase()}">${task.priority}</span> • <span class="task-status status-${status.cls}">${status.label}</span> • <span class="quest-xp">+${task.xp} XP</span>
+          </div>
+          <div class="task-dates">${new Date(task.startDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} → ${new Date(task.endDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function updateTaskXpPreview() {
+    const priority = document.getElementById('task-priority-input').value;
+    const start = document.getElementById('task-start-input').value;
+    const end = document.getElementById('task-end-input').value;
+    const errorEl = document.getElementById('task-form-error');
+    const saveBtn = document.getElementById('task-save-btn');
+    if (start && end && new Date(end + 'T00:00:00') < new Date(start + 'T00:00:00')) {
+      errorEl.style.display = 'block';
+      saveBtn.setAttribute('disabled', 'disabled');
+      document.getElementById('task-xp-preview-val').innerText = '—';
+      return;
+    }
+    errorEl.style.display = 'none';
+    saveBtn.removeAttribute('disabled');
+    document.getElementById('task-xp-preview-val').innerText = `${computeTaskXP(priority, start, end)} XP`;
+  }
+
+  function openTaskModal() {
+    document.getElementById('task-title-input').value = '';
+    document.getElementById('task-category-input').value = '';
+    document.getElementById('task-priority-input').value = 'Medium';
+    const today = new Date();
+    const inWeek = new Date(today); inWeek.setDate(today.getDate() + 7);
+    document.getElementById('task-start-input').value = dateKeyFor(today);
+    document.getElementById('task-end-input').value = dateKeyFor(inWeek);
+    updateTaskXpPreview();
+    document.getElementById('task-modal-backdrop').classList.add('open');
+  }
+  function closeTaskModal() { document.getElementById('task-modal-backdrop').classList.remove('open'); }
+
+  function wireTaskModal() {
+    document.getElementById('open-task-modal-btn').addEventListener('click', openTaskModal);
+    document.getElementById('task-cancel-btn').addEventListener('click', closeTaskModal);
+    document.getElementById('task-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'task-modal-backdrop') closeTaskModal(); });
+    ['task-priority-input', 'task-start-input', 'task-end-input'].forEach(id => {
+      document.getElementById(id).addEventListener('change', updateTaskXpPreview);
+    });
+    document.getElementById('task-save-btn').addEventListener('click', () => {
+      const title = document.getElementById('task-title-input').value.trim();
+      if (!title) { document.getElementById('task-title-input').focus(); return; }
+      const category = document.getElementById('task-category-input').value;
+      const priority = document.getElementById('task-priority-input').value;
+      const start = document.getElementById('task-start-input').value;
+      const end = document.getElementById('task-end-input').value;
+      if (!start || !end || new Date(end + 'T00:00:00') < new Date(start + 'T00:00:00')) return;
+      addTask(title, category, priority, start, end);
+      closeTaskModal();
+    });
+  }
+
+  // ---------- Sleep logging (tap the Home Sleep card, or the Sleep Quest) ----------
+  const SLEEP_QUALITY_LABELS = ["Poor", "Fair", "Good", "Great", "Excellent"];
+
+  function sleepMinutesOf(day) {
+    if (!day || day.sleep == null) return null;
+    if (typeof day.sleep === 'number') return Math.round(day.sleep * 60); // legacy format from the old prompt()-based logger
+    return day.sleep.totalMinutes;
+  }
+
+  function sleepXpForMinutes(minutes) {
+    if (minutes == null) return 0;
+    const hours = minutes / 60;
+    if (hours < 5) return 5;
+    if (hours < 6) return 15;
+    if (hours < 7) return 25;
+    if (hours < 8) return 40;
+    if (hours < 9) return 60;
+    return 45;
+  }
+
+  function calcSleepDuration(bedtime, wake) {
+    if (!bedtime || !wake) return null;
+    const [bh, bm] = bedtime.split(':').map(Number);
+    const [wh, wm] = wake.split(':').map(Number);
+    let bedMinutes = bh * 60 + bm;
+    let wakeMinutes = wh * 60 + wm;
+    if (wakeMinutes <= bedMinutes) wakeMinutes += 24 * 60; // wrapped past midnight
+    return wakeMinutes - bedMinutes;
+  }
+
+  function formatMinutes(total) {
+    const h = Math.floor(total / 60), m = total % 60;
+    return `${h}h ${m}m`;
+  }
+
+  function updateSleepPreview() {
+    const bedtime = document.getElementById('sleep-bedtime-input').value;
+    const wake = document.getElementById('sleep-waketime-input').value;
+    const total = calcSleepDuration(bedtime, wake);
+    if (total == null) {
+      document.getElementById('sleep-total-val').innerText = '—';
+      document.getElementById('sleep-xp-hint').innerText = 'Log both times to see your XP';
+      return;
+    }
+    document.getElementById('sleep-total-val').innerText = formatMinutes(total);
+    document.getElementById('sleep-xp-hint').innerText = `+${sleepXpForMinutes(total)} XP for this session`;
+  }
+
+  function updateSleepQualityLabels() {
+    const val = document.getElementById('sleep-quality-input').value;
+    document.querySelectorAll('#sleep-quality-labels span').forEach(s => s.classList.toggle('active', s.dataset.q === val));
+  }
+
+  function openSleepModal() {
+    const key = todayKey();
+    const day = STATE.days[key];
+    const existing = day && typeof day.sleep === 'object' ? day.sleep : null;
+    document.getElementById('sleep-bedtime-input').value = existing ? existing.bedtime : '';
+    document.getElementById('sleep-waketime-input').value = existing ? existing.wakeTime : '';
+    document.getElementById('sleep-quality-input').value = existing ? existing.quality : 2;
+    document.getElementById('sleep-notes-input').value = existing ? (existing.notes || '') : '';
+    updateSleepPreview();
+    updateSleepQualityLabels();
+    document.getElementById('sleep-modal-backdrop').classList.add('open');
+  }
+  function closeSleepModal() { document.getElementById('sleep-modal-backdrop').classList.remove('open'); }
+
+  function saveSleepEntry() {
+    const bedtime = document.getElementById('sleep-bedtime-input').value;
+    const wake = document.getElementById('sleep-waketime-input').value;
+    const totalMinutes = calcSleepDuration(bedtime, wake);
+    if (totalMinutes == null) { alert("Enter both a bedtime and a wake time."); return; }
+    const quality = SLEEP_QUALITY_LABELS[document.getElementById('sleep-quality-input').value];
+    const notes = document.getElementById('sleep-notes-input').value.trim();
+
+    const key = todayKey();
+    if (!STATE.days[key]) STATE.days[key] = { completedIds: [], xp: 0, minutes: 0, sleep: null, completionXp: {}, timeSpent: {} };
+    const day = STATE.days[key];
+    const alreadyLogged = !!day.sleep;
+    const previousXp = alreadyLogged ? sleepXpForMinutes(sleepMinutesOf(day)) : 0;
+    const newXp = sleepXpForMinutes(totalMinutes);
+
+    day.sleep = { bedtime, wakeTime: wake, totalMinutes, quality, notes };
+
+    // Reconcile XP: remove whatever this entry earned before (if editing), then apply the new amount.
+    day.xp += (newXp - previousXp);
+    STATE.totalXP += (newXp - previousXp);
+    STATE.attributeXP.Recovery = Math.max(0, (STATE.attributeXP.Recovery || 0) + (newXp - previousXp));
+
+    if (!alreadyLogged) {
+      day.completedIds.push('sleep-log');
+      STATE.totalCompletions += 1;
+      recomputeStreak();
+      if (navigator.vibrate) navigator.vibrate(50);
+      showXpFlyout(newXp);
+      checkAchievements();
+    }
+
+    saveState();
+    quests = buildTodaysQuests();
+    renderQuests();
+    updateHomeStats();
+    closeSleepModal();
+  }
+
+  function wireSleepModal() {
+    document.getElementById('sleep-stat-card').addEventListener('click', openSleepModal);
+    document.getElementById('sleep-cancel-btn').addEventListener('click', closeSleepModal);
+    document.getElementById('sleep-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'sleep-modal-backdrop') closeSleepModal(); });
+    document.getElementById('sleep-bedtime-input').addEventListener('change', updateSleepPreview);
+    document.getElementById('sleep-waketime-input').addEventListener('change', updateSleepPreview);
+    document.getElementById('sleep-quality-input').addEventListener('input', updateSleepQualityLabels);
+    document.getElementById('sleep-save-btn').addEventListener('click', saveSleepEntry);
   }
 
   // ---------- Home stats ----------
@@ -1226,9 +1914,11 @@
 
     const today = STATE.days[todayKey()] || { xp: 0, completedIds: [], sleep: null };
     document.getElementById('stat-xp').innerText = today.xp;
-    document.getElementById('stat-streak').innerText = STATE.currentStreak;
-    document.getElementById('stat-sleep').innerText = today.sleep != null ? `${today.sleep}h` : '—';
-    document.getElementById('stat-quests').innerText = `${today.completedIds.length}/${quests.length}`;
+    document.getElementById('stat-streak').innerText = STATE.streakFreezeArmed ? `${STATE.currentStreak} ❄️` : `${STATE.currentStreak}`;
+    const sleepMin = sleepMinutesOf(today);
+    document.getElementById('stat-sleep').innerText = sleepMin != null ? formatMinutes(sleepMin) : '—';
+    const questsOnly = today.completedIds.filter(id => !id.startsWith('task-')).length;
+    document.getElementById('stat-quests').innerText = `${questsOnly}/${quests.length}`;
   }
 
   // ---------- Home category row → jump to Quests + pulse ----------
@@ -1323,7 +2013,8 @@
     document.getElementById('cdi-xp').innerText = day.xp;
     document.getElementById('cdi-quests').innerText = day.completedIds.length;
     document.getElementById('cdi-hours').innerText = `${(day.minutes / 60).toFixed(1)}h`;
-    document.getElementById('cdi-sleep').innerText = day.sleep != null ? `${day.sleep}h` : '—';
+    const sleepMin = sleepMinutesOf(day);
+    document.getElementById('cdi-sleep').innerText = sleepMin != null ? formatMinutes(sleepMin) : '—';
   }
 
   function generateXpSeriesReal(range) {
@@ -1580,8 +2271,9 @@
     }
     const totalXpMonth = monthKeys.reduce((s, k) => s + STATE.days[k].xp, 0);
     const avgXp = Math.round(totalXpMonth / 30);
-    const sleepDays = monthKeys.filter(k => STATE.days[k].sleep != null);
-    const avgSleep = sleepDays.length ? (sleepDays.reduce((s, k) => s + STATE.days[k].sleep, 0) / sleepDays.length).toFixed(1) : null;
+    const sleepDays = monthKeys.filter(k => sleepMinutesOf(STATE.days[k]) != null);
+    const avgSleepMinutes = sleepDays.length ? sleepDays.reduce((s, k) => s + sleepMinutesOf(STATE.days[k]), 0) / sleepDays.length : null;
+    const avgSleep = avgSleepMinutes != null ? (avgSleepMinutes / 60).toFixed(1) : null;
 
     let possible = 0, completed = 0;
     for (let i = 0; i < 30; i++) {
@@ -1683,9 +2375,40 @@
       : `Keep logging quests across categories to see where you're strongest.`;
   }
 
+  function buildSleepAnalyticsReal() {
+    const keys = getAllDayKeysSorted();
+    const now = new Date();
+    const thirtyAgo = new Date(now); thirtyAgo.setDate(now.getDate() - 29);
+    const recentKeys = keys.filter(k => { const d = new Date(k + 'T00:00:00'); return d >= thirtyAgo && d <= now; });
+    const sleepEntries = recentKeys.map(k => ({ key: k, min: sleepMinutesOf(STATE.days[k]) })).filter(e => e.min != null);
+
+    if (sleepEntries.length === 0) {
+      document.getElementById('sleep-avg-30').innerText = '—';
+      document.getElementById('sleep-best').innerText = '—';
+      document.getElementById('sleep-logged-count').innerText = '0';
+      document.getElementById('sleep-line-path').setAttribute('d', '');
+      return;
+    }
+    const avgMin = sleepEntries.reduce((s, e) => s + e.min, 0) / sleepEntries.length;
+    const bestMin = Math.max(...sleepEntries.map(e => e.min));
+    document.getElementById('sleep-avg-30').innerText = formatMinutes(Math.round(avgMin));
+    document.getElementById('sleep-best').innerText = formatMinutes(bestMin);
+    document.getElementById('sleep-logged-count').innerText = `${sleepEntries.length}`;
+
+    const w = 320, h = 100, pad = 6;
+    const values = sleepEntries.map(e => e.min);
+    const max = Math.max(...values), min = Math.min(...values);
+    const step = values.length > 1 ? w / (values.length - 1) : 0;
+    const scaleY = (v) => h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
+    let d = `M 0 ${scaleY(values[0]).toFixed(1)}`;
+    values.forEach((v, i) => { if (i > 0) d += ` L ${(i * step).toFixed(1)} ${scaleY(v).toFixed(1)}`; });
+    document.getElementById('sleep-line-path').setAttribute('d', d);
+  }
+
   function renderProgress() {
     buildSnapshotReal();
     buildCalendarReal();
+    buildSleepAnalyticsReal();
     drawXpChart(generateXpSeriesReal(getActiveRangeValue()));
     buildDonutReal();
     buildCategoryCardsReal();
@@ -1766,7 +2489,8 @@
     const today = STATE.days[todayKey()] || { completedIds: [], sleep: null };
     const buffs = [];
     if (STATE.currentStreak >= 7) buffs.push({ icon: "🔥", title: `${STATE.currentStreak} Day Streak`, sub: "Discipline momentum active" });
-    if (today.sleep != null && today.sleep >= 7) buffs.push({ icon: "⚡", title: "Energy Boost", sub: "7h+ sleep logged" });
+    const todaySleepMin = sleepMinutesOf(today);
+    if (todaySleepMin != null && todaySleepMin >= 420) buffs.push({ icon: "⚡", title: "Energy Boost", sub: "7h+ sleep logged" });
     if (today.completedIds.some(id => categoryForId(id) === 'Basketball')) buffs.push({ icon: "🏀", title: "Training Momentum", sub: "Basketball completed today" });
     if (today.completedIds.some(id => categoryForId(id) === 'Faith')) buffs.push({ icon: "✝️", title: "Faith Streak", sub: "Devotion completed today" });
     if (today.completedIds.some(id => taskNameForId(id) === 'Stretch')) buffs.push({ icon: "💪", title: "Recovery", sub: "Stretch completed today" });
@@ -1776,7 +2500,7 @@
     else { scroll.innerHTML = ''; buffs.forEach(b => { const c = document.createElement('div'); c.className = 'buff-card'; c.innerHTML = `<div class="buff-icon">${b.icon}</div><div class="buff-title">${b.title}</div><div class="buff-sub">${b.sub}</div>`; scroll.appendChild(c); }); }
 
     const debuffs = [];
-    if (today.sleep == null) debuffs.push({ icon: "😴", title: "Sleep Not Logged", sub: "No sleep data for today yet.", rec: "Tap the Sleep card on Home to log it." });
+    if (sleepMinutesOf(today) == null) debuffs.push({ icon: "😴", title: "Sleep Not Logged", sub: "No sleep data for today yet.", rec: "Tap the Sleep card on Home to log it." });
     if (!today.completedIds || today.completedIds.length === 0) debuffs.push({ icon: "⏳", title: "No Quests Yet Today", sub: "Nothing logged so far today.", rec: "Head to Quests and knock one out." });
 
     const dScroll = document.getElementById('debuff-scroll');
@@ -1842,33 +2566,144 @@
     });
   }
 
+  function activateStreakFreeze() {
+    if (STATE.streakFreezes <= 0 || STATE.streakFreezeArmed) return;
+    if (!confirm('Activate Streak Freeze?\n\nYour next missed day will not break your streak.')) return;
+    STATE.streakFreezes -= 1;
+    STATE.streakFreezeArmed = true;
+    saveState();
+    renderItems();
+    updateHomeStats();
+  }
+
+  function buildItemsReal() {
+    const list = document.getElementById('item-list');
+    list.innerHTML = '';
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    const armed = STATE.streakFreezeArmed;
+    const owned = STATE.streakFreezes || 0;
+    card.innerHTML = `
+      <div class="item-icon">🎟️</div>
+      <div class="item-body">
+        <div class="item-name">Streak Freeze</div>
+        <div class="item-owned">Owned: ${owned}${armed ? '' : ' · Protects your streak from one missed day'}</div>
+        ${armed ? `<div class="item-armed-badge">❄️ Armed — active for your next missed day</div>` : ''}
+      </div>
+      <button class="item-activate-btn" id="activate-freeze-btn" ${(owned <= 0 || armed) ? 'disabled' : ''}>${armed ? 'Armed' : 'Activate'}</button>
+    `;
+    list.appendChild(card);
+    const btn = document.getElementById('activate-freeze-btn');
+    if (btn && owned > 0 && !armed) btn.addEventListener('click', activateStreakFreeze);
+  }
+  function renderItems() { buildItemsReal(); }
+
   function renderCharacter() {
     buildCharHeroReal();
     buildBossReal();
     buildAttributesReal();
     buildBuffsReal();
     buildSkillTreesReal();
+    renderItems();
     buildAchievementsReal();
   }
 
   /* ============ SETTINGS ============ */
-  function wireSettings() {
-    document.querySelectorAll('.toggle').forEach(t => t.addEventListener('click', () => t.classList.toggle('on')));
-    document.getElementById('export-btn').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(STATE, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `lifeos-backup-${todayKey()}.json`;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+  function applySettingsTogglesToDOM() {
+    document.querySelectorAll('.toggle[data-setting]').forEach(t => {
+      const key = t.dataset.setting;
+      t.classList.toggle('on', !!STATE.settingsToggles[key]);
     });
+  }
+
+  function wireSettings() {
+    applySettingsTogglesToDOM();
+    document.querySelectorAll('.toggle[data-setting]').forEach(t => {
+      t.addEventListener('click', () => {
+        t.classList.toggle('on');
+        STATE.settingsToggles[t.dataset.setting] = t.classList.contains('on');
+        saveState();
+      });
+    });
+
+    document.getElementById('export-btn').addEventListener('click', () => exportBackup(`LifeOS_Backup_${todayKey()}.json`));
+
     document.getElementById('reset-btn').addEventListener('click', () => {
       if (confirm("This permanently deletes all your XP, streaks, quest history, and achievements. This can't be undone. Continue?")) {
         localStorage.removeItem(STORAGE_KEY);
         location.reload();
       }
     });
+
+    document.getElementById('restore-btn').addEventListener('click', () => document.getElementById('import-file-input').click());
+    document.getElementById('import-file-input').addEventListener('change', handleImportFileSelected);
+    document.getElementById('import-cancel-btn').addEventListener('click', closeImportModal);
+    document.getElementById('import-modal-backdrop').addEventListener('click', (e) => { if (e.target.id === 'import-modal-backdrop') closeImportModal(); });
+    document.getElementById('import-confirm-btn').addEventListener('click', confirmImport);
   }
+
+  /* ============ JSON BACKUP & RESTORE ============ */
+  function exportBackup(filename) {
+    const blob = new Blob([JSON.stringify(STATE, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function isValidBackupShape(obj) {
+    return obj && typeof obj === 'object'
+      && typeof obj.totalXP === 'number'
+      && typeof obj.days === 'object'
+      && typeof obj.createdAt === 'string';
+  }
+
+  let pendingImportData = null;
+
+  function handleImportFileSelected(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      let parsed = null;
+      try { parsed = JSON.parse(evt.target.result); } catch (err) { parsed = null; }
+      if (!isValidBackupShape(parsed)) {
+        pendingImportData = null;
+        document.getElementById('import-preview-body').style.display = 'none';
+        document.getElementById('import-error-body').style.display = 'block';
+        document.getElementById('import-confirm-btn').setAttribute('disabled', 'disabled');
+      } else {
+        pendingImportData = parsed;
+        document.getElementById('import-preview-body').style.display = 'block';
+        document.getElementById('import-error-body').style.display = 'none';
+        document.getElementById('import-confirm-btn').removeAttribute('disabled');
+        const lvl = getLevelInfo(parsed.totalXP).level;
+        document.getElementById('import-level').innerText = lvl;
+        document.getElementById('import-xp').innerText = parsed.totalXP.toLocaleString();
+        document.getElementById('import-streak').innerText = parsed.currentStreak || 0;
+        const lastDates = Object.keys(parsed.days || {}).sort();
+        const lastDate = lastDates.length ? lastDates[lastDates.length - 1] : parsed.createdAt.slice(0, 10);
+        document.getElementById('import-date').innerText = new Date(lastDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      document.getElementById('import-modal-backdrop').classList.add('open');
+    };
+    reader.readAsText(file);
+  }
+
+  function closeImportModal() {
+    document.getElementById('import-modal-backdrop').classList.remove('open');
+    document.getElementById('import-file-input').value = '';
+    pendingImportData = null;
+  }
+
+  function confirmImport() {
+    if (!pendingImportData) return;
+    exportBackup('Current_Backup.json'); // safety net before overwriting anything
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(pendingImportData));
+    location.reload();
+  }
+
 
   /* ============ NAV ============ */
   function wireNav() {
@@ -1894,13 +2729,16 @@
   updateGreeting();
   setQuestDate();
   renderQuests();
+  renderTasks();
+  wireTaskModal();
+  wireTimeModal();
   updateHomeStats();
   wireHomeCategoryRow();
   wireXpChartOnce();
   buildEquipmentOnce();
   wireSettings();
   wireNav();
-  document.getElementById('sleep-stat-card').addEventListener('click', logSleep);
+  wireSleepModal();
 
 </script>
 </body>
